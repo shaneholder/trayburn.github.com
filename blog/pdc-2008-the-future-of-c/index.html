@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PDC 2008 - The Future of C# - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="So I had a chance today to attend a session given Anders Hejlsberg on C# 4.0, and beyond.&nbsp; Honestly I walked out of the session going &#8230; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/pdc-2008-the-future-of-c/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">PDC 2008 - the Future of C#</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-10-27T00:00:00-05:00" pubdate data-updated="true">Oct 27<span>th</span>, 2008</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>So I had a chance today to attend a session given Anders Hejlsberg on C# 4.0, and beyond.&nbsp; Honestly I walked out of the session going &#8230; that&#8217;s it?&nbsp; The feature list started with the dynamic keyword, which is cool but simply does not help the 80% of C# developers today.&nbsp; Most C# developers today are so bound to type safety that dynamic will give them even more heartburn than var did.&nbsp; Now in reality it will likely make scenarios like property movement from service contracts to domain objects easier, but all its really doing is the same thing I blogged about the other day when working against .NET types, just with more layers and interfaces so that it can be built into the language directly.</p> <p>The next big thing mentioned was Named and Missing parameters.&nbsp; In the talk be mentioned that these should have been there long ago and he&#8217;s absolutely right about that. As such, you&#8217;ll get no big congratulations from me.</p> <p>What else?&nbsp; Co-variance and Contra-variance of course &#8230; a couple of things on this.&nbsp; First, I don&#8217;t think a lot of people will care.&nbsp; Second, perhaps I&#8217;m slow but I have no idea why a new keyword is needed for this.&nbsp; If a type is being used only as an input, then the compiler can detect that and add the &#8220;in&#8221; keyword, and if it is output only, then add &#8220;out&#8221;.&nbsp; Why do I need to personally decorate this?&nbsp; Are their edge cases? Probably, but then have an opt-out model where you can take direct control only if needed.</p> <p>The C# 5.0 stuff about the compiler as a service is &#8230; sexy.&nbsp; That is a concept that excites me, but that&#8217;s just teaser stuff right now and they have no idea how/when they&#8217;ll deliver.&nbsp; But what about other stuff?&nbsp; How about extension properties?&nbsp; What about interface inference (which is a major step towards duck typing)?&nbsp; I don&#8217;t see a bunch of &#8220;type safe&#8221; enterprise developers getting excited about C# 4.0 as presented.&nbsp; They might think its cool, but will they use it like they use automatic properties or LINQ?&nbsp; I think not.</p> <p>&nbsp;</p> <div class="wlWriterSmartContent" id="scid:0767317B-992E-4b12-91E0-4F059A8CECA8:a4d4deee-d388-4fe6-ab6b-6314e05e975b" style="padding-right: 0px; display: inline; padding-left: 0px; float: none; padding-bottom: 0px; margin: 0px; padding-top: 0px">Technorati Tags: <a href="http://technorati.com/tags/pdc2008" rel="tag">pdc2008</a>,<a href="http://technorati.com/tags/C#" rel="tag">C#</a></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-10-27T00:00:00-05:00" pubdate data-updated="true">Oct 27<span>th</span>, 2008</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/pdc-2008-the-future-of-c/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/pdc-2008-the-future-of-c/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/givecamp-kiva-lending-team/" title="Previous Post: GiveCamp Kiva Lending Team">&laquo; GiveCamp Kiva Lending Team</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/ineta-speaker-s-bureau/" title="Next Post: INETA Speaker's Bureau">INETA Speaker's Bureau &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

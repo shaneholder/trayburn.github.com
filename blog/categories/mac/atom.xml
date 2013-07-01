@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mac | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/mac/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Windows Phone 8 Development on a Mac]]></title>
+    <link href="http://TimRayburn.net/blog/windows-phone-8-development-on-a-mac/"/>
+    <updated>2012-12-11T07:02:00-06:00</updated>
+    <id>http://TimRayburn.net/blog/windows-phone-8-development-on-a-mac</id>
+    <content type="html"><![CDATA[<p>So you want to do Windows Phone 8 development on a Mac, the traditional answer to this has been, your out of luck.  The hurdles are two fold:</p>
+
+<ul>
+<li>The Windows Phone Emulator has always, since Windows Phone 7, been run as a HyperV virtual machine.  This means if your running Windows itself inside a VM, running the emulator is like trying to run a VM inside a VM.  This has traditionally been an unsupported scenario.</li>
+<li>The Windows Phone 8 Emulator raised the bar again, because it only runs on Windows 8.  That causes two problems for us.  The first is that Boot Camp hasn't been updated to support Windows 8 yet, so we can't (easily) get the necessary drivers for our Mac to run Windows 8.</li>
+<li>The second problem that Windows 8 requirement brings us is that HyperV in Windows 8 requires <a href="http://www.ryanlowdermilk.com/2012/09/does-my-computer-support-slat/">"Second Level Address Translation"</a> support from it's CPUs.  That means the CPU its running on has to support very new virtualization support in order to run.  That will make it even more difficult for a VM solution to work for us.</li>
+</ul>
+
+
+<p>But fear not my valiant friends, for there is an answer.  <a href="http://www.vmware.com/products/fusion/overview.html">VMWare Fusion</a> has heard your cries, and there is a way to solve this problem.  Here are the necessary steps, care of <a href="http://social.msdn.microsoft.com/Forums/en-US/wptools/thread/ed72010c-321c-4667-97b2-3ff1540e7f87">an awesome MSDN forums post</a>:</p>
+
+<ol>
+<li>Using <a href="http://www.vmware.com/products/fusion/overview.html">VMWare Fusion 5</a> or better, create and install a Windows 8 virtual machine.  If you have one already, your fine.</li>
+<li>Stop the virtual machine by shutting down Windows 8.</li>
+<li>At the VMWare Virtual Machine list, right click Windows 8 machine then click "Show in Finder".</li>
+<li>Right click the file then click "Show package contents", then find and open with a text editor a file with the extension .vmx</li>
+<li>Go till the end of the file and add this two lines (first check whether they were previously added):
+ <pre>
+ hypervisor.cpuid.v0 = "FALSE"
+ vhv.enable = "TRUE"
+ </pre></li>
+<li>At the VMWare Virtual Machine list, right click Windows 8, click "Preferences" then "Advanced". Choose "Intel VT-X with EPT" as "Preferred virtualization engine".</li>
+<li>Start your virtual machine, launch Visual Studio, and develop away.  The emulator will happily run.</li>
+</ol>
+
+
+<p>Obviously this solution is a "It works on my machine" situation, but I'm sure you will find success down this path.</p>
+
+<h2>Update 12/12/12</h2>
+
+<p>Several questions were asked, so quickly:</p>
+
+<ul>
+<li>Does Parallels support this?  As of today, no.  <a href="http://forum.parallels.com/showthread.php?t=264780">See this support forum post from them.</a></li>
+<li>Does your processor have to support SLAT?  Yes, your physical hardware must be current enough to support SLAT.  For Macs, this means you need to be running an i5 or i7 mac.</li>
+<li>What hardware are you running?  As of today, I'm running this solution on a Thunderbolt MacBook Pro running a 2.3 Ghz i7 and Lion, not Mountain Lion.  The official Model Identifier for my mac is MacBookPro8,3.</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

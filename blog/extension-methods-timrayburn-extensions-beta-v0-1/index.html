@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Extension Methods - TimRayburn.Extensions Beta v0.1 - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="I&#8217;ve had a chance over the last few days to play some more with the March CTP of Visual Studio Codename &#8220;Orcas&#8221; and with the &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/extension-methods-timrayburn-extensions-beta-v0-1/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Extension Methods - TimRayburn.Extensions Beta v0.1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-20T00:00:00-05:00" pubdate data-updated="true">Mar 20<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I&#8217;ve had a chance over the last few days to play some more with the March CTP of Visual Studio Codename &#8220;Orcas&#8221; and with the features being added as a part of C# 3.0.&nbsp; Even while feeling utterly handicap in Visual Studio without CodeRush and Refactor! Pro, I&#8217;ve managed turn out an interesting little assembly that I intend to grow as time goes with the namespace TimRayburn.Extensions.&nbsp; As you might guess this assembly contains Extension methods to classes within the Framework.</p> <p>In case you don&#8217;t know what extension methods are, they are static methods in static classes which use a special syntax to indicate that they extend an existing class or interface.&nbsp; For instance you might write some code like:</p> <div> <div class="csharpcode"><pre class="alt"><span class="lnum"> 1:</span> <span class="kwrd">public</span> <span class="kwrd">static</span> <span class="kwrd">string</span> ToStringNullSafe(<span class="kwrd">this</span> <span class="kwrd">object</span> inStr)</pre><pre><span class="lnum"> 2:</span> {</pre><pre class="alt"><span class="lnum"> 3:</span> <span class="kwrd">if</span> (inStr == <span class="kwrd">null</span>) <span class="kwrd">return</span> <span class="kwrd">string</span>.Empty;</pre><pre><span class="lnum"> 4:</span> <span class="kwrd">else</span></pre><pre class="alt"><span class="lnum"> 5:</span> {</pre><pre><span class="lnum"> 6:</span> <span class="kwrd">string</span> lStr = inStr.ToString();</pre><pre class="alt"><span class="lnum"> 7:</span> <span class="kwrd">if</span> (lStr == <span class="kwrd">null</span>) <span class="kwrd">return</span> <span class="kwrd">string</span>.Empty;</pre><pre><span class="lnum"> 8:</span> <span class="kwrd">else</span> <span class="kwrd">return</span> lStr;</pre><pre class="alt"><span class="lnum"> 9:</span> }</pre><pre><span class="lnum">10:</span> }</pre></div><style type="text/css">.csharpcode-wrapper, .csharpcode-wrapper pre {background-color: #f4f4f4;border: solid 1px gray;cursor: text;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;margin: 20px 0px 10px 0px;max-height: 200px;overflow: auto;padding: 4px 4px 4px 4px;width: 97.5%;}.csharpcode-wrapper pre {border-style: none;margin: 0px 0px 0px 0px;overflow: visible;padding: 0px 0px 0px 0px;}.csharpcode, .csharpcode pre, .csharpcode .alt {background-color: #f4f4f4;border-style: none;color: black;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;overflow: visible;padding: 0px 0px 0px 0px;width: 100%;}.csharpcode pre {margin: 0em;}.csharpcode .alt {background-color: white;}.csharpcode .asp {background-color: #ffff00;}.csharpcode .attr {color: #ff0000;}.csharpcode .html {color: #800000;}.csharpcode .kwrd {color: #0000ff;}.csharpcode .lnum {color: #606060;}.csharpcode .op {color: #0000c0;}.csharpcode .preproc {color: #cc6633;}.csharpcode .rem {color: #008000;}.csharpcode .str {color: #006080;}</style></div><p><a href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/ExtensionMethodsTimRayburn.ExtensionsB.1_1446A/Extension%20Method%20Intellisense%5B13%5D.jpg" atomicselection="true"><img style="margin: 5px" height="231" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/ExtensionMethodsTimRayburn.ExtensionsB.1_1446A/Extension%20Method%20Intellisense_thumb%5B11%5D.jpg" width="377" align="right"></a> Which extends the class System.Object to contain a new method called ToStringNullSafe which, as you can see, returns String.Empty instead of throwing Exceptions when a the object being called is null or it&#8217;s ToString value is null.&nbsp; The intellisense for this looks like the image to the right.</p><p>I intend to use TimRayburn.Extensions to contain extension methods which I&#8217;ve written and find useful.&nbsp; Version 0.1 addresses very simple problems, but over time I&#8217;m sure more complex functions will be added.&nbsp; For now there are two classes in the project FrameworkExtensions and EnsureExtensions.</p><p>Framework Extensions contains three methods today.&nbsp; ToStringNullSafe (as seen above) extends System.Object to provide a ToString method which will not throw exceptions on null.&nbsp; ToInt32 extends System.String to provide the ability to convert to a System.Int32 inline.&nbsp; Likewise ToDouble extends System.String for conversion to System.Double.&nbsp; These extensions are simple and without a unifying purpose other than that I thought they would come in handy.&nbsp; Nothing being done here, or in EnsureExtensions, that can&#8217;t be done without extension methods, just easier and more reader friendly code.</p><p>EnsureExtensions contains many methods which extend either System.Object, System.String or objects which implement IComparable&lt;T&gt;.&nbsp; Every method in this class follows the naming convention Ensure<em>X</em> where <em>X</em> is something you would want to confirm about the datatype before using it in code.&nbsp; The first of these is EnsureNotNull, an extension to System.Object, which checks if the object being used is null, and if it is throws an ArgumentException but if not it simply returns the object.&nbsp; This allows for interesting pieces of code like:</p><div><div class="csharpcode"><pre class="alt"><span class="lnum"> 1:</span> <span class="kwrd">public</span> <span class="kwrd">void</span> MyExampleMethod(<span class="kwrd">string</span> inputData)</pre><pre><span class="lnum"> 2:</span> {</pre><pre class="alt"><span class="lnum"> 3:</span> inputData.EnsureNotNull().EnsureGreaterThan(<span class="str">"Bravo"</span>).EnsureLessThan(<span class="str">"Charlie"</span>);</pre><pre><span class="lnum"> 4:</span> &nbsp;</pre><pre class="alt"><span class="lnum"> 5:</span> <span class="rem">// Real code here now that arguments have been checked.</span></pre><pre><span class="lnum"> 6:</span> }</pre></div><style type="text/css">.csharpcode-wrapper, .csharpcode-wrapper pre {background-color: #f4f4f4;border: solid 1px gray;cursor: text;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;margin: 20px 0px 10px 0px;max-height: 200px;overflow: auto;padding: 4px 4px 4px 4px;width: 97.5%;}.csharpcode-wrapper pre {border-style: none;margin: 0px 0px 0px 0px;overflow: visible;padding: 0px 0px 0px 0px;}.csharpcode, .csharpcode pre, .csharpcode .alt {background-color: #f4f4f4;border-style: none;color: black;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;overflow: visible;padding: 0px 0px 0px 0px;width: 100%;}.csharpcode pre {margin: 0em;}.csharpcode .alt {background-color: white;}.csharpcode .asp {background-color: #ffff00;}.csharpcode .attr {color: #ff0000;}.csharpcode .html {color: #800000;}.csharpcode .kwrd {color: #0000ff;}.csharpcode .lnum {color: #606060;}.csharpcode .op {color: #0000c0;}.csharpcode .preproc {color: #cc6633;}.csharpcode .rem {color: #008000;}.csharpcode .str {color: #006080;}</style></div><p>The observant among you might notice that this sort of methodology could also be extended to handle NUnit Assert&#8217;s, and I assure you that has not gone unnoticed by me.&nbsp; Extension methods may very well provide some interesting Syntactic Glue for many things in the future.&nbsp; Not rocket science, but very cool, and in my opinion very readable.</p><p>You can download the code for this below, though you will need the CTP of Orcas to compile this code.</p><h2><a href="http://www.timrayburn.net/content/binary/TimRayburn.Extensions.zip">Download TimRayburn.Extensions</a></h2>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-20T00:00:00-05:00" pubdate data-updated="true">Mar 20<span>th</span>, 2007</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/extension-methods-timrayburn-extensions-beta-v0-1/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/extension-methods-timrayburn-extensions-beta-v0-1/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/patterns-amp-practices-on-team-system/" title="Previous Post: Patterns &amp; Practices on Team System">&laquo; Patterns &amp; Practices on Team System</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/support-team-hanselman/" title="Next Post: Support Team Hanselman">Support Team Hanselman &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

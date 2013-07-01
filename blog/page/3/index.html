@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="This morning I had the pleasure of review the basics of WCF with a group from Exxon. As promised to them I&#8217;ve made all code and presentations &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/page/3/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/presentation-wcf-topics/">Presentation - WCF Topics</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-17T12:05:00-05:00" pubdate data-updated="true">Apr 17<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This morning I had the pleasure of review the basics of WCF with a group from Exxon.  As promised to them I&#8217;ve made all code and presentations from that talk available at <a href="https://github.com/trayburn/Presentations.WcfTopics">GitHub</a>.  Thank you all for attending, and again if you have any questions please feel free to reach out to me at Tim@TimRayburn.net.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/introducing-swtor-dot-parser/">Introducing SWTOR.Parser</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-19T10:50:00-05:00" pubdate data-updated="true">Mar 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/swtor.jpg"></p>
+
+<p>I&#8217;m pleased today to introduce to all of you a new project, <a href="https://github.com/trayburn/SWTOR.Parser">hosted on GitHub</a>, called <a href="https://github.com/trayburn/SWTOR.Parser">SWTOR.Parser</a>.  SWTOR.Parser is a C# library to parse the combat logs of Star Wars : The Old Republic that are now available on their Test Server, and will be introduced into the main game in Patch 1.2.  This library at the current time is very simple, it will read from any System.IO.TextReader, and return an IList<LogEntry>.  LogEntry and it&#8217;s related classes are a simple C# domain object.  The domain classes are simple POCO classes, and can be easily serialized into JSON or anything else you might want.</p>
+
+<p>This library does not yet contain any analysis code for analyzing logs, it is just a DLL which handles the parsing.  Over the coming weeks I intend to introduce analysis systems for these log files, and welcome any pull requests to that end, but now that the logs are available publicly on the Test Server I thought it time to make this much public so others do not need to replicate the effort.</p>
+
+<p>If you&#8217;re interested in contributing, <a href="https://github.com/trayburn/SWTOR.Parser">fork the project and send me a pull request</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/powertrip-ftw-slash/">PowerTrip FTW</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-13T23:13:00-05:00" pubdate data-updated="true">Mar 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/powertrip.jpg"></p>
+
+<p>While attending the Microsoft MVP Summit, I was given a gift that I simple must write to you about.  It is called the <a href="http://www.powerstick.com/microsite/products/powertrip/">PowerTrip by PowerStick</a> and it is the most terribly useful addition to my consulting bag in quite some time.  This device will power and charge up a USB device from an internal battery.  That battery can, in turn, be charged three ways : by USB, by power outlet, or by included solar cell.  As if that was not enough, it has an included USB flash drive, mine has 8gb of internal storage.  It can take an iPhone from zero to full five times on one charge, or extend the life of an iPad by 6 hours.  Simply put, this device is incredible, and has taken the place of all those other USB chargers in my bag.  One charger can cover all my devices, and serve as emergency power when I&#8217;m running low.  <a href="http://www.powerstick.com/microsite/products/powertrip/">Check it out if you&#8217;re even have the gadget fiend that I am.</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/apprentices-update/">Apprentices Update</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-26T10:36:00-06:00" pubdate data-updated="true">Feb 26<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Some time ago, <a href="http://timrayburn.net/blog/apprenticeship-a-journey-begins/">I wrote about taking my first apprentice</a> but I&#8217;ve been very lax about keeping you my dear readers up to date on how that has gone.  To sum up the previous post, in January of 2011 I took an Apprentice by the name of Chris Jackson.  I&#8217;d known him for decades, literally, and he wanted to break into the programming career path.  So we set out on a time-boxed experiment.  6 months to see if we could get him employable.</p>
+
+<p>Well, in June of 2011, Chris Jackson accepted a position with ThinkFinance as an entry level developer.  His annual income quadrupled on the day he signed the paperwork, moving from $13K to over $50k/year.  All credit to Chris, this was his doing.  He put in the hours, he dealt with my berating him about not grasping topics quickly enough, and in the end he succeeded.  All reports are that Chris is doing very well at ThinkFinance, and I&#8217;m very happy about that.  As anyone in the industry knows, getting your foot in the door is the hardest part and I was thrilled to see him get an offer from his very first interview.</p>
+
+<p>So what&#8217;s the secret sauce?  Looking back on it, several things played key factors in his success.  Some of them were my doing, others were Chris&#8217;, others were luck.</p>
+
+<ul>
+<li>I focused the curriculum on current, market desirable skills.  This made Chris an entry level developer who could write an ASP.NET MVC 3 website, talk intelligently about SOLID, know what an IoC container was and how to use it, and talk about his experiences with Test Driven Development.</li>
+<li>There was an existing relationship between Chris and I which allowed me the latitude to address things directly and sometimes confrontational while knowing we would still part friends.  It is my belief that anyone can do alone what Chris and I did together, but sometimes our own failings are the reason why we don&#8217;t.  If I&#8217;m going to accept someone into this type of relationship, I need the latitude to confront personality flaws that might be holding them back.</li>
+<li>Chris put in the hard work, period, full stop.  8 hours per week of sessions with me, plus homework assignments.</li>
+<li>I required that his spouse, Lynda-Jo, be on board for this before we began.  The time commitment was substantial, and without a spouse&#8217;s support he was going to fail.</li>
+</ul>
+
+
+<p>So if there is a secret sauce, I think it&#8217;s somewhere in that list of things above.  I&#8217;ve gone on and accepted two more apprentices since then, Mark Rayburn and Cody Fails.  Mark is my brother, and Cody is his best friend.  Like Chris Jackson, they&#8217;re smack in the middle of learning the fundamentals, but unlike him I&#8217;ve had to start with the very basics of computing.  Chris Jackson had a couple of years of college education in Computer Science behind him, Mark and Cody do not.  It&#8217;s a new challenge, but we&#8217;ll see how they do.  I full well realize that eventually, no matter how careful I am, one of my apprentices will not succeed in the transition of careers.  But the upside of transforming someone&#8217;s life is so huge, that I&#8217;m compelled to continue.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/where-at-mvp-summit-is-tim-rayburn/">Where at MVP Summit Is Tim Rayburn</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-24T09:22:00-06:00" pubdate data-updated="true">Feb 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><span class='pullquote-right' data-pullquote='First and foremost is FourSquare, I&#8217;ll post whenever I arrive at a location.'>
+The MVP Summit is coming up next week, and it is always a fantastic time to network and get caught up with my friends literally from around the world.  One of the big challenges of Summit is just finding people, so this post will serve as the guidepost of how to find me at Summit.  First and foremost is FourSquare, I&#8217;ll post whenever I arrive at a location.  Even if I&#8217;m not allowed to disclose why I&#8217;m somewhere, because of NDA topics, I can discuss that I&#8217;m somewhere, like &#8220;Building 92 on the MSFT Campus&#8221;.  But beyond that, there are several public events which I can disclose I&#8217;ll be at, so lets list those out.
+</span></p>
+
+<h1>Agenda</h1>
+
+<ul>
+<li>Sunday
+
+<ul>
+<li>9:30ish - Land at SEATAC Airport</li>
+<li>12:30 - <a href="http://www.bluecsushi.com/default.aspx?ID=43">Improving Sushi at Blue C Sushi</a>  &#8230; I love sushi, so does Devlin Liles my fellow Improving employee and Blue C Sushi in Bellevue is awesome.  This is open to one and all, join me if you&#8217;d like sushi or conversation or both.  Your sushi bill is your own, but we&#8217;re fun people.</li>
+</ul>
+</li>
+<li>Monday
+
+<ul>
+<li>18:00 till 21:00 - <a href="https://www.eventbrite.com/orderconfirmation/2871674255/71508107">Party with Palermo</a> &#8230; This is open to anyone who registers, so register at the link, MVP or not.</li>
+</ul>
+</li>
+<li>Tuesday
+
+<ul>
+<li>20:00 till Who Knows - <a href="https://github.com/blog/1059-bellevue-wa-drinkup">GitHub Drinkup hosted by Phil Haack</a> &#8230; This is open to the public, even if you&#8217;re not an MVP come on by!</li>
+</ul>
+</li>
+<li>Wednesday
+
+<ul>
+<li>7:00 - 9:00 - <a href="http://blog.pluralsight.com/2012/02/09/pluralsight-author-and-recruiting-breakfast-at-the-mvp-summit/">Pluralsight Author Breakfast</a></li>
+<li>18:00 till Who Knows - ChezNeward private party</li>
+</ul>
+</li>
+<li>Thursday
+
+<ul>
+<li>19:00 till Who Knows - Attendee Party</li>
+</ul>
+</li>
+<li>Friday
+
+<ul>
+<li>11:00 - <a href="http://www.bluecsushi.com/default.aspx?ID=43">Improving Sushi at Blue C Sushi Part 2</a> &#8230; Gotta get my last fix of good sushi in before tripping back to the landlocked Dallas/Fort Worth area.</li>
+<li>14:00ish - Takeoff from SEATAC Airport</li>
+</ul>
+</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/how-to-be-an-improver/">How to Be an Improver</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-21T15:34:00-06:00" pubdate data-updated="true">Feb 21<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/ie-logo-small.jpg"></p>
+
+<p>If you&#8217;ve every met me, or hung around me for any length of time, you&#8217;ve probably heard me rave about my employer <a href="http://improvingenterprises.com">Improving Enterprises</a> <a href="http://timrayburn.net/blog/improving-myself/">just a few</a> <a href="http://timrayburn.net/blog/work-for-the-best-hellip-pity-the-rest/">times before</a>.  Here are some things you may have heard about us:</p>
+
+<ul>
+<li>You may have heard that we employ the best, and we do, from <a href="http://driventodevelop.com/">David O&#8217;Hara</a> to <a href="http://devlinliles.com/">Devlin Liles</a> to <a href="http://www.castleproject.org/community/team.html">Craig Neuwirt</a>, and many more.</li>
+<li>You may have heard that we&#8217;re now growing beyond Texas, and we are.  Offices are located in Dallas, College Station, Columbus Ohio, and growing presences in Houston and other areas.</li>
+<li>You may have heard that we were voted #1 Best Place To Work by the Dallas Business Journal this year.  We also have been named to the <a href="http://www.improvingenterprises.com/2012/02/02/improving-among-best-places-to-work-in-texas-again/">Texas Monthly Best Place To Work In Texas</a>, at number 5.</li>
+</ul>
+
+
+<p>So why am I telling you all of this again?  Because Improving is looking for some more Improvers.</p>
+
+<h2>What is an Improver?</h2>
+
+<p><span class='pullquote-right' data-pullquote='Some of our technologists are literally world renowned, others are fresh out of school'>
+Those of us who work for this company have come to call ourselves Improvers.  That little gerund that is our name is something we hold very dear.  Our company motto is &#8220;Improving : It&#8217;s What We Do&#8221; and that alone is the thread which ties together the amazingly diverse collection of people who work at this company.  Some of our technologists are literally world renowned, others are fresh out of school.  Some work in Java or .NET, others are Project Managers or Quality Assurance analysts.  But we are all united by the fact that we are constantly striving to improve.
+</span></p>
+
+<p><span class='pullquote-right' data-pullquote='If you&#8217;re interested in being an Improver, then send me an email'>
+If you&#8217;re someone who is passionate about Improving yourself, then I&#8217;d like to talk to you.  We&#8217;re looking to grow the number of consultants in Dallas, Houston, and Columbus, OH.  We&#8217;re looking for QA, PM, and Devs working in .NET, Java and Android.  If you&#8217;re interested in being an Improver, then send me an email to Tim@TimRayburn.net and we&#8217;ll get you started on the journey.
+</span></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/finishing-up-the-cookbook/">Finishing Up the Cookbook</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-19T22:55:00-06:00" pubdate data-updated="true">Feb 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="left" src="/images/efcookbook.jpg" title="s Cookbook" alt="Our Book">While it has not been discussed here a great deal, my good friend <a href="http://devlinliles.com">Devlin Liles</a> and I have been writing a book together.  It&#8217;s called <a href="http://www.amazon.com/Entity-Framework-4-1-Experts-Cookbook/dp/1849684464/ref=sr_1_1?ie=UTF8&amp;qid=1329713927&amp;sr=8-1">&#8220;Entity Framework 4.1 : Expert&#8217;s Cookbook&#8221;</a>.  I will be clear upfront, Devlin did the lion&#8217;s share of the work on this book, but the finished product is something which I am totally proud to be associated with.</p>
+
+<p>When we set out on the journey to write this book, we agreed that it was our primary goal to convey an approach to using Entity Framework which would be consistent with the type of code we would want to see in our production systems.  To that end, every recipe in the book is approached in a test driven fashion, and our first job is to setup the necessary abstractions around Entity Framework to ensure that it is testable, yet performant.  I believe we have accomplished that goal.</p>
+
+<p>The book is going through it&#8217;s final edits now, and we are hopefully that it will be available sometime soon, I&#8217;ll keep you updated here as things develop.</p>
+
+<p>I believe that Devlin and I would also both like to take a moment and thank our amazing wives, Christina and Kate, who have suffered through this experiment with us.  I&#8217;m not certain if Devlin and I will publish another large tome like this again, but I am certain we will collaborate on other projects &#8230; focused on helping you <a href="http://ImprovingEnterprises.com">improve</a>.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/converted-to-octopress/">Converted to Octopress</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-19T12:30:00-06:00" pubdate data-updated="true">Feb 19<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>For those who actually visit my blog on a regular basis, you&#8217;ll have noticed that there have been alot of changes over the last couple of months.  For some time now I&#8217;ve been unhappy with my blogging platform, which up until recently had been Graffiti a platform formerly by Telligent.  Graffiti started out with amazing promise, and then &#8230; nothing.  It was never updated, and eventually was made open source, but without a primary contributor it just died.</p>
+
+<p><span class='pullquote-right' data-pullquote='You can host a blog on GitHub?!  You sure can, and it&#8217;s awesome.'>
+In the midst of this, I realized that my opinions of why my blog exists had changed.  I&#8217;ve never had many comments, and my blog is not the place to discuss my content, it&#8217;s the place to post my content.  Facebook, Twitter, and other social areas are where content is discussed and I&#8217;m fine with that.  To that end, I wanted to get out of the business of dealing with comments, policing them (even with automated tools), etc.  So I researched my options and came to the opinion that I wanted my blog to be hosted as a GitHub repository.  You can host a blog on GitHub?!  You sure can, and it&#8217;s awesome. About a month ago I converted to being a GitHub based blog, but today I&#8217;ve taken the additional step of using the amazing <a href="http://octopress.org/">Octopress</a> project.
+</span></p>
+
+<p>Now that I&#8217;ve completed this, you can expect updates on a more regular basis, including updates on my Apprenticeship projects, my upcoming book, and much much more.  Stay tuned for more details.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/Command-Line-FTW/">Command Line FTW!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-13T00:00:00-06:00" pubdate data-updated="true">Feb 13<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>TL;DR Summary : BASH command line to extract the most often repeated line of text from a log file: <em>cat filename.log \| sort \| uniq -c \| sort -nr</em></p></blockquote>
+
+<p>I was reading some blog posts by my friend <a href="http://truncatedcodr.wordpress.com/">Cori Drew</a> who is in the process of changing into a command line user, when I realized I&#8217;ve been doing some very cool log analysis recently which I should blog about.  I&#8217;ve have two different situations recently in which I was thrust into analyzing log files.  The first was a web site which was throwing logging large numbers of exceptions in production which were not happening in lower environments.  The second was a performance challenge, attempting to determine which indexes would be best applied to a Mongo database.</p>
+
+<p>In the first challenge, I had a log file composed mostly of .NET stack traces, and I they seemed to be from &#8220;all over the place&#8221;, no one component being the source of the exceptions.  But I suspected that some component was shared in common between these various exceptions, so I realized I wanted to do the following things:</p>
+
+<ul>
+<li>Sort the lines of the file, so all the duplicates were next to each other.</li>
+<li>Get a count of each distinct lines number of repeats.</li>
+<li>Find the line which repeated the most often.</li>
+</ul>
+
+
+<p>Now I&#8217;ve been in this programming field for a long time now, and it has taught me some very important lessons, the first and most important is that if you&#8217;re manipulating long files of text, a DOS prompt is not the place to do it, and neither is a GUI.  So I openned my handy-dandy BASH shell which I use for GIT, and other stuff.  After a little bit of google&#8217;ing, I realized that I had everything I needed:</p>
+
+<ul>
+<li>sort - sorts lines of a file</li>
+<li>uniq -c - counts all the unique lines, and puts the count at the front of each line of the output.</li>
+<li>sort -nr - sorts, backwards, with numeric rules (hence sorting the numbers put in by uniq)</li>
+</ul>
+
+
+<p>This worked fantastically well, and quickly isolated to a base class on our security attributes of the MVC application as the true source of the exceptions in the application.  When just a week later the second situation occurred, having to analyze the logs of a mongod process for often executed queries, in hopes of finding good candidates for indexing, I returned to my command line friend and after a minor modification had exactly what I was looking for.</p>
+
+<p>What was the minor modification?  The use of some <a href="http://cheat.errtheblog.com/s/sed/">sed</a> and <a href="http://cheat.errtheblog.com/s/grep">grep</a> commands to remove everything other than query output, and then remove info from each line about the connection it was performed on, so that  I had a clean list of queries.  The final command for the Mongo analysis looked like this:</p>
+
+<pre><code>cat mongo.log | grep "runQuery" | sed 's/ \[conn[0-9]*\]//' | sed 's/[A-Za-z]* [A-Za-z]* [0-9]* [0-9]*:[0-9]*:[0-9]* //' | sort | uniq -c | sort -nr
+</code></pre>
+
+<p>Simple eh?  No?  You might want to follow those links on <a href="http://cheat.errtheblog.com/s/grep">grep</a> and <a href="http://cheat.errtheblog.com/s/sed/">sed</a> then.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/Edition-Wars/">Edition Wars</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-02-12T00:00:00-06:00" pubdate data-updated="true">Feb 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><iframe frameborder="0" height="360px" src="http://www.kickstarter.com/projects/435243061/edition-wars-by-gamer-nation-studios/widget/video.html" width="480px"></iframe>
+
+
+<p>For some time now I&#8217;ve been loosely affiliated with the <a href="http://d20radio.com">D20 Radio Network</a>, a network of podcasts for gamers, and about things gamers care about.  That network was started by some outstandingly creative folks who I&#8217;m thrilled to call friends.  They&#8217;ve recently announced that they have founded a <a href="https://www.facebook.com/thegamernation">Game Studio</a> to help bring cool, innovative, amazing games to the market.  The first of these, is <a href="http://www.kickstarter.com/projects/435243061/edition-wars-by-gamer-nation-studios">Edition Wars</a>.</p>
+
+<blockquote><p>Edition Wars is a fun-filled, tongue-in-check standalone strategy card game for 3-5 players, where you become a Gamemaster slavishly devoted to your edition of the game! In the effort to champion your edition, you will compete to be the first to assemble a complete group of six Gamers. But this simple task is complicated by the fact that the other Gamemasters are trying to steal your Gamers out from under you! You can respond in kind, defend your existing Gamers with the standard attacks of Snark, Blog, and Merch; as well as equip yourself with special gear and toss about instant critical effects, all of which will aid you on your epic quest to edition supremacy! Let the Edition Wars begin&#8230;</p></blockquote>
+
+<p>I&#8217;d like to strongly encourage all of my friends to think about supporting this <a href="http://www.kickstarter.com/projects/435243061/edition-wars-by-gamer-nation-studios">Kickstarter project</a>.  Go check it out, read the rules, and then throw them a few bucks to help them get off the ground.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>CodeSmith 4.0 Beta - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="In case someone somehow failed to notice, I love CodeSmith.&nbsp; As such I was thrilled to open my email the other day and encounter an invitation &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/codesmith-4-0-beta/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">CodeSmith 4.0 Beta</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-08T00:00:00-05:00" pubdate data-updated="true">Oct 8<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/CodeSmith4.0Beta_F530/CodeGen-CodeSmithLogo%5B3%5D.png" atomicselection="true"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="108" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/CodeSmith4.0Beta_F530/CodeGen-CodeSmithLogo_thumb%5B1%5D.png" width="280" align="right" border="0"></a>In case someone somehow failed to notice, <a href="http://www.timrayburn.net/2006/10/05/Code+Generation.aspx">I</a> <a href="http://www.timrayburn.net/2005/09/22/Code+Generation+And+Visual+Studio+2003.aspx">love</a> <a href="http://www.timrayburn.net/2005/07/29/Presentations.aspx">CodeSmith</a>.&nbsp; As such I was thrilled to open my email the other day and encounter an invitation to participate in the CodeSmith 4.0 beta.&nbsp; It&#8217;s a closed Beta, so I can&#8217;t share the binaries, but you can bet that over the next few days I will be sharing my thoughts as I dig into the new version.&nbsp; That said, here is what the guys at CodeSmith Tools are bragging about in the new version:</p> <p>&nbsp;</p> <ul> <li>CodeSmith Project support (.csp files). &nbsp;This replaces property sets, the custom tool and the batch format.</li> <ul> <li>CodeSmith Projects can be run from the command line, inside MSBuild, inside CodeSmith Studio, and inside Windows Explorer.</li> <li>Inside of Visual Studio, any outputs that are generated will automatically be added to your project.</li> <li>If you build your project and you have the &#8220;Generate On Build&#8221; option on, your outputs will automatically be re-generated&nbsp;even if you generate from the command line using MSBuild.</li> <li>Progress dialog is shown when running from Windows Explorer.</li> <li>GUI dialogs to easily manage your project file.</li> <li>Easily add new outputs where you select a template and specify the property values.</li> <li>You can also specify merge settings through the GUI to enable code merging support.</li></ul> <li>ActiveSnippet support. &nbsp;This will allow you to type something&nbsp;like: &nbsp;&#8220;tp Petshop.dbo.Orders&#8221; inside of Visual Studio and then hit the expand key (CTRL-E, CTRL-E by default)&nbsp;and it will expand out into a list of property getters/setters&nbsp;and member variables based on the fields and data types of the Orders table.</li> <li>CodeSmith Map support (.csmap files). &nbsp;This feature will allow you to create dictionary style maps of things like SQL to C# data type mappings.</li> <ul> <li><strong>Example</strong>: &lt;%@ Map Name=&#8221;CSharpTypeAlias&#8221; Src=&#8221;System-CSharpAlias.csmap&#8221; Description=&#8221;Maps system types to C# aliases.&#8221; %&gt; &lt;%= CSharpTypeAlias[&#8220;System.String&#8221;] %&gt; = &#8220;string&#8221;</li> <li>Ability to reverse the map and use the values as the map keys. &nbsp;This is useful for doing reverse lookups.</li> <li>Ability to return the key value if a corresponding map entry is not found.</li> <li>Ability to return a default value if a corresponding map entry is not found.</li> <li>Ability to manage maps inside CodeSmith Studio or from Windows&nbsp;Explorer.</li></ul> <li>Ability to manage database schema extended property values from inside of CodeSmith Studio.</li> <li>XmlProperty support has been enhanced to handle more variations of XSD.</li> <li>Template property values are saved for templates so that each<br>time you run them, you donb_t have to reset the values manually.</li> <li>.netTiers 2.0 templates are included in the install.</li> <li>Added csxsd.exe to allow manually creating shared XmlProperty<br>assemblies.</li> <li>Ton of new system extended properties added to SchemaExplorer<br>objects.</li> <li>Bunch of performance improvements here and there throughout<br>CodeSmith.</li> <li>Bunch of bug fixes.</li></ul>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-08T00:00:00-05:00" pubdate data-updated="true">Oct 8<span>th</span>, 2006</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/codesmith-4-0-beta/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/codesmith-4-0-beta/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/biztalk-learning-resources/" title="Previous Post: BizTalk Learning Resources">&laquo; BizTalk Learning Resources</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/speaking-at-the-little-rock-net-user-group/" title="Next Post: Speaking at the Little Rock .NET User Group">Speaking at the Little Rock .NET User Group &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

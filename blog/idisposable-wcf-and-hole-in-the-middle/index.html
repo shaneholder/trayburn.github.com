@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>IDisposable, WCF, and Hole In The Middle - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="Steve Smith recently posted about the problem of the Close() (or Dispose()) method throwing an exception in WCF.&#160; He proposed a solution that &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/idisposable-wcf-and-hole-in-the-middle/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">IDisposable, WCF, and Hole in the Middle</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-09T00:00:00-06:00" pubdate data-updated="true">Feb 9<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://stevesmithblog.com/blog">Steve Smith</a> recently <a href="http://stevesmithblog.com/blog/idisposable-and-wcf">posted about the problem</a> of the Close() (or Dispose()) method throwing an exception in WCF.&#160; He proposed a solution that was an extension method to the ICommunicationObject interface and handled safely closing the connection.&#160; Now, if you read my blog you likely know I love Extension Methods, and even more so love them on Interfaces, but his code resulted in a usage like this:</p>  <div class="csharpcode">   <pre class="alt">var myClient = <span class="kwrd">new</span> ServiceClient();</pre>
+
+  <pre><span class="kwrd">try</span></pre>
+
+  <pre class="alt">{</pre>
+
+  <pre>  <span class="kwrd">int</span> someValue = myClient.GetSomeValue();</pre>
+
+  <pre class="alt">}</pre>
+
+  <pre><span class="kwrd">finally</span></pre>
+
+  <pre class="alt">{</pre>
+
+  <pre>  myClient.CloseConnection(); <span class="rem">// extension method</span></pre>
+
+  <pre class="alt">}</pre>
+
+  <pre>&#160;</pre>
+</div>
+
+<p><style type="text/css">
+
+.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }</style>This is ok, but as he noted doesn’t actually save you much over a using() block except that the error is not thrown from a closing brace, which is confusing.&#160; But if you look at this code, it is a classic example of a Hole In The Middle.&#160; We want to do some common setup, and common tear down, but do something different in the middle.&#160; The easiest way to get around Hole In The Middle problems in C# is to use lambdas.&#160; But of course we want to do this in a way that is easy, and preserves our type safety.</p>
+
+<p>So I sat down with Visual Studio, and after about 15 minutes came up with this:</p>
+
+<div class="csharpcode">
+  <pre class="alt">        <span class="kwrd">public</span> <span class="kwrd">static</span> TResult SafeExecution&lt;TExtension, TResult&gt;</pre>
+
+  <pre>            (<span class="kwrd">this</span> TExtension myServiceClient, </pre>
+
+  <pre class="alt">            Func&lt;TExtension, TResult&gt; serviceAction)</pre>
+
+  <pre>            <span class="kwrd">where</span> TExtension : ICommunicationObject</pre>
+
+  <pre class="alt">        {</pre>
+
+  <pre>            TResult outValue;</pre>
+
+  <pre class="alt">&#160;</pre>
+
+  <pre>            <span class="kwrd">try</span></pre>
+
+  <pre class="alt">            {</pre>
+
+  <pre>                outValue = serviceAction.Invoke(myServiceClient);</pre>
+
+  <pre class="alt">            }</pre>
+
+  <pre>            <span class="kwrd">finally</span></pre>
+
+  <pre class="alt">            {</pre>
+
+  <pre>                myServiceClient.CloseConnection();</pre>
+
+  <pre class="alt">            }</pre>
+
+  <pre>&#160;</pre>
+
+  <pre class="alt">            <span class="kwrd">return</span> outValue;</pre>
+
+  <pre>        }</pre>
+</div>
+
+<p><style type="text/css">
+
+.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }</style>This solution <a href="http://stevesmithblog.com/blog/idisposable-and-wcf">uses the CloseConnection extension method Steve created</a>, but results in a usage that looks like this:</p>
+
+<div class="csharpcode">
+  <pre class="alt">            var ec2 = <span class="kwrd">new</span> Amazon.AmazonEC2PortTypeClient();</pre>
+
+  <pre>            ec2.SafeExecution(i =&gt; i.AllocateAddress(<span class="kwrd">null</span>));</pre>
+</div>
+
+<p><style type="text/css">
+
+.csharpcode, .csharpcode pre
+{
+	font-size: small;
+	color: black;
+	font-family: consolas, &#8220;Courier New&#8221;, courier, monospace;
+	background-color: #ffffff;
+	/*white-space: pre;*/
+}
+.csharpcode pre { margin: 0em; }
+.csharpcode .rem { color: #008000; }
+.csharpcode .kwrd { color: #0000ff; }
+.csharpcode .str { color: #006080; }
+.csharpcode .op { color: #0000c0; }
+.csharpcode .preproc { color: #cc6633; }
+.csharpcode .asp { background-color: #ffff00; }
+.csharpcode .html { color: #800000; }
+.csharpcode .attr { color: #ff0000; }
+.csharpcode .alt 
+{
+	background-color: #f4f4f4;
+	width: 100%;
+	margin: 0em;
+}
+.csharpcode .lnum { color: #606060; }</style>As you can see, this is a more compact, but still type-safe way of addressing this problem and does so with an Extension Method so you can re-use this code in any project you encounter.</p>
+
+<p>This is a new solution to me, so I’m certainly open to comments, but I think it is an elegant solution.&#160; What do you think?</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-09T00:00:00-06:00" pubdate data-updated="true">Feb 9<span>th</span>, 2009</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/idisposable-wcf-and-hole-in-the-middle/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/idisposable-wcf-and-hole-in-the-middle/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/dallas-techfest-2009-postponed/" title="Previous Post: Dallas TechFest 2009 - Postponed">&laquo; Dallas TechFest 2009 - Postponed</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/solution-clone-v1-0/" title="Next Post: Solution Clone v1.0">Solution Clone v1.0 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

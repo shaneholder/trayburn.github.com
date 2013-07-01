@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: github | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/github/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Converted to Octopress]]></title>
+    <link href="http://TimRayburn.net/blog/converted-to-octopress/"/>
+    <updated>2012-02-19T12:30:00-06:00</updated>
+    <id>http://TimRayburn.net/blog/converted-to-octopress</id>
+    <content type="html"><![CDATA[<p>For those who actually visit my blog on a regular basis, you'll have noticed that there have been alot of changes over the last couple of months.  For some time now I've been unhappy with my blogging platform, which up until recently had been Graffiti a platform formerly by Telligent.  Graffiti started out with amazing promise, and then ... nothing.  It was never updated, and eventually was made open source, but without a primary contributor it just died.</p>
+
+<p><span class='pullquote-right' data-pullquote='You can host a blog on GitHub?!  You sure can, and it&#8217;s awesome.'>
+In the midst of this, I realized that my opinions of why my blog exists had changed.  I've never had many comments, and my blog is not the place to discuss my content, it's the place to post my content.  Facebook, Twitter, and other social areas are where content is discussed and I'm fine with that.  To that end, I wanted to get out of the business of dealing with comments, policing them (even with automated tools), etc.  So I researched my options and came to the opinion that I wanted my blog to be hosted as a GitHub repository.  You can host a blog on GitHub?!  You sure can, and it's awesome. About a month ago I converted to being a GitHub based blog, but today I've taken the additional step of using the amazing <a href="http://octopress.org/">Octopress</a> project.
+</span></p>
+
+<p>Now that I've completed this, you can expect updates on a more regular basis, including updates on my Apprenticeship projects, my upcoming book, and much much more.  Stay tuned for more details.</p>
+]]></content>
+  </entry>
+  
+</feed>

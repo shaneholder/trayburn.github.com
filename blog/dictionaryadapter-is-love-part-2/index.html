@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>DictionaryAdapter is Love (Part 2) - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="In our last installment, we learned the basics of how to use DictionaryAdapter to use an interface to access loosely structured data.&#160; This time &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/dictionaryadapter-is-love-part-2/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">DictionaryAdapter Is Love (Part 2)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-07T00:00:00-05:00" pubdate data-updated="true">Sep 7<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>In our last installment, we learned the basics of how to use DictionaryAdapter to use an interface to access loosely structured data.&#160; This time, we’re going to show a somewhat more complex scenario than simple properties.&#160; Consider the following:</p>  <p>&#160;</p>  <pre class="brush: csharp;">        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { 
+                        &quot;UserName&quot;, new Dictionary&lt;string,object&gt;()
+                        {
+                            { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                            { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                        }
+                    }
+                };
+        }</pre>
+
+<p>As you can see, we’ve nested dictionaries this time, where the UserName key has a value of another dictionary, with two keys itself.&#160; The simplest model for this is to simple add another interface, IUserName, which represents this nested data.&#160; Here is a look at that code:</p>
+
+<pre class="brush: csharp;">    public interface IUserData
+    {
+        [Key(&quot;UserId&quot;)]
+        int Id { get; set; }
+
+        [Key(&quot;UserName&quot;)]
+        IUserName Name { get; set; }
+    }
+
+    public interface IUserName
+    {
+        [Key(&quot;UserFirstName&quot;)]
+        string FirstName { get; set; }
+
+        [Key(&quot;UserMiddleName&quot;)]
+        string MiddleName { get; set; }
+
+        [Key(&quot;UserLastName&quot;)]
+        string LastName { get; set; }
+    }</pre>
+
+<p>So lets see how DictionaryAdapter (it’s called DA by its friends, which if you’re still reading at this point you clearly are) … so lets see how DA handles this scenario.&#160; We’d hope that something like this would work:</p>
+
+<pre class="brush: csharp;">        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { 
+                        &quot;UserName&quot;, new Dictionary&lt;string,object&gt;()
+                        {
+                            { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                            { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                        }
+                    }
+                };
+
+            var data = new DictionaryAdapterFactory().GetAdapter&lt;IUserData&gt;(dict);
+
+            Console.WriteLine(data.Name.FirstName);
+        }</pre>
+
+<p>Does it? Nope.&#160; Why?&#160; Let’s look at the details:</p>
+
+<pre class="brush: csharp;">System.InvalidCastException was unhandled
+  Message=Unable to cast object of type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]' to type 'Part2.IUserName'.
+  Source=Part2.Part2.IUserData.DictionaryAdapter
+  StackTrace:
+       at Part2.UserDataDictionaryAdapter.get_Name()
+       at Part2.Program.Main(String[] args) in C:\source\BlogPosts\DictionaryAdapterIsLove\Part2\Program.cs:line 32
+       at System.AppDomain._nExecuteAssembly(RuntimeAssembly assembly, String[] args)
+       at System.AppDomain.ExecuteAssembly(String assemblyFile, Evidence assemblySecurity, String[] args)
+       at Microsoft.VisualStudio.HostingProcess.HostProc.RunUsersAssembly()
+       at System.Threading.ThreadHelper.ThreadStart_Context(Object state)
+       at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean ignoreSyncCtx)
+       at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+       at System.Threading.ThreadHelper.ThreadStart()
+  InnerException: </pre>
+
+<p>I have to give credit where credit is due, this make pretty darned clear what the problem is.&#160; Our nested dictionary is not, itself, being wrapped so when DA tries to retrieve it and cast it to IUserName it, obviously, cannot.</p>
+
+<p><strong>That’s great Tim … but how do I fix that?</strong></p>
+
+<p>Enter behaviors.&#160; Dictionary adapter has an abstraction over anything that modifies how it does its work called Behaviors.&#160; You can create behaviors for all sorts of things, but one of them is Property Getting.&#160; To modify this behavior you need to do two things:</p>
+
+<ol>
+  <li>Create a class which implements the IDictionaryPropertyGetter interface. </li>
+
+  <li>Modify your request to the Factory to request your DA use that behavior. </li>
+</ol>
+
+<p>If we take a peek at IDictionaryPropertyGetter you will see the following definition:</p>
+
+<pre class="brush: csharp;">    public interface IDictionaryPropertyGetter : IDictionaryBehavior
+    {
+        object GetPropertyValue(IDictionaryAdapter dictionaryAdapter, string key, object storedValue, PropertyDescriptor property, bool ifExists);
+    }</pre>
+
+<p>As you can see this isn’t terribly complex.&#160; But you’ll also notice that it implements IDictionaryBehavior, so lets take a peek at that shall we?</p>
+
+<pre class="brush: csharp;">    public interface IDictionaryBehavior
+    {
+        int ExecutionOrder { get; }
+    }</pre>
+
+<p>Again, not very complex at all.&#160; So we need a class that will implement both of these, and which will examine the <strong>propertyDescriptor </strong>parameter to determine if the requested Type is itself an interface which is not assignable from the type of <strong>storedValue</strong> but that <strong>storedValue</strong> is assignable from IDictionary.&#160; If those conditions are met, we can create another DictionaryAdapter to adapt to the new interface.&#160; Here is a simple example of that class :</p>
+
+<pre class="brush: csharp;">    public class NestedDictionaryGetterBehavior : IDictionaryPropertyGetter
+    {
+        public object GetPropertyValue(IDictionaryAdapter dictionaryAdapter, string key, object storedValue, PropertyDescriptor property, bool ifExists)
+        {
+            if (property.PropertyType.IsAssignableFrom(storedValue.GetType()))
+            {
+                return storedValue;
+            }
+
+            if (property.PropertyType.IsInterface &amp;&amp; IsDictionary(storedValue.GetType()))
+            {
+                return dictionaryAdapter.This.Factory.GetAdapter(property.PropertyType, storedValue as IDictionary);
+            }
+
+            return storedValue;
+        }
+
+        public int ExecutionOrder
+        {
+            get { return 0; }
+        }
+
+        private bool IsDictionary(Type type)
+        {
+            return typeof(IDictionary).IsAssignableFrom(type);
+        }
+    }</pre>
+
+<p>As you can see, some code, but not lots of code.&#160; Our example should skip the first <strong>if</strong> statement and go into the second one, returning the new DictionaryAdapter.&#160; Now we need to do step 2, modify our original request to the Factory to add our behavior.&#160; Here is what the code looks like once we’ve done that:</p>
+
+<pre class="brush: csharp;">        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { 
+                        &quot;UserName&quot;, new Dictionary&lt;string,object&gt;()
+                        {
+                            { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                            { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                        }
+                    }
+                };
+
+            var data = new DictionaryAdapterFactory()
+                .GetAdapter(typeof(IUserData),
+                dict,
+                new DictionaryDescriptor().AddBehavior(new NestedDictionaryGetterBehavior())) as IUserData;
+
+            Console.WriteLine(data.Name.FirstName);
+            Console.ReadLine();
+        }</pre>
+
+<p>Now, that gets a little tedious to do every time, and I can assure you that Craig Neuwirt hates tedious.&#160; As such, DictionaryAdapter will look for any <strong>attributes</strong> on your interface which implement IDictionaryBehavior and add them for you automatically.&#160; So with a very simple refactoring of our class:</p>
+
+<pre class="brush: csharp;">    public class NestedDictionaryGetterBehavior : Attribute, IDictionaryPropertyGetter</pre>
+
+<p>We can then modify our interface:</p>
+
+<pre class="brush: csharp;">    [NestedDictionaryGetterBehavior]
+    public interface IUserData
+    {
+        [Key(&quot;UserId&quot;)]
+        int Id { get; set; }
+
+        [Key(&quot;UserName&quot;)]
+        IUserName Name { get; set; }
+    }</pre>
+
+<p>And move back to a very simple DictionaryAdapterFactory request:</p>
+
+<pre class="brush: csharp;">            var data = new DictionaryAdapterFactory().GetAdapter&lt;IUserData&gt;(dict);</pre>
+
+<p>And I think that’s enough for this time.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-07T00:00:00-05:00" pubdate data-updated="true">Sep 7<span>th</span>, 2010</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/dictionaryadapter-is-love-part-2/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/dictionaryadapter-is-love-part-2/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/dictionaryadapter-is-love-part-1/" title="Previous Post: DictionaryAdapter is Love (Part 1)">&laquo; DictionaryAdapter is Love (Part 1)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/speaking-tonight-at-the-spokane-net-users-group/" title="Next Post: Speaking Tonight at the Spokane .NET Users Group">Speaking Tonight at the Spokane .NET Users Group &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

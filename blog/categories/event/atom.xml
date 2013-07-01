@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: event | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/event/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Windows Phone Bootcamp and Hackathon at Big (D) 2012]]></title>
+    <link href="http://TimRayburn.net/blog/windows-phone-bootcamp-and-hackathon-at-big-d-2012/"/>
+    <updated>2012-05-28T08:38:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/windows-phone-bootcamp-and-hackathon-at-big-d-2012</id>
+    <content type="html"><![CDATA[<p>Want to learn what it takes to build a Windows Phone application?</p>
+
+<p>The Windows Phone Bootcamp and Hackathon is a <strong>free</strong>, two-day event chock-full of everything you need to know to develop a Windows Phone application followed by an application building competition. Whether you</p>
+]]></content>
+  </entry>
+  
+</feed>

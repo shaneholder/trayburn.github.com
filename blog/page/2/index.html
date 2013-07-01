@@ -1,0 +1,970 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="I must go down to the seas again, to the lonely sea and the sky, And all I ask is a tall ship and a star to steer her by, And the wheel&#8217;s kick &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/page/2/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/powershell-for-developers-intro/">PowerShell for Developers - Intro</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-07T13:00:00-05:00" pubdate data-updated="true">May 7<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p> I must go down to the seas again, to the lonely sea and the sky,
+ And all I ask is a tall ship and a star to steer her by,
+ And the wheel&#8217;s kick and the wind&#8217;s song and the white sail&#8217;s shaking,
+ And a gray mist on the sea&#8217;s face, and a gray dawn breaking.
+ &#8211; Sea Fever by John Masefield</p></blockquote>
+
+<p>Every developer knows that in order to be successful at their chosen profession, they need to keep the best tools at their disposal.  We all have our favorite text editors, and our favorite comparison tools, and the wise among us also have our favorite scripting languages and command line environments.</p>
+
+<p>I am an unabashed fan of GIT, and as such for several years now I&#8217;ve used the <code>bash</code> shell as my command line environment of choice.  But I recently started paying more attention to <code>PowerShell</code> and I realized that I had not at all given it it&#8217;s due when I first learned about it several years ago.  I&#8217;ve spoken recently with @DevlinLiles, @AmirRajan, @CoriDrew, and @BForrest about this, and I realized that I wasn&#8217;t alone at all in this.  Most developers working in .NET languages have mostly ignored PowerShell.  I intend this series of blog posts to correct this issue.</p>
+
+<h2>The Basics</h2>
+
+<blockquote><p> Let&#8217;s start at the very beginning
+ A very good place to start
+ When you read you begin with A-B-C
+ When you sing you begin with do-re-mi
+ &#8211; &#8220;Do-Re-Mi&#8221; by Rodgers &amp; Hammerstein</p></blockquote>
+
+<h3>PowerShell 3.0</h3>
+
+<p>So how do I use the <code>PowerShell</code> thing, Tim?  Easy.  First, we need to know what version of Windows you&#8217;re using now, because we might want to upgrade you to the latest version.  If you&#8217;re using <strong>Windows 8</strong> or <strong>Windows Server 2012</strong> then you&#8217;re good, you already have PowerShell 3.0.  If you&#8217;re using <strong>Windows 7</strong> or <strong>Windows Server 2008</strong> or <strong>Windows Server 2008 R2</strong>, then you need to download the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=34595">Windows Management Pack 3.0</a> which upgrades you to PowerShell 3.0.</p>
+
+<p>Not sure if someone else might have already installed it?  Just open PowerShell (hint: Win+R -> <code>PowerShell</code> <strong>enter</strong>) and enter <code>$host.version</code> at the prompt.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $host.version
+</span><span class='line'>
+</span><span class='line'>Major  Minor  Build  Revision
+</span><span class='line'>-----  -----  -----  --------
+</span><span class='line'>3      0      -1     -1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The above it what we&#8217;re looking for, anything else, and you need to install the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=34595">Windows Management Pack 3.0</a>.</p>
+
+<h3>Variables</h3>
+
+<p>The first thing you need to know about PowerShell is how to create a variable.  This is very simple, you just assign it to a variable name.  In PowerShell, all variables are preceded by a <code>$</code>.  So if you want to create a variable X and assign the integer value 1 to it, you would type:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $X = 1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Important to know, especially for C# developers, is that PowerShell is <strong>case-insensitive</strong>.  As such, <code>$X</code> is the same as <code>$x</code>.</p>
+
+<h4>Value Types</h4>
+
+<p>Now, .NET developers, pay attention to this.  In PowerShell all variables are actual objects, not just string values.  What do I mean?  Type this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $X.GetType()
+</span><span class='line'>
+</span><span class='line'>IsPublic IsSerial Name                                     BaseType
+</span><span class='line'>-------- -------- ----                                     --------
+</span><span class='line'>True     True     Int32                                    System.ValueType</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>Holy smoke!</strong> That variable is an <code>Int32</code>, I mean a real <code>System.Int32</code>.</p>
+
+<p>Because of this, we can use any type of methods that might exist on those objects.  For instance, we could type:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $X.Equals(4)
+</span><span class='line'>False</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So how do we create non-value types then?  That depends&#8230;</p>
+
+<h4>Reference Types via New-Object</h4>
+
+<p>Most of the time, we are used to creating .NET objects by typing something like <code>var dt = new System.DateTime()</code> but in PowerShell we have something similar, but different:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $dt = New-Object System.DateTime</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can always check the value of a variable, just by typing it&#8217;s name at the prompt like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $dt
+</span><span class='line'>
+</span><span class='line'>Monday, January 1, 0001 12:00:00 AM</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That makes total sense, that is the default value of a DateTime aka <code>default(DateTime)</code> in C#.  But in reality, I tend to use <code>System.DateTime.Now</code> to get the system time, more often than I do <code>new DateTime()</code>, so how to I do that in PowerShell?</p>
+
+<h4>Reference Types via Static Properties &amp; Methods</h4>
+
+<p>So if we want to access the .NET Framework&#8217;s static types, we simply need to reference the type, and then the method, as follows:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; [System.DateTime]::Now
+</span><span class='line'>
+</span><span class='line'>Monday, May 6, 2013 10:22:26 PM</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, if we wanted to assign that to our variable, we would just do:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $dt = [System.DateTime]::Now</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Please note, when we assign the value to a variable, we no longer get output to the console.  We&#8217;ll see how to change that in just a bit.</p>
+
+<h3>Arrays</h3>
+
+<p>Arrays are common in all programming languages, they represent a series of values.  In PowerShell, those values are not required to be of the same type, you can think of all Arrays in .NET terms as <code>System.Object[]</code>, an array of Objects.</p>
+
+<p>Declaring and using arrays could not possibly be easier in PowerShell, we simply put together a series of values, separated by commas.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; 1,2,3
+</span><span class='line'>1
+</span><span class='line'>2
+</span><span class='line'>3</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As I noted above, they don&#8217;t have to be of the same type:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; 1,"abc",[System.DateTime]::Now
+</span><span class='line'>1
+</span><span class='line'>abc
+</span><span class='line'>
+</span><span class='line'>Monday, May 6, 2013 10:28:15 PM</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And that is all there is to arrays.  You can add members to arrays many ways, but the simplest is as follows:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $arr = 1,2,3
+</span><span class='line'>&gt; $arr
+</span><span class='line'>1
+</span><span class='line'>2
+</span><span class='line'>3
+</span><span class='line'>&gt; $arr = $arr + 4,5,6
+</span><span class='line'>&gt; $arr
+</span><span class='line'>1
+</span><span class='line'>2
+</span><span class='line'>3
+</span><span class='line'>4
+</span><span class='line'>5
+</span><span class='line'>6</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Hashtable</h3>
+
+<p>There is one other type of object which is critical to the world of PowerShell, and that is the Hashtable.  PowerShell is a dynamic language, in fact as of 3.0 it&#8217;s even built on top of the Dynamic Language Runtime, but as such it needs a flexible structure for storing loosely types objects.  Enter the Hashtable.</p>
+
+<p>The syntax for Hashtable couldn&#8217;t possibly be easier, to create one you just use <code>@{ key=value; key2=value2}</code> So for instance, if you want to create a Hashtable to store a bunch of people, you could do so like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $tim = @{ FirstName="Tim";LastName="Rayburn"}
+</span><span class='line'>&gt; $cori = @{ FirstName="Cori";LastName="Drew"}
+</span><span class='line'>&gt; $barry = @{ FirstName="Barry";LastName="Forrest"}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, as we learned in the last section, we can create an array just by separating items by commas, so lets do so, and then sort these people by FirstName:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $tim,$cori,$barry | Sort-Object FirstName
+</span><span class='line'>
+</span><span class='line'>Name                           Value
+</span><span class='line'>----                           -----
+</span><span class='line'>LastName                       Forrest
+</span><span class='line'>FirstName                      Barry
+</span><span class='line'>LastName                       Drew
+</span><span class='line'>FirstName                      Cori
+</span><span class='line'>LastName                       Rayburn
+</span><span class='line'>FirstName                      Tim</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, Barry is now listed first, then Cori, then Tim.  Don&#8217;t worry about understanding Sort-Object just yet, we&#8217;ll get into how that line works more in the next post.</p>
+
+<p>Now, lets imagine I want to add a value for Employer to each of these.  How to I change a Hashtable once it has been created?  Easy, just refer to a property that doesn&#8217;t exist yet, and set its value.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $tim.Employer = "Improving Enterprises"
+</span><span class='line'>&gt; $barry.Employer = "Improving Enterprises"
+</span><span class='line'>&gt; $cori.Employer = "Improving Enterprises (Contractor until August)"</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Constants</h3>
+
+<p>In addition to all of the above, there are a couple of constants which you might want to know about when developing.  <code>$null</code> is the constant value of a Null Reference.  In addition there are constants for <code>$true</code> and <code>$false</code> though if a boolean is expected you can also always use <code>1</code> or <code>0</code> respectively.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/working-with-dynamic-schema-in-azure-mobile-services/">Working With Dynamic Schema in Azure Mobile Services</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-12T11:45:00-06:00" pubdate data-updated="true">Dec 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Lately I&#8217;ve been developing on a side project using the awesome <a href="http://chriskoenig.net/2012/10/17/new-azure-sdk-and-services-updates/">Azure Mobile Services</a> offering from Microsoft.  Specifically I&#8217;ve been developing a Windows Phone 8 application, the details of which will be revealed in time.  One of the best features of Azure Mobile Services is the ability to work with a Dynamic Schema, it will automatically insert new columns for fields it has never received before.</p>
+
+<p>There are many great reasons for this during development.  It allows for rapid iteration, which is great.  But, let&#8217;s take the example of the <a href="https://github.com/WindowsAzure-TrainingKit/HOL-Windows8AndMobileServices/blob/master/HOL.md">Todo Hands On Lab</a>, and look at the DataContract established for it&#8217;s entity.</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>Now, lets say I wanted to add a property called Description to this, I might update the above code as follows:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>If I change nothing else other than this, I when I run my program I&#8217;d expect that the Description column would be added to the database when I saved a new item.  But, instead, I get the following exception when I save an item:</p>
+
+<pre>
+Microsoft.WindowsAzure.MobileServices.MobileServiceInvalidOperationException was unhandled by user code
+  HResult=-2146233079
+  Message=Error: Unable to insert a null value for new property 'description'
+  Source=Microsoft.Azure.Zumo.WindowsPhone8.Managed
+  InnerException: 
+</pre>
+
+
+<p>I was more than a little baffled by this concept, my first read of this exception got me thinking things like: &#8221;<em>who on earth would design a dynamic data feature to create NON NULLABLE FIELDS?!?!?</em>&#8221; and other less kind statements.  Well, as they say, pride commeth before the fall.  As I&#8217;ve researched this error, I&#8217;ve realized it&#8217;s entirely reasonable.  Why?  Ah&#8230; REST.</p>
+
+<p>Azure Mobile Services data offering is built as a set of RESTful services, using JSON serialization.  That means that initially my request to add an entry named &#8220;Foo&#8221; would have looked like this:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>When I added the additional field but didn&#8217;t set a value for it, the serializer added it to the submitted output, resulting in:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>Sure, that makes sense &#8230; Unless your the SQL Server who is now being asked to add that new field.  Why?  Because you&#8217;ve got NO IDEA what the data type of description is.  Whoops!  So how do we solve this?  Well, there are a couple of ways we can do that.</p>
+
+<ol>
+<li>We could add the field manually in SQL Server, specifying the data type desired.  This works great, but kindof unravels the whole point of Dynamic Schema.</li>
+<li>We could put in temporary code, so that the first time we send this up, it&#8217;s populated.  After that, the field is nullable so there is no problem storing nulls from that point onward.  I&#8217;m not a big fan of &#8220;secret recipes&#8221; in code bases, and this model leaves no trace for the next guy of the &#8220;proper procedure&#8221; so I decided against it.</li>
+<li>We could add a Setup script, which pushed a single completely populated entity.  This could be run all sorts of ways, from a unit test to a rake task, but would ensure the schema desired.  This solution is better, but still a little buried for me.</li>
+<li>We could make the DBAs amongst us cry, and decide that our entities will provide a default value for reference types such as string (note value types don&#8217;t have this problem, they can&#8217;t be null) in the constructor of our type.  This technically takes more space, and I&#8217;m certain the DBAs will yell at me about other reasons, but on the other hand it leaves a clear pattern to be followed by future developers.</li>
+</ol>
+
+
+<p>I chose option 4.  That resulted in this code:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>Now, you can feel free to make a different choice, but for me and my project, this pattern is working just fine.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/windows-phone-8-development-on-a-mac/">Windows Phone 8 Development on a Mac</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-11T07:02:00-06:00" pubdate data-updated="true">Dec 11<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So you want to do Windows Phone 8 development on a Mac, the traditional answer to this has been, your out of luck.  The hurdles are two fold:</p>
+
+<ul>
+<li>The Windows Phone Emulator has always, since Windows Phone 7, been run as a HyperV virtual machine.  This means if your running Windows itself inside a VM, running the emulator is like trying to run a VM inside a VM.  This has traditionally been an unsupported scenario.</li>
+<li>The Windows Phone 8 Emulator raised the bar again, because it only runs on Windows 8.  That causes two problems for us.  The first is that Boot Camp hasn&#8217;t been updated to support Windows 8 yet, so we can&#8217;t (easily) get the necessary drivers for our Mac to run Windows 8.</li>
+<li>The second problem that Windows 8 requirement brings us is that HyperV in Windows 8 requires <a href="http://www.ryanlowdermilk.com/2012/09/does-my-computer-support-slat/">&#8220;Second Level Address Translation&#8221;</a> support from it&#8217;s CPUs.  That means the CPU its running on has to support very new virtualization support in order to run.  That will make it even more difficult for a VM solution to work for us.</li>
+</ul>
+
+
+<p>But fear not my valiant friends, for there is an answer.  <a href="http://www.vmware.com/products/fusion/overview.html">VMWare Fusion</a> has heard your cries, and there is a way to solve this problem.  Here are the necessary steps, care of <a href="http://social.msdn.microsoft.com/Forums/en-US/wptools/thread/ed72010c-321c-4667-97b2-3ff1540e7f87">an awesome MSDN forums post</a>:</p>
+
+<ol>
+<li>Using <a href="http://www.vmware.com/products/fusion/overview.html">VMWare Fusion 5</a> or better, create and install a Windows 8 virtual machine.  If you have one already, your fine.</li>
+<li>Stop the virtual machine by shutting down Windows 8.</li>
+<li>At the VMWare Virtual Machine list, right click Windows 8 machine then click &#8220;Show in Finder&#8221;.</li>
+<li>Right click the file then click &#8220;Show package contents&#8221;, then find and open with a text editor a file with the extension .vmx</li>
+<li>Go till the end of the file and add this two lines (first check whether they were previously added):
+ <pre>
+ hypervisor.cpuid.v0 = "FALSE"
+ vhv.enable = "TRUE"
+ </pre></li>
+<li>At the VMWare Virtual Machine list, right click Windows 8, click &#8220;Preferences&#8221; then &#8220;Advanced&#8221;. Choose &#8220;Intel VT-X with EPT&#8221; as &#8220;Preferred virtualization engine&#8221;.</li>
+<li>Start your virtual machine, launch Visual Studio, and develop away.  The emulator will happily run.</li>
+</ol>
+
+
+<p>Obviously this solution is a &#8220;It works on my machine&#8221; situation, but I&#8217;m sure you will find success down this path.</p>
+
+<h2>Update 12/12/12</h2>
+
+<p>Several questions were asked, so quickly:</p>
+
+<ul>
+<li>Does Parallels support this?  As of today, no.  <a href="http://forum.parallels.com/showthread.php?t=264780">See this support forum post from them.</a></li>
+<li>Does your processor have to support SLAT?  Yes, your physical hardware must be current enough to support SLAT.  For Macs, this means you need to be running an i5 or i7 mac.</li>
+<li>What hardware are you running?  As of today, I&#8217;m running this solution on a Thunderbolt MacBook Pro running a 2.3 Ghz i7 and Lion, not Mountain Lion.  The official Model Identifier for my mac is MacBookPro8,3.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/azure-bootcamp-in-houston/">Azure Bootcamp in Houston</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-05T09:47:00-05:00" pubdate data-updated="true">Oct 5<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/ie-logo-small.jpg" title="Improving Enterprises Logo" alt="Improving Enterprises Logo"></p>
+
+<p>How would you like a <a href="http://www.improvingenterprises.com/events/event/windows-azure-developer-camp/">free full day of training</a> from the best and brightest of <a href="http://improvingenterprises.com">Improving Enterprises</a>?  Well have I got a deal for you!</p>
+
+<p>On October the 22nd, at the Microsoft Offices in Houston, we will be hosting a Windows Azure Developer Camp.  We will be covering all of the basics of Windows Azure, from IaaS to Websites, from SQL Azure to Mobile Services.  And what&#8217;s more?  We&#8217;ve got some rockstar trainers for you.  <a href="http://www.improvingenterprises.com/about/people/todd-girvin/bio/">Todd Girvin</a>, <a href="http://www.improvingenterprises.com/about/people/allen-hurst/bio/">Allen Hurst</a>, <a href="http://www.improvingenterprises.com/about/people/devlin-liles/bio/">Devlin Liles</a>, <a href="http://www.improvingenterprises.com/about/people/chris-weldon/bio/">Chris Weldon</a>, <a href="http://www.improvingenterprises.com/about/people/ben-floyd/bio/">Ben Floyd</a> and <a href="http://www.improvingenterprises.com/about/people/tim-rayburn/bio/">myself</a> will guide you through all the hands on labs, and you&#8217;ll leave ready to bring the incredible scale and ease of Windows Azure to your next project.</p>
+
+<p>While you&#8217;re there, be sure to ask about our <a href="http://www.improvingenterprises.com/2012/09/10/improving-and-alphaware-join-forces/">incredible new Houston offices</a>.  Need consultants in Houston?  We&#8217;re open for business and ready to help.  Looking for a new job?  Drop me a line, and we&#8217;ll talk about the opportunities for you to start improving.</p>
+
+<p>Even if none of that is true, be sure to ask us that day about our upcoming Monday Night Football event.</p>
+
+<h1><a href="http://www.improvingenterprises.com/events/event/windows-azure-developer-camp/">Signup Now</a></h1>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/six-time-microsoft-mvp/">Six Time Microsoft MVP</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-01T14:11:00-05:00" pubdate data-updated="true">Jul 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;m thrilled to announce that Microsoft has deemed fit to award my efforts over the last year with a Microsoft MVP for Connected Systems Development, once again.  This marks my sixth year as an MVP, a community of such passionate leaders, contributors and influencers that it could boggle the mind.  Every MVP is different, but each brings a passion about their technology that is infectious.</p>
+
+<p>I look forward to once again getting the chance to visit the Microsoft campus during the MVP Summit, and to continue to help start conversations everywhere I go.  I&#8217;m also thrilled to announce that <a href="http://devlinliles.com">Devlin Liles</a>, my co-author for <a href="http://www.packtpub.com/entity-framework-4-1-experts-test-driven-development-architecture-cookbook/book">Entity Framework 4.1 : An Expert&#8217;s Cookbook</a>, was also re-awarded today as an MVP for Data Platform Development.  With that, I&#8217;ll let you get back to your day, and I&#8217;ll get back to celebrating my wife&#8217;s birthday which is also July 1st and which she has shared the celebration of my award for the last six years.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/introducing-the-highway-framework/">Introducing the Highway Framework</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-29T07:18:00-05:00" pubdate data-updated="true">Jun 29<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I&#8217;m pleased to announce a combined effort of <a href="http://TimRayburn.net/about/">myself</a> and <a href="http://devlinliles.com/">Devlin Liles</a> which we are calling <a href="http://HighwayFramework.com">The Highway Framework</a>, &#8220;The fastest and smoothest way to great architecture&#8221;.  For this initial release we&#8217;ve focused on data access architecture with Entity Framework, a topic we&#8217;ve recently <a href="http://www.packtpub.com/entity-framework-4-1-experts-test-driven-development-architecture-cookbook/book">written a book</a> about, but you can expect further greatness from us on other topics in the future.  As you most likely know, Devlin and I are both consultants with <a href="http://improvingenterprises.com">Improving Enterprises</a> and this is framework definitely distills alot of learning from our various clients and from other Improving consultants.  We invite you to read on, check out <a href="http://HighwayFramework.com">the source code on github</a>, our <a href="http://highwayframework.github.com/Highway.Data/docs/index.html">API Documentation</a>, <a href="http://highwayframework.github.com/Highway.Data">review the website</a>, and tells us what you think.  All that said, let&#8217;s tell you about Highway.Data.</p>
+
+<h2>Highway.Data</h2>
+
+<p>This project focuses on bringing our recommendations for data access, specifically the Repository and Specification patterns.  For this intial release we&#8217;ve focused on delivering these for Entity Framework, but in the future you can look foward implementations for NHibernate and other data access structures.  If we&#8217;re going to work with Entity Framework in a code first fashion, we will need some POCOs.  Our guidance with Highway.Data is not to use the Mapping attributes, which instantly make your POCOs aware of your database, but rather to use a mapping class.  We provide an interface you can implement to configure your Entity Framework mappings, it is called IMappingConfiguration.  So let&#8217;s say we&#8217;re working with the following POCO:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>We can create a very simply mapping class to store that in the database in the People table:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>Now all that is left is to register with our container, and we&#8217;re off and running.  For this demo, we&#8217;ll show how to do that with Castle.Windsor:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>We now have a completely wired up Highway.Data implementation, and can resolved IRepository into any of our classes which need to access data.  But that&#8217;s only the first half of Highway.Data.</p>
+
+<h2>Specification Pattern</h2>
+
+<p>In addition to a repository pattern implementation, we also provide an implementation of Specification pattern in Highway.Data.  We use the pattern to ensure our queries are all testable, without access to a database, and also to be able to quickly enumerate, and if necessary generate SQL for, all the queries are project uses.  There are few things that will make a DBA smile more than to learn that a project using an ORM can quickly produce for him or her a list of all queries used by that application.  That said, let me show you how you create a simple query against the LastName property of our Person.</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>As you can see, we create a class to represent our query, and provide the query implementation to the ContextQuery property.  Once we&#8217;ve created this query, using it is as simple as:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized&#8217; for RubyPython::Python:Module</p>
+
+<p>Obviously, this could be any class in your application, we depend on an IRepository, and hand the Find method our query, and our query it&#8217;s parameter.  And that&#8217;s it!</p>
+
+<h2>NuGet Packages</h2>
+
+<p>We provide three NuGet Packages:</p>
+
+<ul>
+<li><a href="https://nuget.org/packages/Highway.Data.EntityFramework">Highway.Data.EntityFramework</a> is the package most people will use, and contains our full Entity Framework implementation.</li>
+<li><a href="https://nuget.org/packages/Highway.Data.EntityFramework.Castle">Highway.Data.EntityFramework.Castle</a> contains a Windsor Installer already setup for everything Highway.Data needs other than your Repository, Context and Mappings.</li>
+<li><a href="https://nuget.org/packages/Highway.Data">Highway.Data</a> is our core abstractions, without an ORM dependency.</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/write-less-code-theme-detection-on-windows-phone-7/">Write Less Code - Theme Detection on Windows Phone 7</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-16T21:33:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I spent alot of time tonight trying to find an elegant solution to the problem of detecting the light or dark theme from Windows Phone 7 and changing images based on those options.  I was people that were doing a ToString in the Foreground Brush, or writing custom methods for every image in their code-behind, and all of that felt  &#8230; dirty.  Finally I <a href="http://stackoverflow.com/questions/7198046/how-to-swap-images-based-on-the-current-theme-wp7">came across this solution on StackOverflow</a> which is not the &#8220;accepted&#8221; answer, but is the highest voted answer.  It was good enough to get me to post the answer here as well, so I can remember it, and hopefully some of you who might be working to hard can find a more elegant solution.</p>
+
+<p>Liquid error: No such file or directory - python -c &#8220;import sys; print sys.executable&#8221;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/pylon-solver-for-windows-phone-7/">Pylon Solver for Windows Phone 7</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-14T19:22:00-05:00" pubdate data-updated="true">Jun 14<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="left" src="/images/pylonsolver.png">
+I&#8217;ve recently started developing for Windows Phone 7 because my apprentices have been very interested in the mobile space.  My first application is a utility used by players in <a href="http://swtor.com">Star Wars : The Old Republic</a> called <a href="http://windowsphone.com/s?appid=9b2a529d-8b02-4db7-a954-71677a50268b">Pylon Solver</a>.  The application is a solver for the Ancient Pylons puzzle in Eternity Vault.  But unlike so many of the apps out there, this one addresses a common problem, it is color-blind friendly.  Most of the solvers out there use just the colors, not the shapes, from the game.  This app uses both to provide a quick easy interface to solving the puzzle.  I&#8217;d appreciate any <a href="http://swtor.com">SWTOR</a> players out there downloading it, trying it out, and letting me know what they think, and leave a review.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/join-scottgu-for-meet-windows-azure/">Join ScottGu for Meet Windows Azure</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-06T19:17:00-05:00" pubdate data-updated="true">Jun 6<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Just a quick note here, tomorrow (June 7th) Scott Guthrie will be hosting a live stream event called <a href="http://www.meetwindowsazure.com/">Meet Windows Azure</a>.  The event will start at 1PM PDT (2PM MDT, 3PM CDT, 4PM EDT) and it will be covering some amazing new features in Windows Azure.  In particular I&#8217;d like to draw your attention to this snippet, from their <a href="http://blogs.msdn.com/b/windowsazure/archive/2012/06/06/announcing-new-windows-azure-services-to-deliver-hybrid-cloud.aspx">announcement blog post</a> which should get your attention.</p>
+
+<blockquote><p>Build web sites and applications with this highly elastic solution supporting .NET, Node.js, and PHP while using common deployment techniques like Git and FTP.  Windows Azure Web Sites will also allow easy deployment of open source applications like WordPress, Joomla!, DotNetNuke, Umbraco, and Drupal to the cloud with a few clicks.</p></blockquote>
+
+<p>What&#8217;s that?  Quick and easy deployment from GIT to Azure?  You&#8217;ve got my attention.  But their not done yet, then they throw down:</p>
+
+<blockquote><p>Windows Azure SDK June 2012 includes new developer capabilities for writing code against the latest service improvements with updated support for Java, PHP, and .NET, and the addition of Python as a supported language on Windows Azure.  Additionally, the SDK now provides 100% command line support for both Windows and Mac.</p></blockquote>
+
+<p>Ok, where are the hidden cameras? 100% command line support for both Mac and Windows?!  Sign me up!</p>
+
+<p>Join me tomorrow for <a href="http://www.meetwindowsazure.com/">Meet Windows Azure</a> and lets see what ScottGu has done to improve Azure.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/windows-phone-bootcamp-and-hackathon-at-big-d-2012/">Windows Phone Bootcamp and Hackathon at Big (D) 2012</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-28T08:38:00-05:00" pubdate data-updated="true">May 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Want to learn what it takes to build a Windows Phone application?</p>
+
+<p>The Windows Phone Bootcamp and Hackathon is a <strong>free</strong>, two-day event chock-full of everything you need to know to develop a Windows Phone application followed by an application building competition. Whether you</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

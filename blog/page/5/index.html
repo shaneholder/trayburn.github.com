@@ -1,0 +1,984 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="In our last installment, we learned the basics of how to use DictionaryAdapter to use an interface to access loosely structured data.&#160; This time &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/page/5/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/dictionaryadapter-is-love-part-2/">DictionaryAdapter Is Love (Part 2)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-07T00:00:00-05:00" pubdate data-updated="true">Sep 7<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In our last installment, we learned the basics of how to use DictionaryAdapter to use an interface to access loosely structured data.&#160; This time, we’re going to show a somewhat more complex scenario than simple properties.&#160; Consider the following:</p>  <p>&#160;</p>  <pre class="brush: csharp;">        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { 
+                        &quot;UserName&quot;, new Dictionary&lt;string,object&gt;()
+                        {
+                            { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                            { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                        }
+                    }
+                };
+        }</pre>
+
+<p>As you can see, we’ve nested dictionaries this time, where the UserName key has a value of another dictionary, with two keys itself.&#160; The simplest model for this is to simple add another interface, IUserName, which represents this nested data.&#160; Here is a look at that code:</p>
+
+<pre class="brush: csharp;">    public interface IUserData
+    {
+        [Key(&quot;UserId&quot;)]
+        int Id { get; set; }
+
+        [Key(&quot;UserName&quot;)]
+        IUserName Name { get; set; }
+    }
+
+    public interface IUserName
+    {
+        [Key(&quot;UserFirstName&quot;)]
+        string FirstName { get; set; }
+
+        [Key(&quot;UserMiddleName&quot;)]
+        string MiddleName { get; set; }
+
+        [Key(&quot;UserLastName&quot;)]
+        string LastName { get; set; }
+    }</pre>
+
+<p>So lets see how DictionaryAdapter (it’s called DA by its friends, which if you’re still reading at this point you clearly are) … so lets see how DA handles this scenario.&#160; We’d hope that something like this would work:</p>
+
+<pre class="brush: csharp;">        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { 
+                        &quot;UserName&quot;, new Dictionary&lt;string,object&gt;()
+                        {
+                            { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                            { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                        }
+                    }
+                };
+
+            var data = new DictionaryAdapterFactory().GetAdapter&lt;IUserData&gt;(dict);
+
+            Console.WriteLine(data.Name.FirstName);
+        }</pre>
+
+<p>Does it? Nope.&#160; Why?&#160; Let’s look at the details:</p>
+
+<pre class="brush: csharp;">System.InvalidCastException was unhandled
+  Message=Unable to cast object of type 'System.Collections.Generic.Dictionary`2[System.String,System.Object]' to type 'Part2.IUserName'.
+  Source=Part2.Part2.IUserData.DictionaryAdapter
+  StackTrace:
+       at Part2.UserDataDictionaryAdapter.get_Name()
+       at Part2.Program.Main(String[] args) in C:\source\BlogPosts\DictionaryAdapterIsLove\Part2\Program.cs:line 32
+       at System.AppDomain._nExecuteAssembly(RuntimeAssembly assembly, String[] args)
+       at System.AppDomain.ExecuteAssembly(String assemblyFile, Evidence assemblySecurity, String[] args)
+       at Microsoft.VisualStudio.HostingProcess.HostProc.RunUsersAssembly()
+       at System.Threading.ThreadHelper.ThreadStart_Context(Object state)
+       at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean ignoreSyncCtx)
+       at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state)
+       at System.Threading.ThreadHelper.ThreadStart()
+  InnerException: </pre>
+
+<p>I have to give credit where credit is due, this make pretty darned clear what the problem is.&#160; Our nested dictionary is not, itself, being wrapped so when DA tries to retrieve it and cast it to IUserName it, obviously, cannot.</p>
+
+<p><strong>That’s great Tim … but how do I fix that?</strong></p>
+
+<p>Enter behaviors.&#160; Dictionary adapter has an abstraction over anything that modifies how it does its work called Behaviors.&#160; You can create behaviors for all sorts of things, but one of them is Property Getting.&#160; To modify this behavior you need to do two things:</p>
+
+<ol>
+  <li>Create a class which implements the IDictionaryPropertyGetter interface. </li>
+
+  <li>Modify your request to the Factory to request your DA use that behavior. </li>
+</ol>
+
+<p>If we take a peek at IDictionaryPropertyGetter you will see the following definition:</p>
+
+<pre class="brush: csharp;">    public interface IDictionaryPropertyGetter : IDictionaryBehavior
+    {
+        object GetPropertyValue(IDictionaryAdapter dictionaryAdapter, string key, object storedValue, PropertyDescriptor property, bool ifExists);
+    }</pre>
+
+<p>As you can see this isn’t terribly complex.&#160; But you’ll also notice that it implements IDictionaryBehavior, so lets take a peek at that shall we?</p>
+
+<pre class="brush: csharp;">    public interface IDictionaryBehavior
+    {
+        int ExecutionOrder { get; }
+    }</pre>
+
+<p>Again, not very complex at all.&#160; So we need a class that will implement both of these, and which will examine the <strong>propertyDescriptor </strong>parameter to determine if the requested Type is itself an interface which is not assignable from the type of <strong>storedValue</strong> but that <strong>storedValue</strong> is assignable from IDictionary.&#160; If those conditions are met, we can create another DictionaryAdapter to adapt to the new interface.&#160; Here is a simple example of that class :</p>
+
+<pre class="brush: csharp;">    public class NestedDictionaryGetterBehavior : IDictionaryPropertyGetter
+    {
+        public object GetPropertyValue(IDictionaryAdapter dictionaryAdapter, string key, object storedValue, PropertyDescriptor property, bool ifExists)
+        {
+            if (property.PropertyType.IsAssignableFrom(storedValue.GetType()))
+            {
+                return storedValue;
+            }
+
+            if (property.PropertyType.IsInterface &amp;&amp; IsDictionary(storedValue.GetType()))
+            {
+                return dictionaryAdapter.This.Factory.GetAdapter(property.PropertyType, storedValue as IDictionary);
+            }
+
+            return storedValue;
+        }
+
+        public int ExecutionOrder
+        {
+            get { return 0; }
+        }
+
+        private bool IsDictionary(Type type)
+        {
+            return typeof(IDictionary).IsAssignableFrom(type);
+        }
+    }</pre>
+
+<p>As you can see, some code, but not lots of code.&#160; Our example should skip the first <strong>if</strong> statement and go into the second one, returning the new DictionaryAdapter.&#160; Now we need to do step 2, modify our original request to the Factory to add our behavior.&#160; Here is what the code looks like once we’ve done that:</p>
+
+<pre class="brush: csharp;">        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { 
+                        &quot;UserName&quot;, new Dictionary&lt;string,object&gt;()
+                        {
+                            { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                            { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                        }
+                    }
+                };
+
+            var data = new DictionaryAdapterFactory()
+                .GetAdapter(typeof(IUserData),
+                dict,
+                new DictionaryDescriptor().AddBehavior(new NestedDictionaryGetterBehavior())) as IUserData;
+
+            Console.WriteLine(data.Name.FirstName);
+            Console.ReadLine();
+        }</pre>
+
+<p>Now, that gets a little tedious to do every time, and I can assure you that Craig Neuwirt hates tedious.&#160; As such, DictionaryAdapter will look for any <strong>attributes</strong> on your interface which implement IDictionaryBehavior and add them for you automatically.&#160; So with a very simple refactoring of our class:</p>
+
+<pre class="brush: csharp;">    public class NestedDictionaryGetterBehavior : Attribute, IDictionaryPropertyGetter</pre>
+
+<p>We can then modify our interface:</p>
+
+<pre class="brush: csharp;">    [NestedDictionaryGetterBehavior]
+    public interface IUserData
+    {
+        [Key(&quot;UserId&quot;)]
+        int Id { get; set; }
+
+        [Key(&quot;UserName&quot;)]
+        IUserName Name { get; set; }
+    }</pre>
+
+<p>And move back to a very simple DictionaryAdapterFactory request:</p>
+
+<pre class="brush: csharp;">            var data = new DictionaryAdapterFactory().GetAdapter&lt;IUserData&gt;(dict);</pre>
+
+<p>And I think that’s enough for this time.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/dictionaryadapter-is-love-part-1/">DictionaryAdapter Is Love (Part 1)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-03T00:00:00-05:00" pubdate data-updated="true">Sep 3<span>rd</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Nestled deep within the Castle Project repository, there is a wonderful library maintained by Improving Enterprises&rsquo; own Craig Neuwirt which can forever change how you deal with the assortment of Key/Value pair structures in our programming life.&nbsp; That library is called DictionaryAdapter, or more properly Castle.Components.DictionaryAdapter and the source can be found at : <a title="http://github.com/castleproject/Castle.Core" href="http://github.com/castleproject/Castle.Core">http://github.com/castleproject/Castle.Core</a></p>
+<p>So how does this library work?&nbsp; Let&rsquo;s take a quick tour around, shall we?</p>
+<p><strong>So you&rsquo;ve got a Dictionary&hellip;</strong></p>
+<pre class="brush: csharp;">
+        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                    { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                };
+        }</pre>
+<p>We deal with dictionaries like this all the time in .NET, the easiest example of which is ASP.NET Session but many others exist.&nbsp; Now lets assume that we wanted to access this information in a structured way.&nbsp; That is to say, instead of writing something like:</p>
+<pre class="brush: csharp;">
+        public static string UglyWayToGetUserFirstName(Dictionary&lt;string, object&gt; dict)
+        {
+            string userFirstName = &quot;UserFirstName&quot;;
+            if (dict.ContainsKey(userFirstName)) 
+                return dict[userFirstName] as string;
+            return null;
+        }</pre>
+<p>I instead want to write code which access the information using a strongly typed interfaced like this:</p>
+<pre class="brush: csharp;">
+    public interface IUserData
+    {
+        int UserId { get; set; }
+        string UserFirstName { get; set; }
+        string UserLastName { get; set; }
+    }</pre>
+<p>Which would produce code like this:</p>
+<pre class="brush: csharp;">
+        public static string CleanWayToGetUserFirstName(IUserData data)
+        {
+            return data.UserFirstName;
+        }</pre>
+<p>How do I do that?&nbsp; DictionaryAdapter to the rescue.&nbsp; Add a reference to Castle.Core, and a using statement for Castle.Components.DictionaryAdapter and then the following code will work:</p>
+<pre class="brush: csharp;">
+        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                    { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                };
+
+            IUserData data = new DictionaryAdapterFactory()
+               .GetAdapter&lt;IUserData&gt;(dict);
+
+            Console.WriteLine(CleanWayToGetUserFirstName(data));
+            Console.ReadLine();
+        }</pre>
+<p>Simple, eh?&nbsp; But there is much more coming.&nbsp; As you can see, there is a default convention that matches the property name of our interface to the key in the dictionary.&nbsp; Lets assume that you&rsquo;re the type of person who believes having the word User in front of each property on the interface is a bad idea, but keeping it on the keys which lack the context of being IUserData makes sense.&nbsp; No problem, enter aliasing.&nbsp; Modify your interface like so:</p>
+<pre class="brush: csharp;">
+    public interface IUserData
+    {
+        [Key(&quot;UserId&quot;)]
+        int Id { get; set; }
+
+        [Key(&quot;UserFirstName&quot;)]
+        string FirstName { get; set; }
+
+        [Key(&quot;UserLastName&quot;)]
+        string LastName { get; set; }
+    }</pre>
+<p>And now your&nbsp; interface main method (no longer using our rather useless CleanWayToGetUserFirstName example above) can be refactored like so:</p>
+<pre class="brush: csharp;">
+        static void Main(string[] args)
+        {
+            var dict = new Dictionary&lt;string, object&gt;()
+                {
+                    { &quot;UserId&quot;, 1234567 },
+                    { &quot;UserFirstName&quot;, &quot;Tim&quot; },
+                    { &quot;UserLastName&quot;, &quot;Rayburn&quot; }
+                };
+
+            IUserData data = new DictionaryAdapterFactory()
+                .GetAdapter&lt;IUserData&gt;(dict);
+
+            Console.WriteLine(data.FirstName);
+            Console.ReadLine();
+        }</pre>
+<p>That&rsquo;s a good introduction to the basics of DictionaryAdapter, but there is a lot more depth here that I hope to cover in future posts.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/work-for-the-best-hellip-pity-the-rest/">Work for the Best &hellip; Pity the Rest</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-25T00:00:00-05:00" pubdate data-updated="true">Aug 25<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Do you work for a company that truly, I mean truly, values technical leadership and skills?&#160; Do they value your abilities to communicate with non-IT staff?&#160; Do they encourage you to get involved in the community through a bonus compensation plan that includes things as simple as <strong>attending</strong> a local user group?&#160; No?&#160; Then perhaps its time to Improve your outlook…</p>  <p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/WorkfortheBestPitytheRest_9268/Improving%20Logo_2.jpg"><img style="border-bottom: 0px; border-left: 0px; display: block; float: none; margin-left: auto; border-top: 0px; margin-right: auto; border-right: 0px" title="Improving Logo" border="0" alt="Improving Logo" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/WorkfortheBestPitytheRest_9268/Improving%20Logo_thumb.jpg" width="240" height="86" /></a> </p>  <p>Improving Enterprises, my employer since March of 2009, is just such and employer.&#160; Improving has to be doing something right, after all we’ve just been named to the Inc. 500/5000 list, placing us at #210 in the nation, but number #10 fastest growing company in Dallas, and #18 in IT Services nationwide.&#160; And this is our second year on that list.</p>  <p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/WorkfortheBestPitytheRest_9268/inc5000_2010_logo_2.gif"><img style="border-bottom: 0px; border-left: 0px; display: block; float: none; margin-left: auto; border-top: 0px; margin-right: auto; border-right: 0px" title="inc5000_2010_logo" border="0" alt="inc5000_2010_logo" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/WorkfortheBestPitytheRest_9268/inc5000_2010_logo_thumb.gif" width="240" height="32" /></a> </p>  <p>Now why am I telling you all of this?&#160; Is it just to brag about how great my life at Improving is?&#160; To rub in your face that I get to work for a company with 4 Microsoft MVPs on staff?&#160; No, none of that…</p>  <p><strong>It’s because we’re hiring … and in a big way!</strong></p>  <p>How big?&#160; We’ve got over 20 positions open at the current time.&#160; Are we just looking for rock stars?&#160; Not at all … we’ve got positions available at Consultant, Senior Consultant, and Principal Consultant available.&#160; Consultants are generally people just out of school, or with a year or two of experience, and it goes up from there.</p>  <p><strong>Why should you work for us?</strong></p>  <p>For me, it is just this simple : I like to be challenged at work, I want to feel that my co-workers are challenging me to expand my horizons.&#160; I’ve felt that way every day since I started at Improving.</p>  <p>Other perks?&#160; How about an annual company retreat to Vegas.&#160; A bonus plan.&#160; And an incredible work environment.</p>  <p><strong>CALL TO ACTION – It’s time to work for the best, and pity the rest … if you’re interested in working for an incredible organization like Improving, then drop me an email with your resume to <a href="mailto:Tim@TimRayburn.net">Tim@TimRayburn.net</a> and we’ll get you started along the process.</strong></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/why-should-i-got-to-dallas-techfest/">Why Should I Go to Dallas TechFest?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-26T00:00:00-05:00" pubdate data-updated="true">Jul 26<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/WhyshouldIgottoDallasTechFest_6D8F/Banner%202010_2.png"><img style="border-right-width: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto" title="Banner 2010" border="0" alt="Banner 2010" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/WhyshouldIgottoDallasTechFest_6D8F/Banner%202010_thumb.png" width="503" height="150" /></a> </p>  <p>So I’m always pushing Dallas TechFest, and that I believe it is the best value day you can spend away from work, but you don’t have to listen to me…</p>  <ul>   <li>“There are also some big names from other technologies at TechFest as well, such as<a href="http://thirstyhead.com/">Scott Davis</a> (<a href="http://grails.org">Grails</a> guru extraordinaire), <a href="http://blogs.tedneward.com/">Ted Neward</a> (.NET developer and consultant), <a href="http://themidnightcoders.com/">Mark Piller</a> (Midnight Coders), and <a href="http://www.springinaction.com/">Craig Walls</a> (SpringSource) to name but a few.&#160; Sounds excellent, right? Well, today&#8217;s your lucky day. If you haven&#8217;t registered yet there&#8217;s still time, and there&#8217;s a big discount to boot! <a href="http://dallastechfest.com/">Register now</a> and use the discount code coldfusion to get in for only $25. That&#8217;s right, a mere $25 for all this geeky goodness.” from <a href="http://blog.mattwoodward.com/attend-dallas-techfest-for-only-25">Matt Woodward</a> </li>    <li>“If you are unable to attend CFUnited and you are in or are able to travel to the Dallas, TX area you should really check out Dallas TechFest.&#160; I&#8217;ll be speaking there again this year on Getting Started with Mura CMS Development.” from <a href="http://stevegood.org/blog/ill-be-speaking-at-dallas-techfest/">Steve Good</a> </li>    <li>“This year’s schedule features well-known and local speakers from across 6 different communities including .NET, Java, PHP, Adobe, ColdFusion, Apple and IT Pro.&#160; Registration is normally $50, but if you use the code “dotnet” you can get a $25 discount!&#160; Make sure you sign up today as space is filling up quickly” from <a href="http://chriskoenig.net/2010/07/20/time-for-dallas-techfest/">Chris Koenig</a> </li> </ul>  <p>If you haven’t registered yet, then what are you waiting for?&#160; Online registration is open for the another day or so, so head over to <a href="http://DallasTechFest.EventBrite.Com">http://DallasTechFest.EventBrite.Com</a> and use one of the discount codes above to register for only $25.&#160; Or, register at the door, but that will cost $60.&#160; Feel like registering ahead of time now?&#160; I thought so.</p>  <ul>   <p></p> </ul>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/another-database-option-mongodb/">Another Database Option - MongoDB</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-12T00:00:00-05:00" pubdate data-updated="true">Jun 12<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/AnotherDatabaseOptionMongoDB_B26D/logo-mongodb_2.png"><img style="border-bottom: 0px; border-left: 0px; display: inline; margin-left: 0px; border-top: 0px; margin-right: 0px; border-right: 0px" title="logo-mongodb" border="0" alt="logo-mongodb" align="right" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/AnotherDatabaseOptionMongoDB_B26D/logo-mongodb_thumb.png" width="217" height="90" /></a> It’s been far to long since I’ve talked here about what I’m working on, so it is time to correct that.&#160; I’ve been working with a client who has some very unique business requirements, and one of them deals with a lot of flexibility of their data storage.&#160; As such we were looking into different types of storage, because while SQL Server is in fact a wonderful product, it is not known for its flexibility of storage.</p>  <p>This quest led us to the door of a large number of databases in the “No SQL” arena, and eventually to <a href="http://mongodb.org/">MongoDB</a>.&#160; MongoDB is a document database, which stores what can best be described to the .NET Developer as a Dictionary&lt;string,object&gt;.&#160; This structure allows for nesting of structures (where the object stored is another Dictionary) and is a very clever structure if you ask me.&#160; But, document databases do not work like relational databases.&#160; There are several important things you need to realize:</p>  <ol>   <li>Documents databases do not generally support the concept of JOINS.&#160; If you retrieve data, and it refers to other data, then you need to make another call to the database to retrieve that data.</li>    <ul>     <li>This leads to the core concept of preferring to embed (in the dictionary) data rather than refer to data.</li>   </ul>    <li>Document databases do not generally support a defined structure, they do not have tables but rather “collections” which have no definition in the database.&#160; It is perfectly valid for one entry in a collection to have a key “dateOfAccount” which is a string type, and another with that same key as a date.</li>    <li>Document databases do not include a validation structure, any validation of the data (including structural data as noted above) must be enforced by your application.</li> </ol>  <p>In the world of .NET there are several drivers, but the one my team, <a href="http://blog.davidohara.net/">David O’Hara</a> and Craig Neuwirt and I, decided on was <a href="http://github.com/samus/mongodb-csharp">MongoDB-CSharp</a>.&#160; They have just released version 0.9 beta 1, which moves the driver a lot closer to a familiarity level for most .NET developers.&#160; Now we had to address on our project all of the above problems, and key to us doing so has been a component called <a href="http://www.castleproject.org/castle/download.html">DictionaryAdapater</a> from the <a href="http://www.castleproject.org/">Castle Project</a>.&#160; But that is a topic for another blog post.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/ipad-becomes-toughpad/">iPad Becomes toughPad</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-07T00:00:00-05:00" pubdate data-updated="true">Jun 7<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>So on Thursday afternoon, I picked up a beautiful new iPad 16gb WiFi.&#160; As an avid iPhone user, I find the device to be everything I expected, and used it all day Friday happily.</p>  <p>On Saturday night, technically Sunday morning, I was leaving the home of my brother after a night of playing poker, and drove out of his driveway with the iPad on the roof of my Suburban.&#160; My drive was 5 minutes of city streets, and somewhere along the way, on a road I was going about 30 miles per hour on, my iPad took the plunge.&#160; Now, of course, I didn’t notice this at the time.&#160; So it fell into the roadway and I drove on.&#160; When I finally realized it was missing when I got home, I called my brother who went out from his place, we met in the middle and he found it in the road for me.&#160; The iPad had been in a black Belkin neoprene case I had purchased for my Kindle DX while I waited for Amazon to deliver my Speck CandyShell case, and the zipper was now ruined, so my brother left the tearing open of the case to me.&#160; What did I find inside, after a 5 foot fall going 30 mph and then (as I would soon discover) having been run over by another car?&#160; Here are the photos…</p>  <p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0200.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IMG_0200" border="0" alt="IMG_0200" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0200_thumb.jpg" width="184" height="244" /></a> <a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0206.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IMG_0206" border="0" alt="IMG_0206" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0206_thumb.jpg" width="184" height="244" /></a> </p>  <p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0208%5B1%5D.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IMG_0208[1]" border="0" alt="IMG_0208[1]" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0208%5B1%5D_thumb.jpg" width="184" height="244" /></a> </p>  <p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0201.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IMG_0201" border="0" alt="IMG_0201" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0201_thumb.jpg" width="184" height="244" /></a> <a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0202.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IMG_0202" border="0" alt="IMG_0202" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0202_thumb.jpg" width="184" height="244" /></a></p>  <p>&#160;<a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0205.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IMG_0205" border="0" alt="IMG_0205" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0205_thumb.jpg" width="184" height="244" /></a> <a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0204.jpg"><img style="border-bottom: 0px; border-left: 0px; display: inline; border-top: 0px; border-right: 0px" title="IMG_0204" border="0" alt="IMG_0204" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/iPadbecomestoughPad_8D6A/IMG_0204_thumb.jpg" width="184" height="244" /></a> </p>  <p>As you can see, clearly the device was run over, likely while laying glass-down in the case on the road, by a vehicle.&#160; The device though continues to work PERFECTLY.&#160; The screen has two areas showing some extra brightness where I suspect it is being pressed on from the rear, but despite this incredible event that I would have expected most devices to have been destroyed by, the iPad came through a little worse for wear but otherwise unscathed.&#160; The sides of the aluminum case are puckering away from the screen slightly, and the corners are roughed up a bit, but overall it came through amazingly well.</p>  <p>Thank you Apple for a quality product, and saving me from being killed by my wife when she heard about this event.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/dallas-techfest-2010-registration-is-open/">Dallas TechFest 2010 Registration Is Open</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-25T00:00:00-05:00" pubdate data-updated="true">May 25<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/DallasTechFest2010RegistrationIsOpen_D616/Large%20Logo%202010_2.png"><img style="border-bottom: 0px; border-left: 0px; display: inline; margin-left: 0px; border-top: 0px; margin-right: 0px; border-right: 0px" title="Large Logo 2010" border="0" alt="Large Logo 2010" align="right" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/DallasTechFest2010RegistrationIsOpen_D616/Large%20Logo%202010_thumb.png" width="187" height="240" /></a> </p>  <p>I’m thrilled to announce that registration is open for Dallas TechFest 2010 at <a href="http://dallastechfest.eventbrite.com">http://dallastechfest.eventbrite.com</a> </p>  <p>Who is speaking you ask?&#160; Well our incredible team of web volunteers are hard at work on a refresh of our website, but in the meantime, here are some names and topics from the .NET Track:</p>  <ul>   <li>ASP.NET MVC 2 and Azure Table Storage - Chander Dhall</li>    <li>Particle Physics Engine in Silverlight and ASP-mvc?! - <a href="http://amirrajan.net/">Amir Rajan</a></li>    <li>The Rich Standard: Getting Familiar with HTML 5 - <a href="http://blogs.telerik.com/ToddAnglin/Posts.aspx">Todd Anglin</a></li>    <li>Hard Lessons Learned From Being Stupid About TDD - <a href="http://mhinze.com/">Matt Hinze</a></li>    <li>Intro To Generics 0 to 60 - <a href="http://devlinliles.com/">Devlin Liles</a></li>    <li>M-V-V-M in Silverlight 4 - <a href="http://developingux.com">Caleb Jenkins</a></li>    <li>Unit Testing SharePoint using TypeMock - <a href="http://www.dotnetmafia.com/blogs/kylekelin/default.aspx">Kyle Kelin</a></li>    <li>10 Practices every developer should start right now - <a href="http://developingux.com">Caleb Jenkins</a></li>    <li>Monotouch for the iPhone - <a href="http://caseywatson.com/">Casey Watson</a></li>    <li>Dropping ACID: Building Scalable Systems That Work - <a href="http://phatboyg.com/">Chris Patterson</a></li> </ul>  <p>&#160;</p>  <p>Silverlight, SharePoint, iPhone, HTML5, as you can see we’ve got a packed schedule of .NET goodness … and that’s not to mention the Flex, ColdFusion, PHP, and Java tracks!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/why-go-to-the-mvp-summit/">Why Go to the MVP Summit?</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-02-20T00:00:00-06:00" pubdate data-updated="true">Feb 20<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://timrayburn.net/files/media/image/WindowsLiveWriter/WhygototheMVPSummit_F3C9/NDA%20Reminder_2.jpg"><img style="border-right-width: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; margin-left: 0px; border-left-width: 0px; margin-right: 0px" title="NDA Reminder" border="0" alt="NDA Reminder" align="right" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/WhygototheMVPSummit_F3C9/NDA%20Reminder_thumb.jpg" width="244" height="184" /></a> Every year Microsoft hosts an event they refer to as the <a href="http://mvpsummit2010.com/">MVP Global Summit</a> in the Seattle area.&#160; This event is invitation only event where those who have been recognized as Microsoft MVPs get to meet with their product groups, discuss strategy, impart real-world scenarios, and learn what is coming down the pipe.&#160; The event is simply wonderful, where else can you get a chance to interact with the people directly responsible for parts of the Microsoft eco-system you care about most deeply.&#160; Of course, such openness does not come without restriction.&#160; The MVPs are all under a Non-Disclosure Agreement (NDA) which means that for 90%+ of what we are told, we cannot discuss it with other people.</p>  <p><strong>You can’t discuss it?&#160; Why go then?!</strong></p>  <p>A fair question, with at least four answers. So let’s go through them.</p>  <p><strong>First – I can’t discuss things, but I still know them.</strong></p>  <p>When thinking about the trip to the Summit you must remember that you’re learning things far before the public will, but that does not mean that the public will never learn these things.&#160; Much of what is discussed will eventually become public information, and once it is those who have been to the Summit will have had the most time to internalize and strategize on the information, often meaning they will be able to act on that information more quickly.&#160; Also just because I can’t share my knowledge does not mean I can’t share my judgment.&#160; I can use the information I have received to inform the choices I make for my own personal work and what I do for my clients.</p>  <p><strong>Second – Meet the Team</strong></p>  <p>Every Summit is a chance to meet new people within Microsoft who are working on your area of expertise and interest, to put a face with a name, and to collect business cards or email aliases.&#160; This can be wonderful later on if you want to provide feedback or ask a short question during the 99% of the year that isn’t the MVP Summit.</p>  <p><strong>Third – Bond with your Local MVPs</strong></p>  <p>When you travel to the MVP Summit you get a chance to spend time strengthening your relationships with the MVPs in your area.&#160; Your local MVPs are the backbone of your community, and getting to know them better will help you help your community better.&#160; You’ve got time during the Summit to discuss plans for future events, eat, drink and be merry.</p>  <p><strong>Fourth – Meet MVPs from around the world…</strong></p>  <p>This may seem like a repeat of the entry above, but meeting MVPs from outside your local area has a different purpose.&#160; Your making connections that open up an exchange of ideas.&#160; You’re putting names with faces from Twitter, Facebook, StackOverflow and other sites.&#160; You never know when a passing conversation about your interest with some technology might not result in you being able to help a company half way around the world make a wiser technical decision.&#160; Absolutely key.&#160; Again, eat, drink and be merry.</p>  <p><strong>Conclusion</strong></p>  <p>Rather obviously a lot of what the MVP Summit is about is networking, but you’re and MVP right?&#160; You network, help people, organize meetings, answer questions, in general you are a community leader, and influencer.&#160; And so are ALL of those other MVPs.&#160; Even if every MVP touched merely as many people as a small user group, say 50/month people, then the 1400 MVPs who just left the Summit in 2010 represent 840,000 developer touches.&#160; And those numbers are low.&#160; From blog posts, to conferences, and more an MVP has huge reach … which is why we were invited to begin with.</p>  <p>Thank you to Microsoft, the Product Groups, the Developer Evangelists, and the incredible MVP Leads for making this Summit a smashing success!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/dallas-techfest-2010-ndash-call-for-speakers/">Dallas TechFest 2010 &ndash; Call for Speakers</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-02-17T00:00:00-06:00" pubdate data-updated="true">Feb 17<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img style="border-bottom: 0px; border-left: 0px; display: inline; margin-left: 0px; border-top: 0px; margin-right: 0px; border-right: 0px" title="Dallas TechFest 2010" border="0" alt="Dallas TechFest 2010" align="right" src="http://timrayburn.net/files/media/image/WindowsLiveWriter/DallasTechFest2010CallForSpeakers_8FBE/Large%20Logo%202010_3.png" width="187" height="240" /> </p>  <p>I’m thrilled to announce that Dallas TechFest 2010 has set a date of July 30th, 2010 and is currently engaged in a <a href="http://tinyurl.com/dtf10cfs">Call For Speakers</a> looking for those in all sorts of technology areas who wish to speak.&#160; If you’ve got expertise in .NET, Java, Ruby, PHP, ColdFusion, Python, Flex or anything else then send in an abstract and see if you can secure a speaking slot at Dallas TechFest 2010.</p>  <p>Sometime in March we will be opening registration, but in the meantime mark the date on your calendar, and get ready for our registration drive.&#160; Like in previous years, if you recommend people to register you will be entered to win a great prize.&#160; What prize? Hmmm….&#160; Well it’s got a touch screen, a 3G modem, and a huge app store.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/gravatars-in-asp-net-mvc-using-htmlhelper/">Gravatars in ASP.NET MVC Using HtmlHelper</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-12-23T00:00:00-06:00" pubdate data-updated="true">Dec 23<span>rd</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I’m working on a side-project right now that is using Gravatars and found the <a href="http://frickinsweet.com/ryanlanciaux.com/post/MVC-HtmlHelper-for-Gravatar.aspx">wonderful article by Ryan Lanciaux</a> on creating an HtmlHelper extension.&#160; His extension was good, but did not use integrate with the FluentHtml model of MvcContrib, so I refactored his original into the following class, which does the same thing, but allows for fluent building of all the options.&#160; Someone will undoubtedly point out that this could have used a couple of Enumerations, and their right, but I decided the API was static enough that I’d just create the methods. Anyway, I hope someone else gets some use out of this.</p>  <pre class="brush: csharp">using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Web.Mvc;
+using System.Web.Routing;
+using MvcContrib.FluentHtml.Elements;
+using System;
+using System.Web;
+
+public class Gravatar : Element<gravatar>
+{
+    private string _email;
+    private string _default;
+    private string _rating;
+    private int _size;
+    private string _alt;
+
+    public Gravatar(string email) : base(&quot;img&quot;)
+    {
+        _email = email;
+    }
+
+    public Gravatar DefaultToUrl(string url)
+    {
+        _default = url;
+        return this;
+    }
+
+    public Gravatar DefaultToIdenticon()
+    {
+        _default = &quot;identicon&quot;;
+        return this;
+    }
+
+    public Gravatar DefaultToMonsterId()
+    {
+        _default = &quot;monsterid&quot;;
+        return this;
+    }
+
+    public Gravatar DefaultToWavatar()
+    {
+        _default = &quot;wavatar&quot;;
+        return this;
+    }
+
+    public Gravatar DefaultTo404()
+    {
+        _default = &quot;404&quot;;
+        return this;
+    }
+
+    public Gravatar Size(int size)
+    {
+        if (size &lt; 1 || size &gt; 512) throw new ArgumentException(&quot;Gravatars can only be between 1 and 512 in size.&quot;, &quot;size&quot;);
+        _size = size;
+        return this;
+    }
+
+    public Gravatar GRated()
+    {
+        _rating = &quot;g&quot;;
+        return this;
+    }
+
+    public Gravatar PGRated()
+    {
+        _rating = &quot;pg&quot;;
+        return this;
+    }
+
+    public Gravatar RRated()
+    {
+        _rating = &quot;r&quot;;
+        return this;
+    }
+
+    public Gravatar XRated()
+    {
+        _rating = &quot;x&quot;;
+        return this;
+    }
+
+    public Gravatar AlternateText(string alt)
+    {
+        _alt = alt;
+        return this;
+    }
+
+    protected override TagRenderMode TagRenderMode
+    {
+        get
+        {
+            return TagRenderMode.SelfClosing;
+        }
+    }
+
+    public override string ToString()
+    {
+        var src = string.Format(&quot;http://www.gravatar.com/avatar/{0}?&quot;, EncryptMD5(_email));
+
+        if (!String.IsNullOrEmpty(_rating)) src += string.Format(&quot;r={0}&amp;&quot;, HttpUtility.UrlEncode(_rating));
+        if (_size != 0) src += string.Format(&quot;s={0}&amp;&quot;, _size);
+        if (!String.IsNullOrEmpty(_default)) src += string.Format(&quot;d={0}&amp;&quot;, HttpUtility.UrlEncode(_default));
+
+        base.builder.MergeAttribute(&quot;src&quot;, src);
+        base.Attr(&quot;alt&quot;, _alt ?? &quot;Gravatar&quot;);
+
+        return base.ToString();
+    }
+
+    private static string EncryptMD5(string Value)
+    {
+        using(var md5 = new MD5CryptoServiceProvider())
+        {
+            byte[] valueArray = System.Text.Encoding.ASCII.GetBytes(Value);
+            valueArray = md5.ComputeHash(valueArray);
+            string encrypted = &quot;&quot;;
+            for (int i = 0; i &lt; valueArray.Length; i++)
+                encrypted += valueArray[i].ToString(&quot;x2&quot;).ToLower();
+            return encrypted;
+        }
+    }
+}
+
+public static class GravatarHtmlHelper
+{
+    public static Gravatar Gravatar(this HtmlHelper html, string email)
+    {
+        return new Gravatar(email);
+    }
+}</pre>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/6/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/4/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

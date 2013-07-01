@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: azure, | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/azure-/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Working with Dynamic Schema in Azure Mobile Services]]></title>
+    <link href="http://TimRayburn.net/blog/working-with-dynamic-schema-in-azure-mobile-services/"/>
+    <updated>2012-12-12T11:45:00-06:00</updated>
+    <id>http://TimRayburn.net/blog/working-with-dynamic-schema-in-azure-mobile-services</id>
+    <content type="html"><![CDATA[<p>Lately I've been developing on a side project using the awesome <a href="http://chriskoenig.net/2012/10/17/new-azure-sdk-and-services-updates/">Azure Mobile Services</a> offering from Microsoft.  Specifically I've been developing a Windows Phone 8 application, the details of which will be revealed in time.  One of the best features of Azure Mobile Services is the ability to work with a Dynamic Schema, it will automatically insert new columns for fields it has never received before.</p>
+
+<p>There are many great reasons for this during development.  It allows for rapid iteration, which is great.  But, let's take the example of the <a href="https://github.com/WindowsAzure-TrainingKit/HOL-Windows8AndMobileServices/blob/master/HOL.md">Todo Hands On Lab</a>, and look at the DataContract established for it's entity.</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized' for RubyPython::Python:Module</p>
+
+<p>Now, lets say I wanted to add a property called Description to this, I might update the above code as follows:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized' for RubyPython::Python:Module</p>
+
+<p>If I change nothing else other than this, I when I run my program I'd expect that the Description column would be added to the database when I saved a new item.  But, instead, I get the following exception when I save an item:</p>
+
+<pre>
+Microsoft.WindowsAzure.MobileServices.MobileServiceInvalidOperationException was unhandled by user code
+  HResult=-2146233079
+  Message=Error: Unable to insert a null value for new property 'description'
+  Source=Microsoft.Azure.Zumo.WindowsPhone8.Managed
+  InnerException: 
+</pre>
+
+
+<p>I was more than a little baffled by this concept, my first read of this exception got me thinking things like: "<em>who on earth would design a dynamic data feature to create NON NULLABLE FIELDS?!?!?</em>" and other less kind statements.  Well, as they say, pride commeth before the fall.  As I've researched this error, I've realized it's entirely reasonable.  Why?  Ah... REST.</p>
+
+<p>Azure Mobile Services data offering is built as a set of RESTful services, using JSON serialization.  That means that initially my request to add an entry named "Foo" would have looked like this:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized' for RubyPython::Python:Module</p>
+
+<p>When I added the additional field but didn't set a value for it, the serializer added it to the submitted output, resulting in:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized' for RubyPython::Python:Module</p>
+
+<p>Sure, that makes sense ... Unless your the SQL Server who is now being asked to add that new field.  Why?  Because you've got NO IDEA what the data type of description is.  Whoops!  So how do we solve this?  Well, there are a couple of ways we can do that.</p>
+
+<ol>
+<li>We could add the field manually in SQL Server, specifying the data type desired.  This works great, but kindof unravels the whole point of Dynamic Schema.</li>
+<li>We could put in temporary code, so that the first time we send this up, it's populated.  After that, the field is nullable so there is no problem storing nulls from that point onward.  I'm not a big fan of "secret recipes" in code bases, and this model leaves no trace for the next guy of the "proper procedure" so I decided against it.</li>
+<li>We could add a Setup script, which pushed a single completely populated entity.  This could be run all sorts of ways, from a unit test to a rake task, but would ensure the schema desired.  This solution is better, but still a little buried for me.</li>
+<li>We could make the DBAs amongst us cry, and decide that our entities will provide a default value for reference types such as string (note value types don't have this problem, they can't be null) in the constructor of our type.  This technically takes more space, and I'm certain the DBAs will yell at me about other reasons, but on the other hand it leaves a clear pattern to be followed by future developers.</li>
+</ol>
+
+
+<p>I chose option 4.  That resulted in this code:</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized' for RubyPython::Python:Module</p>
+
+<p>Now, you can feel free to make a different choice, but for me and my project, this pattern is working just fine.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Azure Bootcamp in Houston]]></title>
+    <link href="http://TimRayburn.net/blog/azure-bootcamp-in-houston/"/>
+    <updated>2012-10-05T09:47:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/azure-bootcamp-in-houston</id>
+    <content type="html"><![CDATA[<p><img src="/images/ie-logo-small.jpg" title="Improving Enterprises Logo" alt="Improving Enterprises Logo"></p>
+
+<p>How would you like a <a href="http://www.improvingenterprises.com/events/event/windows-azure-developer-camp/">free full day of training</a> from the best and brightest of <a href="http://improvingenterprises.com">Improving Enterprises</a>?  Well have I got a deal for you!</p>
+
+<p>On October the 22nd, at the Microsoft Offices in Houston, we will be hosting a Windows Azure Developer Camp.  We will be covering all of the basics of Windows Azure, from IaaS to Websites, from SQL Azure to Mobile Services.  And what's more?  We've got some rockstar trainers for you.  <a href="http://www.improvingenterprises.com/about/people/todd-girvin/bio/">Todd Girvin</a>, <a href="http://www.improvingenterprises.com/about/people/allen-hurst/bio/">Allen Hurst</a>, <a href="http://www.improvingenterprises.com/about/people/devlin-liles/bio/">Devlin Liles</a>, <a href="http://www.improvingenterprises.com/about/people/chris-weldon/bio/">Chris Weldon</a>, <a href="http://www.improvingenterprises.com/about/people/ben-floyd/bio/">Ben Floyd</a> and <a href="http://www.improvingenterprises.com/about/people/tim-rayburn/bio/">myself</a> will guide you through all the hands on labs, and you'll leave ready to bring the incredible scale and ease of Windows Azure to your next project.</p>
+
+<p>While you're there, be sure to ask about our <a href="http://www.improvingenterprises.com/2012/09/10/improving-and-alphaware-join-forces/">incredible new Houston offices</a>.  Need consultants in Houston?  We're open for business and ready to help.  Looking for a new job?  Drop me a line, and we'll talk about the opportunities for you to start improving.</p>
+
+<p>Even if none of that is true, be sure to ask us that day about our upcoming Monday Night Football event.</p>
+
+<h1><a href="http://www.improvingenterprises.com/events/event/windows-azure-developer-camp/">Signup Now</a></h1>
+]]></content>
+  </entry>
+  
+</feed>

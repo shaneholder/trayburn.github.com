@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>New Project, New Technologies - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="Starting Monday morning I will be starting a new project for a client of my employer Improving Enterprises.&#160; I’ve spent a good deal of time &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/new-project-new-technologies/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">New Project, New Technologies</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-27T00:00:00-05:00" pubdate data-updated="true">Jun 27<span>th</span>, 2009</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Starting Monday morning I will be starting a new project for a client of my employer <a href="http://improvingenterprises.com/">Improving Enterprises</a>.&#160; I’ve spent a good deal of time talking with my new teammates about what technologies we will be using for the project, and I thought that work might be of interest to others, so here are some of the highlights.</p>  <h2>Technology Stack : VS2010, .NET 4, C#</h2>  <p>The first thing that was decided, during the initial scoping phase of the project, was that this project was a nearly ideal candidate for Visual Studio 2010 and .NET 4.0.&#160; How did we come to that decision?&#160; The desired architecture for the project is such that certain features of WCF 4.0 and Entity Framework 4.0 would help with the implementation, and the timeline of the project is such that we have a no concerns over the current lack of the a “Go Live” license.&#160; For language it was decided we will primarily be working in C#. With that decided, we get to the far more interesting pieces.</p>  <h2>Inversion of Control : StructureMap</h2>  <p>Obviously we are going to need an IoC container for the project, and we have settled on <a href="http://structuremap.sourceforge.net">StructureMap</a> for that.&#160; The competition in this regard was <a href="http://www.castleproject.org/container/index.html">Castle Windsor</a> as <a href="http://improvingenterprises.com/">Improving</a> has the benefit of employing Craig Neuwirt, we knew we had an expert.&#160; The final decision to go with <a href="http://structuremap.sourceforge.net">StructureMap</a> instead hinged on two related things, complexity and learning curve.&#160; While we were quite certain we could pick up Castle quickly enough (2 of the 3 did not know it already), we were not as certain how easy it would be for those who follow us.&#160; <a href="http://structuremap.sourceforge.net">StructureMap</a> had a single well defined scope (IoC), versus the larger bite that the Castle Project would be for those who follow.&#160; We recognize we could have <strong>just</strong> done Windsor, but we found no compelling reasons to do that versus <a href="http://structuremap.sourceforge.net">StructureMap</a>.</p>  <p>As noted, we will be doing a good bit of WCF 4.0 on this project, so it naturally followed we would need to integrated StructureMap into the channel stack to let it handle the creation of our service instances.&#160; <a href="http://www.lostechies.com/blogs/jimmy_bogard/archive/2008/07/29/integrating-structuremap-with-wcf.aspx">Jimmy Bogard has an excellent post</a> on this subject, and we followed that guidance closely, though we updated the StructureMapServiceHostFactory to use ObjectFactory.Initialize as was recommended by the excellent ObsoleteAttribute usage in the latest StructureMap.</p>  <h2>Source Control : GIT</h2>  <p>Even within a group of people as passionate about creating great technology as we have at Improving, there are certain debates that deeply divide us.&#160; Source Control is definitely one of them.&#160; We have a certain segment of the company that are passionate advocates for <a href="http://www.teamsystemlive.com/">Team System</a>, obviously including <a href="http://techtea.typepad.com/teamsystem/">Chris Tullier</a> our resident Team System MVP.&#160; But there are others who are passionate believers in Subversion.&#160; Still others are not happy with either of those options, and still seek the “better mouse trap” for Source Control.&#160; We discussed the pros and cons of various solutions and decided in the end to try GIT, because of its distributed model, and see how we liked it in comparison to the others.&#160; It is an experiment, and we shall see.</p>  <h2>Logging : log4net</h2>  <p>Really, is there another option?&#160; The definitive logging library for .NET, it does what it needs to and does not bring along any additional baggage.&#160; As we are also using StructureMap, we found <a href="http://aspzone.com/tech/structuremap-ninject-log4net/">this blog post by John Rudolf Lewis</a> helpful in discussing how to inject <a href="http://logging.apache.org/log4net/index.html">log4net</a> using StructureMap (or Ninject) without losing fidelity in the logs.</p>  <h2>Conclusion</h2>  <p>So there are a few of our technology decisions, things I’ll be learning on in the coming months more and more.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-27T00:00:00-05:00" pubdate data-updated="true">Jun 27<span>th</span>, 2009</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/new-project-new-technologies/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/new-project-new-technologies/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/dallas-devcares-ndash-parallelism-in-net-4-0/" title="Previous Post: Dallas DevCares &ndash; Parallelism in .NET 4.0">&laquo; Dallas DevCares &ndash; Parallelism in .NET 4.0</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/i-rsquo-m-an-mvp-for-2009/" title="Next Post: I&rsquo;m an MVP for 2009!">I&rsquo;m an MVP for 2009! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

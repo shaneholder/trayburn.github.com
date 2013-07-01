@@ -1,0 +1,1654 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: PowerShell | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/powershell/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[PowerShell for Developers - DRY]]></title>
+    <link href="http://TimRayburn.net/blog/powershell-for-developers-dry/"/>
+    <updated>2013-05-12T21:06:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/powershell-for-developers-dry</id>
+    <content type="html"><![CDATA[<p>DRY is an acronym that was created by <a href="http://www.amazon.com/gp/product/020161622X/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=020161622X&amp;linkCode=as2&amp;tag=timraybnet-20">Andrew Hunt and Dave Thomas in their book The Pragmatic Programmer</a>.  It stands for Don't Repeat Yourself.  We've espoused terse commands in all the previous chapters, but how to I avoid having to re-invent the wheel every time I open a PowerShell prompt.</p>
+
+<h2>Profiles</h2>
+
+<p>There is a script which runs every time you open a PowerShell prompt, it's called your Profile.  The file name varies depending on your operating system and version, but you can find it quickly by opening a prompt and typing <code>$profile</code> like so:</p>
+
+<p>```</p>
+
+<blockquote><p>$profile
+C:\Users\Tim\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+```</p></blockquote>
+
+<p>Now if you've got a brand new environment, this file may not even exist.  You can test if it does, and then create it if it does not with the following commands:</p>
+
+<p>```</p>
+
+<blockquote><p>Test-Path $PROFILE
+False
+New-Item -path $profile -type file -force</p></blockquote>
+
+<pre><code>Directory: C:\Users\Tim\Documents\WindowsPowerShell
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>-a---         5/12/2013   6:09 PM          0 Microsoft.PowerShell_profile.ps1</p>
+
+<blockquote><p>notepad $PROFILE
+```
+The first command ensures that the you don't already have a profile.  If it returns true, the skip the second command.</p></blockquote>
+
+<p>The second command created the profile, as a file, and uses -force to create any directories required to create the item along the way.  This command will work even if you don't have a <code>WindowsPowershell</code> directory in your <code>Documents</code> folder.</p>
+
+<h3>What do I put in a $PROFILE?</h3>
+
+<p>Things you don't want to type over and over again, of course.  Don't Repeat Yourself (DRY).  Now, in reality you don't want your profile to become just a giant function library, we have a concept called Modules for that, which we will discuss in just a minute, but there are some things which belong in your $PROFILE.</p>
+
+<h4>The Prompt</h4>
+
+<p>There is a special function called <code>Prompt</code> which you can define, that controls how what your command prompt looks like.  You may have noticed that during this article I've had a very basic prompt that was just <code>&gt;</code>, but most of you likely have a prompt that looks more like this <code>PS C:\Source&gt;</code>.  There is no trickery, I just wanted to make my prompt minimalist for these articles, so I typed the following:</p>
+
+<p>```
+PS C:\Source> function prompt { "> " }</p>
+
+<blockquote><p>```</p></blockquote>
+
+<p>As you can see, instantly my prompt was set to the minimalist version you've seen in all these articles.  How is the default prompt defined?  Let's see, shall we?</p>
+
+<p>```
+PS C:\Source> (get-item Function:\prompt).Definition
+"PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) "</p>
+
+<h1>.Link</h1>
+
+<h1>http://go.microsoft.com/fwlink/?LinkID=225750</h1>
+
+<h1>.ExternalHelp System.Management.Automation.dll-help.xml</h1>
+
+<p>```</p>
+
+<p>So this prompt is defined as <code>PS</code> followed by the expression <code>$executionContext.SessionState.Path.CurrentLocation</code> which gets the current location of the execution context (aka the directory you're in).  Then, it displays one <code>&gt;</code> for every level of <code>$nestedPromptLevel</code>, adding one.  Well if your like most people, you've likely got no idea what the heck <code>$nestedPromptLevel</code> is.  We will discuss it further, but for the most basic idea, there is a command called <code>$Host.EnterNestedPrompt()</code> which creates a new prompt.  Like so:</p>
+
+<p><code>
+PS C:\Source&gt; $host.EnterNestedPrompt()
+PS C:\Source&gt;&gt; $host.EnterNestedPrompt()
+PS C:\Source&gt;&gt;&gt; $host.EnterNestedPrompt()
+PS C:\Source&gt;&gt;&gt;&gt; exit
+PS C:\Source&gt;&gt;&gt; exit
+PS C:\Source&gt;&gt; exit
+PS C:\Source&gt;
+</code></p>
+
+<p>As you can see, each nested level of prompt adds a <code>&gt;</code>, which makes perfect sense given the above <code>prompt</code> function definition.</p>
+
+<h2>Location</h2>
+
+<p>Your current working directory is on display in the prompt at all times, and you know if you want to change that directory, you use <code>cd</code>.  It must be named <code>cd</code>, both DOS and LINUX agree on this, how could it possibly be named something else, right?</p>
+
+<p>```
+PS C:\Source> cd Highway
+PS C:\Source\Highway> alias cd</p>
+
+<p>CommandType     Name                                               ModuleName</p>
+
+<hr />
+
+<p>Alias           cd -> Set-Location
+```</p>
+
+<p>Well, as you can see, in PowerShell, which <code>cd</code> is an alias that exists by default for it, the actual command you're execution is <code>Set-Location</code>.  Well, most programs would rightly assume that whatever you can <code>Set-</code> you can also <code>Get-</code>, right?</p>
+
+<p>```
+PS C:\Source\Highway> Get-Location</p>
+
+<h2>Path</h2>
+
+<p>C:\Source\Highway</p>
+
+<p>PS C:\Source\Highway> alias -Definition Get-Location</p>
+
+<p>CommandType     Name                                               ModuleName</p>
+
+<hr />
+
+<p>Alias           gl -> Get-Location
+Alias           pwd -> Get-Location
+```</p>
+
+<p>Yup, Get-Location returns the current <code>Path</code> we are at.  You can see that we have two aliases defined by default for us, one is just shorthand for Get-Item, and the other is a helper alias for our Linux friends, who use <code>pwd</code> (short for Print Working Directory) to accomplish this same task.</p>
+
+<h3>Time to get pushy</h3>
+
+<p>Now, as it happens, in PowerShell (and Linux, and DOS) there are a couple of commands for working with Location that most people didn't learn when they were first struggling through how to work at a command prompt.  These two commands are called <code>pushd</code> and <code>popd</code> in Linux and DOS, but in PowerShell those are, of course, just aliases:</p>
+
+<p>```
+PS C:\Source> alias pushd</p>
+
+<p>CommandType     Name                                               ModuleName</p>
+
+<hr />
+
+<p>Alias           pushd -> Push-Location</p>
+
+<p>PS C:\Source> alias popd</p>
+
+<p>CommandType     Name                                               ModuleName</p>
+
+<hr />
+
+<p>Alias           popd -> Pop-Location
+```</p>
+
+<p>So <code>Push-Location</code> and <code>Pop-Location</code> are commands that let you quickly leave your current location, but then return there very quickly.  Let me demonstrate:</p>
+
+<p><code>
+PS C:\Source&gt; pushd 'C:\Windows\Microsoft.NET\Framework\v4.0.30319'
+PS C:\Windows\Microsoft.NET\Framework\v4.0.30319&gt; pushd 'C:\Program Files'
+PS C:\Program Files&gt; pushd 'C:\Program Files (x86)'
+PS C:\Program Files (x86)&gt; pushd 'C:\Users\Tim\Documents\WindowsPowerShell'
+PS C:\Users\Tim\Documents\WindowsPowerShell&gt; popd
+PS C:\Program Files (x86)&gt; popd
+PS C:\Program Files&gt; popd
+PS C:\Windows\Microsoft.NET\Framework\v4.0.30319&gt; popd
+PS C:\Source&gt; popd
+PS C:\Source&gt; popd
+PS C:\Source&gt;
+</code>
+So initially, <code>pushd</code> would appear to just be a longer version of <code>cd</code>, it moves our current working directory to whichever directory we name.  But, when we then invoke <code>popd</code> the magical nature becomes clear.  When we invoke <code>pushd</code> it changes our directory, but puts the directory we're leaving on a stack of remembered directories.  <a href="http://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29">A stack, hence push and pop.</a></p>
+
+<p>As we pop the locations back off the stack, we are transported back to that location as our current working directory.  Pretty darn useful if you need to move from one path to another and back very quickly.</p>
+
+<h3>PSDrive</h3>
+
+<p>Now, Location is all well and good, but that described where you are a given drive.  My default drive, and likely yours, is <code>C:</code> aka the C-Drive.  From time immemorial this has been the default hard drive letter in Windows. <code>A:</code> and <code>B:</code> were reserved for Floppy drives.  Hard drives started at the letter C and incremented from there.  But, that has been simply default for a long time now.</p>
+
+<p>In PowerShell, I can still use <code>C:</code> and <code>D:</code> to move between drives.  This next set of commands will only work if you have two drives (or an SSD and a <a href="http://www.amazon.com/gp/product/B00AK31M3G/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B00AK31M3G&amp;linkCode=as2&amp;tag=timraybnet-20">Flash card</a> as I'm using on my <a href="http://www.amazon.com/gp/product/B00BE5T2TA/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B00BE5T2TA&amp;linkCode=as2&amp;tag=timraybnet-20">Microsoft Surface Pro</a>):</p>
+
+<p>```
+PS C:\Source> d:
+PS D:> dir</p>
+
+<pre><code>Directory: D:\
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>d----         5/11/2013   2:17 PM            iTunes
+d----         5/11/2013   2:27 PM            iTunes Library</p>
+
+<p>PS D:> c:
+PS C:\Source> dir</p>
+
+<pre><code>Directory: C:\Source
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>d----          5/7/2013   1:57 PM            Blog
+d----          5/9/2013   7:06 PM            Highway
+d----         5/11/2013   4:17 PM            Node
+d----          5/5/2013   5:13 PM            PowerShell
+d----         4/11/2013  11:58 PM            Presentation-EasyESB
+d----         5/10/2013   7:55 PM            RrynVsPS
+d----         4/20/2013   1:53 PM            SynTask
+```</p>
+
+<p>As you can see, the commands move me between those two drives.  But in reality, the concept of a <em>drive</em> has been much expanded in PowerShell.</p>
+
+<blockquote><p>If it has hierarchy (aka Locations) you want to Navigate, or items you want to inspect, then in PowerShell someone will likely have made it a drive.</p></blockquote>
+
+<p>There is a command in PowerShell that lists all current drives:</p>
+
+<p>```
+PS C:\Source> Get-PSDrive</p>
+
+<p>Name           Used (GB)     Free (GB) Provider      Root                                               CurrentLocation</p>
+
+<hr />
+
+<p>Alias                                  Alias
+C                  78.10         32.42 FileSystem    C:\                                                         Source
+Cert                                   Certificate   \
+D                   3.29         56.16 FileSystem    D:\
+E                                      FileSystem    E:\
+Env                                    Environment
+Function                               Function
+HKCU                                   Registry      HKEY_CURRENT_USER
+HKLM                                   Registry      HKEY_LOCAL_MACHINE
+Variable                               Variable
+WSMan                                  WSMan
+```</p>
+
+<p><strong>blink</strong> <strong>blink</strong> ... Ok, so that is more drives than I was expecting when I first invoked this command.  So what all drives are those, and how do I use them?</p>
+
+<p>Enter <code>Set-Location</code>, aka <code>cd</code>:</p>
+
+<p>```
+PS C:\Source> cd alias:
+PS Alias:> ls | select -first 5</p>
+
+<p>CommandType     Name                                               ModuleName</p>
+
+<hr />
+
+<p>Alias           % -> ForEach-Object
+Alias           ? -> Where-Object
+Alias           ac -> Add-Content
+Alias           asnp -> Add-PSSnapin
+Alias           cat -> Get-Content
+```</p>
+
+<p>Here I've <code>Set-Location</code> to the Alias drive, and listed the first 5 items.  Each PSDrive has different contents depending on what it is representing.  Here's a sum-up of the contents of the <strong>default</strong> set of drives:</p>
+
+<ul>
+<li>C, D and E drive are File System drives, representing your various mounted drives.  In my case they are my SSD, Flash card, and virtual CD drive.</li>
+<li>Cert represents your digital certificate store, both CurrentUser and LocalMachine, which are the two root locations.</li>
+</ul>
+
+
+<p>```
+PS Alias:> cd Cert:
+PS Cert:> ls | select -first 5</p>
+
+<p>Location   : CurrentUser
+StoreNames : {SmartCardRoot, Root, Trust, AuthRoot...}</p>
+
+<p>Location   : LocalMachine
+StoreNames : {TrustedPublisher, ClientAuthIssuer, Remote Desktop, Root...}
+```
+- Env represents your Environment Variables, which contains all defined environment variables for your machine.</p>
+
+<p>```
+PS Cert:> cd env:
+PS Env:> ls | select -first 5</p>
+
+<p>Name                           Value</p>
+
+<hr />
+
+<p>ALLUSERSPROFILE                C:\ProgramData
+APPDATA                        C:\Users\Tim\AppData\Roaming
+asl.log                        Destination=file
+ChocolateyInstall              C:\Chocolatey
+CommonProgramFiles             C:\Program Files\Common Files
+<code>``
+- Function represents all functions defined in PowerShell, and in fact is how I showed you the definition of</code>prompt` earlier in this chapter (go ahead, look back, I don't mind)
+- HKCU and HKLM represent your register, and specifically the <strong>HKEY_CURRENT_USER</strong> and <strong>HKEY_LOCAL_MACHINE</strong> sections of it.  For instance, want to know all versions of the .NET Framework 4.0 installed on your box?</p>
+
+<p><code>
+PS Env:\&gt; ls HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs | %{$_.Name}
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0,Profile=Client
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.1
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.1,Profile=Client
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.2
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.2,Profile=Client
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.3
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.3,Profile=Client
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.5
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\Client
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\Default
+</code></p>
+
+<ul>
+<li>Variable represents all current variables defined in your scope.</li>
+</ul>
+
+
+<p>```
+PS Env:> ls Variable:\ | select -first 3</p>
+
+<p>Name                           Value</p>
+
+<hr />
+
+<p>$                              Get-PSDrive
+?                              True
+^                              Get-PSDrive
+```
+- WSMan represents the "Windows Remote Management" aka WinRM settings.</p>
+
+<p>Moreover, these are just the beginning.  Lots of modules, which we are about to discuss, create even more drives.  With the right modules you can browse around Active Directory, SQL Servers, IIS Websites, and so much more.</p>
+
+<h2>Modules Basics</h2>
+
+<p>Modules are a way to expand your available functions, drives, etc in PowerShell, but in an optional manner.  Any given PowerShell environment can load many different Modules, in and adhoc manner.  You can get a list of the current Modules you're running as so:</p>
+
+<p>```</p>
+
+<blockquote><p>Get-Module</p></blockquote>
+
+<p>ModuleType Name                                ExportedCommands</p>
+
+<hr />
+
+<p>Manifest   Microsoft.PowerShell.Management     {Add-Computer, Add-Content, Checkpoint-Computer, Clear-Content...}
+Manifest   Microsoft.PowerShell.Security       {ConvertFrom-SecureString, ConvertTo-SecureString, Get-Acl, Get-Authe...
+Manifest   Microsoft.PowerShell.Utility        {Add-Member, Add-Type, Clear-Variable, Compare-Object...}
+Manifest   Microsoft.WSMan.Management          {Connect-WSMan, Disable-WSManCredSSP, Disconnect-WSMan, Enable-WSManC...
+Manifest   pki                                 {Add-CertificateEnrollmentPolicyServer, Export-Certificate, Export-Pf...
+```</p>
+
+<p>As you can see, I have four modules loaded at the current time.  But those are just what I have loaded.  What I have available to me is quite another thing.  If you type <code>Get-Module -ListAvailable</code> it will show you all of your possible options, but that output is large.  I'm going to limit it somewhat here:</p>
+
+<p>```</p>
+
+<blockquote><p>Get-Module -ListAvailable | select -first 10</p></blockquote>
+
+<pre><code>Directory: C:\Users\Tim\Documents\WindowsPowerShell\Modules
+</code></pre>
+
+<p>ModuleType Name                                ExportedCommands</p>
+
+<hr />
+
+<p>Script     EZOut                               {Add-FormatData, Clear-FormatData, Out-FormatData, Remove-FormatData...}
+Script     IsePackV2                           {Add-PowerGUIMenu, Add-IseMenu, Add-Icicle, Clear-Icicle...}
+Script     Pester                              {Assert-MockCalled, Assert-VerifiableMocks, Context, Describe...}
+Script     Pipeworks                           {Get-FunctionFromScript, Write-PowerShellHashtable, Import-PSData, Ex...
+Script     psake                               {Assert, Exec, FormatTaskName, Framework...}
+Script     PsGet                               {Get-PsGetModuleHash, Get-PsGetModuleInfo, Install-Module, Update-Mod...
+Script     ScriptCop                           {Get-ScriptCopRule, Register-ScriptCopRule, Unregister-ScriptCopRule,...
+Script     Send-Growl                          {Get-GrowlPath, Register-GrowlCallback, Register-GrowlType, Send-Grow...
+Script     ShowUI                              {Add-CodeGenerationRule, Add-UIModule, Select-UIType, Get-AssemblyNam...
+Script     TRayburn-Utils                      {New-BasicAuth, Set-AppSetting, Set-NuSpecVersion, Test-Item}
+```</p>
+
+<p>As you can see, I have a number of Modules installed, and they are installed by in the <code>WindowsPowerShell\Modules</code> folder of my Documents folder.  But as I said, there are alot of them:</p>
+
+<p>```</p>
+
+<blockquote><p>Get-Module -ListAvailable | measure</p></blockquote>
+
+<p>Count    : 62
+Average  :
+Sum      :
+Maximum  :
+Minimum  :
+Property :
+```</p>
+
+<p>62 in fact, on my box alone, and it isn't part of a domain, or a server, or one of many other things which might add to that list.</p>
+
+<h3>Creating your own modules</h3>
+
+<p>You can create your own modules very simply.  A module is just a PowerShell script, named <code>.psm1</code> instead of simply <code>.ps1</code> and which loads up a series of functions, cmdlets, aliases, etc.  The big additional requirement is that the script must also declare what it intends to make available to those who <code>Import</code> that module.  Simply defining a function in a script isn't enough, you must also <code>Export</code> that function to those who use the module.  This is done with the Cmdlet <code>Export-ModuleMember</code>.</p>
+
+<p>I'm not going to go into details here about how to create a PowerShell module, there is alot of information out there on that already.  If you'd like to see the source of one, check out either <a href="https://github.com/trayburn/powershell">my PowerShell repository</a>, or <a href="https://github.com/pester/pester">the repository for Pester</a>.</p>
+
+<p>To use a module you have installed, simply type:</p>
+
+<p>```</p>
+
+<blockquote><p>Import-Module <name>
+```</p></blockquote>
+
+<h3>Must-Have Modules</h3>
+
+<p>The community of developers and administrators in the world being the wonderful geeks that they are, there are many awesome Modules that have been made available for others to consume.  While it saddens me to report that there is not one consolidated repository, like NuGet for references, there are several good places.  Both <a href="http://nuget.org">NuGet</a> and <a href="http://chocolatey.org">Chocolatey</a> have PowerShell modules hiding in their directories, but in my opinion the best overall implementation for PowerShell is <a href="http://psget.net">PsGet.net</a>.</p>
+
+<h3>PsGet</h3>
+
+<p>PsGet is the module that drives access to the PsGet.net directory of modules.  To get started with it, simply type:</p>
+
+<p><code>
+(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex
+</code></p>
+
+<p>This will download and install the PsGet module.  Once it's installed, go ahead and import that module:</p>
+
+<p>```</p>
+
+<blockquote><p>Import-Module PsGet
+```</p></blockquote>
+
+<p>You now have two powerful commands are your disposal:
+- Install-Module
+- Update-Module</p>
+
+<p>With these, you can install any module from the PsGet.net directory with just one command.</p>
+
+<h3>Pester</h3>
+
+<p>I'm a big fan of TDD/BDD and so I was sold the moment Pester was described to me as a BDD framework for PowerShell.  It allows me to test my modules with the familiar Describe, Context, It syntax.  This module was created by the awesome <a href="http://about.me/scottmuc/">Scott Muc</a> and I've used it in my own PowerShell work.  Details on how to use it can be found at the <a href="https://github.com/pester/pester/wiki">GitHub wiki</a> for the project, and <a href="http://scottmuc.com/powershell-pester-2-and-1-dot-2-released/">on Scott's blog</a>.</p>
+
+<p>```</p>
+
+<blockquote><p>Install-Module Pester
+Import-Module Pester
+```</p></blockquote>
+
+<h3>PowerShell Community Extensions</h3>
+
+<p>So what happens when lots of people love PowerShell and start putting together their greatest hits functions and CmdLets?  PowerShell Community Extensions (PSCX) or course!  Think of this as a -contrib project for PowerShell.  It has functions that do all sorts of things, from awesome, to cute.  How many commands?  148 as of this writing.  Everything from <code>Out-Speech</code> which voice outputs any piped content, to quick helpers like <code>Set-ReadOnly</code> and <code>Set-Writeable</code>.</p>
+
+<p>```</p>
+
+<blockquote><p>Install-Module PSCX
+Import-Module PSCX
+```</p></blockquote>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PowerShell for Developers - Functions]]></title>
+    <link href="http://TimRayburn.net/blog/powershell-for-developers-functions/"/>
+    <updated>2013-05-10T00:24:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/powershell-for-developers-functions</id>
+    <content type="html"><![CDATA[<h2>Pipeline</h2>
+
+<p>We've been using it already quite a bit in the past chapters, but lets take a moment and introduce, properly, the pipeline.  Pipeline'ing is powered in PowerShell using the pipe operator <code>|</code>.  It passes data from one command, to another command.  That other command had better be able to use that data.  How?  Well there is not magic here, there is conventions instead.</p>
+
+<p>Let's take a look at the help for our friend <code>Get-Item</code>, we do that as by typing <code>help Get-Item</code> or in our case <code>help Get-Item -Parameter Path</code> which is asking for the help for the Path parameter specifically:</p>
+
+<p>```</p>
+
+<blockquote><p>help get-item -Parameter Path</p></blockquote>
+
+<p>-Path &lt;String[]></p>
+
+<pre><code>Specifies the path to an item. Get-Item gets the item at the specified location. Wildcards are permitted. This
+parameter is required, but the parameter name ("Path") is optional.
+
+Use a dot (.) to specify the current location. Use the wildcard character (*) to specify all the items in the
+current location.
+
+Required?                    true
+Position?                    1
+Default value
+Accept pipeline input?       true (ByValue, ByPropertyName)
+Accept wildcard characters?  true
+</code></pre>
+
+<p>```</p>
+
+<p>Did you not get this?  You likely need to install the help, run <code>Update-Help</code> and it will do so.  If you did get this, you'll see the line that talks about <code>Accept Pipeline Input?</code> and that it states <code>true</code> but more importantly that we can pass either <strong>ByValue</strong> or <strong>ByPropertyName</strong>.  Let us explore both of those for a moment.</p>
+
+<h3>By Value Pipeline'ing</h3>
+
+<p>ByValue pipelines are the easiest to understand, in this case we can see from the help above we, the value for Path is expected to a <code>String[]</code> (a string array).</p>
+
+<p>```</p>
+
+<blockquote><p>dir | %{ $_.FullName }
+C:\source\Highway\MVC\build
+C:\source\Highway\MVC\src
+C:\source\Highway\MVC.gitignore
+C:\source\Highway\MVC\license.txt
+C:\source\Highway\MVC\make.ps1
+C:\source\Highway\MVC\NDesk.Options.dll
+C:\source\Highway\MVC\OnRamper.exe
+C:\source\Highway\MVC\push.ps1
+C:\source\Highway\MVC\README.markdown
+C:\source\Highway\MVC\setv.ps1
+<code>``
+So here we have taken a directory listing, which is objects as we have learned previously, and then done a</code>ForEach-Object` on that to select just the FullName property.  FullName is a string, and so we are sending an array of strings out to the console currently.  How, lets send that same data to Get-Item:</p></blockquote>
+
+<p>```</p>
+
+<blockquote><p>dir | %{ $_.FullName } | Get-Item</p></blockquote>
+
+<pre><code>Directory: C:\source\Highway\MVC
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>d----          5/4/2013  10:44 PM            build
+d----          5/2/2013   8:37 PM            src
+-a---          5/2/2013   2:19 PM        259 .gitignore
+-a---          5/2/2013   2:19 PM      16896 license.txt
+-a---          5/4/2013  11:11 AM        211 make.ps1
+-a---          5/2/2013  11:46 PM      22016 NDesk.Options.dll
+-a---          5/4/2013   6:36 PM      15872 OnRamper.exe
+-a---          5/4/2013  12:16 PM         62 push.ps1
+-a---          5/2/2013   2:19 PM      17183 README.markdown
+-a---          5/4/2013  11:26 AM        332 setv.ps1
+```
+Wait ... uhm ... what?  Sure, we just took a bunch of FileSystemInfo objects and dumped them to the console, you know how that formats them?  As a directory listing of course.  But that means we've been successful in binding that data to Get-Item.  Prove it?  Ok...</p>
+
+<p>```</p>
+
+<blockquote><p>dir | %{ $<em>.FullName } | Get-Item | %{$</em>.GetType()}</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     DirectoryInfo                            System.IO.FileSystemInfo
+True     True     DirectoryInfo                            System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+```</p>
+
+<p>So we have just bound <strong>ByValue</strong>, we've passed an array and it went to Path because of the value it was.</p>
+
+<h3>By Property Name Pipeline'ing</h3>
+
+<p>So how do we pass <strong>ByPropertyName</strong>?  Let us continue the above example:</p>
+
+<p>```</p>
+
+<blockquote><p>dir | %{ @{ Path=$_.FullName} }</p></blockquote>
+
+<p>Name                           Value</p>
+
+<hr />
+
+<p>Path                           C:\source\Highway\MVC\build
+Path                           C:\source\Highway\MVC\src
+Path                           C:\source\Highway\MVC.gitignore
+Path                           C:\source\Highway\MVC\license.txt
+Path                           C:\source\Highway\MVC\make.ps1
+Path                           C:\source\Highway\MVC\NDesk.Options.dll
+Path                           C:\source\Highway\MVC\OnRamper.exe
+Path                           C:\source\Highway\MVC\push.ps1
+Path                           C:\source\Highway\MVC\README.markdown
+Path                           C:\source\Highway\MVC\setv.ps1
+```</p>
+
+<p>So here we have created a bunch of Hashtables that contain a property named Path.  Now this is to simple, it doesn't make that point that we could have other data included in these hashtables.  So I'm going to add some of that, but limit the number of files:</p>
+
+<p>```</p>
+
+<blockquote><p>dir *.ps1 | %{ @{ Path=$<em>.FullName; Size=$</em>.Length; Updated=$_.LastWriteTime} }</p></blockquote>
+
+<p>Name                           Value</p>
+
+<hr />
+
+<p>Path                           C:\source\Highway\MVC\make.ps1
+Size                           211
+Updated                        5/4/2013 11:11:03 AM
+Path                           C:\source\Highway\MVC\push.ps1
+Size                           62
+Updated                        5/4/2013 12:16:29 PM
+Path                           C:\source\Highway\MVC\setv.ps1
+Size                           332
+Updated                        5/4/2013 11:26:16 AM
+```</p>
+
+<p>Ok, three entries, each with three properties, and we're good ... Right?  <strong>sigh</strong> No.  So you'll see from the output, these are not properties.  They are entries in a Hashtable, and are outputted vertically under <strong>Name</strong> and <strong>Value</strong> because of this.  We can easily turn this into a real object with properties though, using a cast to <code>PSCustomObject</code> which is the PowerShell <code>dynamic</code> object.</p>
+
+<p>```</p>
+
+<blockquote><p>dir *.ps1 | %{ [PSCustomObject]@{ Path=$<em>.FullName; Size=$</em>.Length; Updated=$_.LastWriteTime} }</p></blockquote>
+
+<p>Path                                                                       Size Updated</p>
+
+<hr />
+
+<p>C:\source\Highway\MVC\make.ps1                                              211 5/4/2013 11:11:03 AM
+C:\source\Highway\MVC\push.ps1                                               62 5/4/2013 12:16:29 PM
+C:\source\Highway\MVC\setv.ps1                                              332 5/4/2013 11:26:16 AM
+```</p>
+
+<p>Alright, now we have the horizontal labels for our properties, and values below that.  Awesome.  Now lets pipe that to Get-Item:</p>
+
+<p>```</p>
+
+<blockquote><p>dir *.ps1 | %{ [PSCustomObject]@{ Path=$<em>.FullName; Size=$</em>.Length; Updated=$_.LastWriteTime} } | Get-Item</p></blockquote>
+
+<pre><code>Directory: C:\source\Highway\MVC
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>-a---          5/4/2013  11:11 AM        211 make.ps1
+-a---          5/4/2013  12:16 PM         62 push.ps1
+-a---          5/4/2013  11:26 AM        332 setv.ps1
+```</p>
+
+<p>Bingo, we bound Path to Get-Item.  That gives you an example now of both types of Pipeline'ing.</p>
+
+<h2>Functions</h2>
+
+<p>Now that we understand pipelines, how do we start to create reusable functionality?  Well, to do that we need to write functions.  And so, lets look at this in practice with everyone's favorite demo ... Hello World!</p>
+
+<h3>Basic Script Blocks</h3>
+
+<p>We can create a script block simply by using a set of curly braces <code>{ }</code>.  Like so:</p>
+
+<p>```</p>
+
+<blockquote><p>{ "Hello World!" }
+ "Hello World!"
+```</p></blockquote>
+
+<p>That output is kind of odd, right?  It didn't output the string, because that would not have the quotes.  What type of object did that return?</p>
+
+<p>```</p>
+
+<blockquote><p>{ "Hello World!" }.GetType()</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     ScriptBlock                              System.Object
+```</p>
+
+<p>Oh, so it's a script block!  Ok, is that the string representation of the block then?</p>
+
+<p>```</p>
+
+<blockquote><p>{ "Hello World!" }.ToString()
+ "Hello World!"
+```</p></blockquote>
+
+<p>Ah!  Yep, that's what happened.  So how do I run a script block?  Just stick a <code>.</code> or <code>&amp;</code> in front of it.</p>
+
+<p>```</p>
+
+<blockquote><p>.{ "Hello World!" }
+Hello World!
+&amp;{ "Hello World!" }
+Hello World!
+```</p></blockquote>
+
+<p>Yep, both of those do indeed execute, we lose the quotes, and all is well.  So we now have a code block.</p>
+
+<h3>Named Functions</h3>
+
+<p>But what if I want to name that script block?  Easy, we define a function:</p>
+
+<p>```</p>
+
+<blockquote><p>function HW { "Hello World!" }</p>
+
+<p>```</p></blockquote>
+
+<p>Done, we've defined that block now as HW.  How do I run it?  I type <code>HW</code> of course!</p>
+
+<p>```</p>
+
+<blockquote><p>HW
+Hello World!
+```</p></blockquote>
+
+<p>Now I can assign a script block simply to a variable if I want, but if I do so, then I still need to use <code>&amp;</code> or <code>.</code> to execute it, where-as functions are called by name. See:</p>
+
+<p>```</p>
+
+<blockquote><p>$hw = { "Hello World!" }
+$hw
+ "Hello World!"
+&amp;$hw
+Hello World!
+.$hw
+Hello World!
+```</p></blockquote>
+
+<p>But functions also have an important other aspect, which is that they can have parameters.  So let's create a function which takes a parameter, but lets say we want to pass it a location:</p>
+
+<p>```</p>
+
+<blockquote><p>function HW {</p>
+
+<blockquote><p>param($location)
+"Hello $location!"
+}</p>
+
+<p>HW Dallas
+Hello Dallas!
+```</p></blockquote></blockquote>
+
+<p>Now, we can specify types for parameters, so that we can't pass bad data:</p>
+
+<p>```</p>
+
+<blockquote><p>function HW {</p>
+
+<blockquote><p> param([int]$location)
+"Hello $location!"
+}</p>
+
+<p>HW Dallas
+HW : Cannot process argument transformation on parameter 'location'. Cannot convert value "Dallas" to type
+"System.Int32". Error: "Input string was not in a correct format."
+At line:1 char:4
++ HW Dallas
++    ~~~~~~</p>
+
+<pre><code>+ CategoryInfo          : InvalidData: (:) [HW], ParameterBindingArgumentTransformationException
++ FullyQualifiedErrorId : ParameterArgumentTransformationError,HW
+</code></pre></blockquote>
+
+<p>hw 123
+Hello 123!
+```</p></blockquote>
+
+<p>See that we got an error now when we passed the Dallas string, but when we passed 123, we succeeded.  Now we can change this pipe in an array, passing <strong>ByValue</strong>:</p>
+
+<p>```</p>
+
+<blockquote><p>1..5 | HW
+Hello 0!
+```</p></blockquote>
+
+<p>Huh... that didn't do what we expected.  I guess we'll have to give a hint that we want that Parameter to be pipelined.</p>
+
+<p>```</p>
+
+<blockquote><p>function HW { param( [Parameter(ValueFromPipeline=$true)][int]$location )</p>
+
+<blockquote><p>"Hello $location" }</p>
+
+<p>1..5 | HW
+Hello 5
+```</p></blockquote></blockquote>
+
+<p>Ok, but still not "correct".  Why?  Because as it happens, we're using the simple form of a script blocks.  A script block is <strong>actually</strong> defined by three sections: Begin, Process, and End.  By default, if we don't specify a section, we get <strong>End</strong>.  What are the differences?  Begin runs once, before pipleline values are bound.  Process is run once for each member of the pipeline.  End runs after all members have been process.  How do we know that we get <strong>End</strong> by default?  Look at the value we got, it was the last value of the pipeline.</p>
+
+<p>```</p>
+
+<blockquote><p>function HW { param( [Parameter(ValueFromPipeline=$true)][int]$location )</p>
+
+<blockquote><p> BEGIN { "Beginning : $location" }
+ PROCESS {"Processing : $location"}
+ END {"Ending: $location"}}</p>
+
+<p>1..5 | HW
+Beginning : 0
+Processing : 1
+Processing : 2
+Processing : 3
+Processing : 4
+Processing : 5
+Ending: 5
+```</p></blockquote></blockquote>
+
+<p>So here we have redefined our function, and given it a <strong>Begin</strong>, <strong>Process</strong> and <strong>End</strong> block.  And we can see that $location, <strong>because it is marked from pipeline</strong>, is not set until we are in Process, and then we run process 5 times, and finally we run ending once.</p>
+
+<h3>Branching</h3>
+
+<p>So... it is not programming without if blocks, right?  Well we've got those:</p>
+
+<p>```</p>
+
+<blockquote><p>function HW { param( [Parameter(ValueFromPipeline=$true)][int]$location )</p>
+
+<blockquote><p> BEGIN { "Beginning : $location" }
+ PROCESS { if(($location % 2) -eq 0) { "Processing : $location" } else { "Else" } }
+ END {"Ending: $location"}}</p>
+
+<p>1..5 | HW
+Beginning : 0
+Else
+Processing : 2
+Else
+Processing : 4
+Else
+Ending: 5
+```</p></blockquote></blockquote>
+
+<h3>Looping</h3>
+
+<p>First ... don't loop, pipeline.  But when you must loop, do so these ways:</p>
+
+<p>```</p>
+
+<blockquote><p>function DoWhile { $i = 1; do { Write-Host $i; $i++ } while ($i -le 5) }
+DoWhile
+1
+2
+3
+4
+5
+```</p></blockquote>
+
+<p>```</p>
+
+<blockquote><p>function WhileLoop { $i = 1; while ($i -le 5) { Write-Host $i;$i++} }
+WhileLoop
+1
+2
+3
+4
+5
+<code>
+</code>
+function ForLoop { for ($i=1;$i -le 5;$i++) {Write-Host $i} }
+ForLoop
+1
+2
+3
+4
+5
+<code>
+</code>
+function ForEachLoop { $ints=@(1..5); foreach ($i in $ints) {Write-Host $i} }
+ForEachLoop
+1
+2
+3
+4
+5
+```</p></blockquote>
+
+<p>Those cover all of the major types of looping, and do so in a clean way, very similar to the C# syntax in all cases.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PowerShell for Developers - Cmdlets]]></title>
+    <link href="http://TimRayburn.net/blog/powershell-for-developers-cmdlets/"/>
+    <updated>2013-05-08T22:38:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/powershell-for-developers-cmdlets</id>
+    <content type="html"><![CDATA[<h2>Cmdlets (Command-lets)</h2>
+
+<p>In PowerShell we have a concept called Cmdlets, these are the functions we use.  We've already seem some of them, but this chapter will introduce you to the must-know Cmdlets.  This is not a catalog of all Cmdlets, not even close.  As of PowerShell 3.0 there are 2,430 in Windows Server 2012, without adding those available from the community.</p>
+
+<p>Microsoft's commitment is unfailing, they've committed to shipping PowerShell Cmdlets for every server product.  If you use SQL Server, Exchange, BizTalk, SharePoint or any of the other server products then you simply cannot do anything more powerful to pump up your career than to learn PowerShell.</p>
+
+<h3>Proper Grammar</h3>
+
+<p>Cmdlets have a grammar all of their own.  In PowerShell we are encouraged to use a grammar of <strong>Verb-Noun</strong> when creating Cmdlets and functions.  But more than that, there is a list of common verbs, which help new users discover your functions.  For instance, I created a function to update the value of an <code>AppSetting</code> in a <code>web.config</code> or <code>app.config</code> file.  Now, I've not memorized the whole list of verbs, so how did I know which one to use?  Well, I used the Cmdlet called <code>Get-Verb</code> like so:</p>
+
+<p>Hmm... I wonder if it should be called Create-AppSetting:
+```</p>
+
+<blockquote><p>Get-Verb C*</p></blockquote>
+
+<p>Verb                                                        Group</p>
+
+<hr />
+
+<p>Clear                                                       Common
+Close                                                       Common
+Copy                                                        Common
+Checkpoint                                                  Data
+Compare                                                     Data
+Compress                                                    Data
+Convert                                                     Data
+ConvertFrom                                                 Data
+ConvertTo                                                   Data
+Complete                                                    Lifecycle
+Confirm                                                     Lifecycle
+Connect                                                     Communications
+```</p>
+
+<p>Nope, no listing for Create.  How about Set-AppSetting:
+```</p>
+
+<blockquote><p>Get-Verb S*</p></blockquote>
+
+<p>Verb                                                        Group</p>
+
+<hr />
+
+<p>Search                                                      Common
+Select                                                      Common
+Set                                                         Common
+Show                                                        Common
+Skip                                                        Common
+Split                                                       Common
+Step                                                        Common
+Switch                                                      Common
+Save                                                        Data
+Sync                                                        Data
+Start                                                       Lifecycle
+Stop                                                        Lifecycle
+Submit                                                      Lifecycle
+Suspend                                                     Lifecycle
+Send                                                        Communications
+```</p>
+
+<p>Alright, yep, that could work.  But I'm curious, how about Update-AppSetting?</p>
+
+<p>```</p>
+
+<blockquote><p>Get-Verb U*</p></blockquote>
+
+<p>Verb                                                        Group</p>
+
+<hr />
+
+<p>Undo                                                        Common
+Unlock                                                      Common
+Unpublish                                                   Data
+Update                                                      Data
+Uninstall                                                   Lifecycle
+Unregister                                                  Lifecycle
+Unblock                                                     Security
+Unprotect                                                   Security
+Use                                                         Other
+```</p>
+
+<p>Bingo, Update-AppSetting is a good choice, so is Set-AppSetting.  I chose Set-AppSetting, but either would have been an excellent choice.</p>
+
+<p>Likewise, if you were to look-up Delete:
+```</p>
+
+<blockquote><p>Get-Verb Delete</p>
+
+<p><code>
+Nope, not there.  How about Erase?
+</code>
+Get-Verb Delete
+Get-Verb Erase</p>
+
+<p><code>
+Nope again.  How about Remove?
+</code>
+Get-Verb Delete
+Get-Verb Erase
+Get-Verb Remove</p></blockquote>
+
+<p>Verb                                                        Group</p>
+
+<hr />
+
+<p>Remove                                                      Common
+```
+There it is!  So remember, use Get-Verb when deciding how to name things, it will help everyone out in the long run.</p>
+
+<h3>For-Each</h3>
+
+<p>So what is the most important Cmdlet in PowerShell?  Well, for sheer utility, I've got to give this award to ForEach-Object.  It allows you to iterate over any array or list of data.  So how do we use it?</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6 | ForEach-Object { Write-Host $<em> ($</em> * $_) }
+1 1
+2 4
+3 9
+4 16
+5 25
+6 36
+```</p></blockquote>
+
+<p>Alright, we've got one call to the script block (inside the <code>{ }</code>) for every member of the array.  Now, you might be thinking, "man that is really verbose for a scripting language", well good news that is the really long form version of that command.  Shall we terse it up a bit?</p>
+
+<p>First, ForEach-Object has an alias (more on those later) in simply <code>%</code>.  So we can shorten it up like so:</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6 |%{ Write-Host $<em> ($</em> * $_) }
+1 1
+2 4
+3 9
+4 16
+5 25
+6 36
+```</p></blockquote>
+
+<p>Pretty good, but we can get even better.  We're explicitly calling Write-Host, but whatever is returned at the end of a command is automatically printed to the host.  So we can shorten it further like so:</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6 |%{"$<em> $($</em> * $_)"}
+1 1
+2 4
+3 9
+4 16
+5 25
+6 36
+```</p></blockquote>
+
+<p>Alright, I can hear you already, hold up Mr. Smarty Pants, you just did something tricky there.  Yep, I sure did.  How did that work?  Let me explain.  Any string in double-quotes (<code>" "</code>) will have any variables (<code>$foo</code>) inside of it replaced with the value of that variable.</p>
+
+<p>Moreover, any script block returns the last object it creates by default, so since that script block creates a string, it returns that string.  And ForEach-Object collects those objects and returns them as an Array, here to console, but it could also be piped to yet another Cmdlet or function.  But, the really attentive among you will be saying, <strong>"Wait!  You slipped in another $."</strong> Your right, but lets see it without that extra $.</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6 |%{"$<em> ($</em> * $_)"}
+1 (1 * 1)
+2 (2 * 2)
+3 (3 * 3)
+4 (4 * 4)
+5 (5 * 5)
+6 (6 * 6)
+```</p></blockquote>
+
+<p>Ah, you see, this version doesn't actually perform the multiplication.  It replaces the $_ with each value, but the rest is just considered a string.  But PowerShell has a way to evaluate expressions in the middle of strings as well, using <code>$( expression )</code>.  So the extra $ in this <code>1,2,3,4,5,6 |%{"$_ $($_ * $_)"}</code> version evaluates the multiplication and gives us our "most terse form" of this command.</p>
+
+<h3>Where-Object</h3>
+
+<p>So we've now seen how to iterate over an array, but the other thing we usually need to do is to filter them.  In .NET, we are used to using LINQ for this, but LINQ is pretty verbose itself.  How about we cut down our list of numbers to just the even numbers using <code>Where-Object</code>:</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6| Where-Object { ($<em> % 2) -eq 0 } |%{"$</em> $($<em> * $</em>)"}
+2 4
+4 16
+6 36
+```</p></blockquote>
+
+<p>Outstanding, but verbose.  Well just like with <code>For-Each</code> above, there is a much shorter alias for <code>Where-Object</code> which is <code>?</code>.  That shortens us up to:</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6|?{ ($<em> % 2) -eq 0 } |%{"$</em> $($<em> * $</em>)"}
+2 4
+4 16
+6 36
+```</p></blockquote>
+
+<h4>A little diversion...</h4>
+
+<p>Now, we've seen how to limit the array, but here's a little diversion.  At the current time we're returning an array of strings.  Actually, since all arrays in PowerShell are arrays of Objects (in C# <code>Object[]</code>), this would be an array of objects consisting entirely of string objects.  Prove it?  Sure.  First the type of the array itself:</p>
+
+<p>```</p>
+
+<blockquote><p>(1,2,3,4,5,6|?{ ($<em> % 2) -eq 0 } |%{"$</em> $($<em> * $</em>)"}).GetType()</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Object[]                                 System.Array
+```</p>
+
+<p>And now the individual members:</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6|?{ ($<em> % 2) -eq 0 } |%{"$</em> $($<em> * $</em>)"} | %{ $_.GetType() }</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     String                                   System.Object
+True     True     String                                   System.Object
+True     True     String                                   System.Object
+```</p>
+
+<p>But what if I wanted to have access to each of those numbers (the number itself, and the square) at the end of the command.  One way to do this would be to create a <code>Hashtable</code> instead of a <code>String</code> like so:</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6|?{ ($<em> % 2) -eq 0 } |%{@{Num=$</em>;Square=$<em> * $</em>}}</p></blockquote>
+
+<p>Name                           Value</p>
+
+<hr />
+
+<p>Num                            2
+Square                         4
+Num                            4
+Square                         16
+Num                            6
+Square                         36
+```</p>
+
+<p>Let's check the types:</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3,4,5,6|?{ ($<em> % 2) -eq 0 } |%{@{Num=$</em>;Square=$<em> * $</em>}} | %{$_.GetType()}</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Hashtable                                System.Object
+True     True     Hashtable                                System.Object
+True     True     Hashtable                                System.Object
+```
+Yep, Hashtables.</p>
+
+<p>But sometimes have to name variable when you don't intend to use those names is a bit annoying a verbose.  So instead, we can create an array by simply using the <code>,@( )</code> array constructor syntax:</p>
+
+<p>```</p>
+
+<blockquote><p>$a = 1,2,3,4,5,6|?{ ($<em> % 2) -eq 0 } |%{,@($</em>,($<em> * $</em>))}
+$a
+2
+4
+4
+16
+6
+36
+<code>``
+Uhm, output looks a little wierd.  Lets take a look at the type of</code>$a`:</p></blockquote>
+
+<p>```</p>
+
+<blockquote><p>$a.GetType()</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Object[]                                 System.Array
+```</p>
+
+<p>Ok, an array. And it's members?</p>
+
+<p>```</p>
+
+<blockquote><p>$a | %{ $_.GetType() }</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Object[]                                 System.Array
+True     True     Object[]                                 System.Array
+True     True     Object[]                                 System.Array
+```</p>
+
+<p>Alright, more arrays!  And inside the first one of those?</p>
+
+<p>```</p>
+
+<blockquote><p>$a[0] | %{$_.GetType()}</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Int32                                    System.ValueType
+True     True     Int32                                    System.ValueType
+<code>``
+Boom,</code>Int32<code>s for the win.  Instant multi-dimensional array.  This is powerful, it is a terse syntax which is similar to Tuples in other languages.  Because they are</code>Object[]` arrays, the types don't have to match.  Oh yeah, did I mention there is a short form for creating arrays of concurrent integers?  Ohm, my bad. For instance:</p>
+
+<p>```</p>
+
+<blockquote><p>$a = 1..6|?{ ($<em> % 2) -eq 0 } |%{,@($</em>,($<em> * $</em>),"Smile")}
+$a.GetType()</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Object[]                                 System.Array</p>
+
+<blockquote><p>$a | %{ $_.GetType() }</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Object[]                                 System.Array
+True     True     Object[]                                 System.Array
+True     True     Object[]                                 System.Array</p>
+
+<blockquote><p>$a[0] | %{$_.GetType()}</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Int32                                    System.ValueType
+True     True     Int32                                    System.ValueType
+True     True     String                                   System.Object
+```</p>
+
+<h3>Get-ChildItem</h3>
+
+<p>The last Cmdlet I want to introduce in this chapter is the one most people use without even knowing that they're doing so.  If you've every opened a PowerShell command prompt, you've likely done something like:</p>
+
+<p>```</p>
+
+<blockquote><p>dir</p></blockquote>
+
+<pre><code>Directory: C:\Source\Highway
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>d----          5/2/2013   2:20 PM            Data
+d----          5/4/2013  10:44 PM            MVC
+d----          5/4/2013   6:37 PM            Onramper
+d----          5/4/2013   6:46 PM            Services
+-a---          5/4/2013  11:59 AM       1062 dest
+-a---          5/4/2013  12:11 PM        385 distribute.ps1
+<code>``
+Or perhaps if you're from the</code>bash<code>or other</code>sh` descendant family of shell users:</p>
+
+<p>```</p>
+
+<blockquote><p>ls</p></blockquote>
+
+<pre><code>Directory: C:\Source\Highway
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>d----          5/2/2013   2:20 PM            Data
+d----          5/4/2013  10:44 PM            MVC
+d----          5/4/2013   6:37 PM            Onramper
+d----          5/4/2013   6:46 PM            Services
+-a---          5/4/2013  11:59 AM       1062 dest
+-a---          5/4/2013  12:11 PM        385 distribute.ps1
+```</p>
+
+<p>Now, in reality you're using a Cmdlet called Get-ChildItem.  Prove it?  Sure:</p>
+
+<p>```</p>
+
+<blockquote><p>Get-ChildItem</p></blockquote>
+
+<pre><code>Directory: C:\Source\Highway
+</code></pre>
+
+<p>Mode                LastWriteTime     Length Name</p>
+
+<hr />
+
+<p>d----          5/2/2013   2:20 PM            Data
+d----          5/4/2013  10:44 PM            MVC
+d----          5/4/2013   6:37 PM            Onramper
+d----          5/4/2013   6:46 PM            Services
+-a---          5/4/2013  11:59 AM       1062 dest
+-a---          5/4/2013  12:11 PM        385 distribute.ps1
+```</p>
+
+<p>Now this Cmdlet has so much power it almost deserves a chapter to itself.  Let's review just a few things that can't be skipped over.  First, this Cmdlet returns an array of <code>FileSystemInfo</code> objects.  Of course that's easy to prove:</p>
+
+<p>```</p>
+
+<blockquote><p>ls |%{$_.GetType()}</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     DirectoryInfo                            System.IO.FileSystemInfo
+True     True     DirectoryInfo                            System.IO.FileSystemInfo
+True     True     DirectoryInfo                            System.IO.FileSystemInfo
+True     True     DirectoryInfo                            System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+True     True     FileInfo                                 System.IO.FileSystemInfo
+```</p>
+
+<p>That means we have access to all sorts of data about those directory items by pipeing that command along.  For instance, what if I wanted the full path and filename?</p>
+
+<p>```</p>
+
+<blockquote><p>ls |%{$_.FullName}
+C:\Source\Highway\Data
+C:\Source\Highway\MVC
+C:\Source\Highway\Onramper
+C:\Source\Highway\Services
+C:\Source\Highway\dest
+C:\Source\Highway\distribute.ps1
+```</p></blockquote>
+
+<p>And if I wanted to get just the files?</p>
+
+<p>```</p>
+
+<blockquote><p>ls -File |%{$_.FullName}
+C:\Source\Highway\dest
+C:\Source\Highway\distribute.ps1
+```</p></blockquote>
+
+<p>And if I wanted their sizes instead?</p>
+
+<p>```</p>
+
+<blockquote><p>ls -File |%{$_.Length}
+1062
+385
+```</p></blockquote>
+
+<h4>Another bonus section? Oh, ok...</h4>
+
+<p>We can restrict the types of files to a pattern like so:</p>
+
+<p>```</p>
+
+<blockquote><p>ls -File *.ps1 |%{$_.Length}
+385
+```</p></blockquote>
+
+<p>What if I wanted that same thing, recursively, through every subdirectory of my current location?</p>
+
+<p>```</p>
+
+<blockquote><p>ls -File *.ps1 -Recurse|%{$_.Length}
+10275
+10424
+4001
+1332
+1546
+2987
+332
+188
+2997
+344
+194
+211
+62
+332
+0
+0
+0
+0
+247
+243
+368
+247
+243
+0
+0
+0
+0
+880
+265
+265
+217
+62
+332
+385
+```</p></blockquote>
+
+<p>And ... if I wanted all those summed up?</p>
+
+<p>```</p>
+
+<blockquote><p>ls -File *.ps1 -Recurse|%{$_.Length}|Measure-Object -Sum</p></blockquote>
+
+<p>Count    : 34
+Average  :
+Sum      : 38979
+Maximum  :
+Minimum  :
+Property :
+```</p>
+
+<h3>Aliases</h3>
+
+<blockquote><p>There are a finite number of keystrokes left in your hands before you die. -- <a href="http://www.hanselman.com/blog/DoTheyDeserveTheGiftOfYourKeystrokes.aspx">Scott Hanselman</a></p></blockquote>
+
+<p>So, you've likely picked up by now that I'm a fan of terse commands.  Terse commands allow you to move faster, which to me is a huge part of why I'm investing in PowerShell.  There is an ability in PowerShell to create shorter versions of Cmdlets, as you've seen already in this article, called Aliases.  There are alot of aliases already defined.  How many?  So many I can't just do a screen shot of them, but I can count them:</p>
+
+<p>```</p>
+
+<blockquote><p>alias | Measure-Object</p></blockquote>
+
+<p>Count    : 150
+Average  :
+Sum      :
+Maximum  :
+Minimum  :
+Property :
+```</p>
+
+<p>150 aliases already defined for you.  If you want to see what command is behind something like <code>dir</code> you can simply:</p>
+
+<p>```</p>
+
+<blockquote><p>alias dir</p></blockquote>
+
+<p>CommandType     Name                                               ModuleName</p>
+
+<hr />
+
+<p>Alias           dir -> Get-ChildItem
+```</p>
+
+<p>As you can see, <code>dir</code> is <code>Get-ChildItem</code>.  What if I wanted to see all aliases for a given Cmdlet?</p>
+
+<p>```</p>
+
+<blockquote><p>alias -Definition Get-ChildItem</p></blockquote>
+
+<p>CommandType     Name                                               ModuleName</p>
+
+<hr />
+
+<p>Alias           dir -> Get-ChildItem
+Alias           gci -> Get-ChildItem
+Alias           ls -> Get-ChildItem
+```</p>
+
+<p>Now, aliases are something you can expand on!  You can make it super easy to open text files by aliases <code>notepad.exe</code> as so:</p>
+
+<p>```</p>
+
+<blockquote><p>New-Alias n C:\Windows\system32\notepad.exe
+n .\distribute.ps1
+```</p></blockquote>
+
+<p>That opens Notepad, with the <code>distribute.ps1</code> file already opened for editing.  I keep aliases around for a lot of things.  For my text editor, my text comparison tool, and so much more.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PowerShell for Developers - Intro]]></title>
+    <link href="http://TimRayburn.net/blog/powershell-for-developers-intro/"/>
+    <updated>2013-05-07T13:00:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/powershell-for-developers-intro</id>
+    <content type="html"><![CDATA[<blockquote><p> I must go down to the seas again, to the lonely sea and the sky,
+ And all I ask is a tall ship and a star to steer her by,
+ And the wheel's kick and the wind's song and the white sail's shaking,
+ And a gray mist on the sea's face, and a gray dawn breaking.
+ -- Sea Fever by John Masefield</p></blockquote>
+
+<p>Every developer knows that in order to be successful at their chosen profession, they need to keep the best tools at their disposal.  We all have our favorite text editors, and our favorite comparison tools, and the wise among us also have our favorite scripting languages and command line environments.</p>
+
+<p>I am an unabashed fan of GIT, and as such for several years now I've used the <code>bash</code> shell as my command line environment of choice.  But I recently started paying more attention to <code>PowerShell</code> and I realized that I had not at all given it it's due when I first learned about it several years ago.  I've spoken recently with @DevlinLiles, @AmirRajan, @CoriDrew, and @BForrest about this, and I realized that I wasn't alone at all in this.  Most developers working in .NET languages have mostly ignored PowerShell.  I intend this series of blog posts to correct this issue.</p>
+
+<h2>The Basics</h2>
+
+<blockquote><p> Let's start at the very beginning
+ A very good place to start
+ When you read you begin with A-B-C
+ When you sing you begin with do-re-mi
+ -- "Do-Re-Mi" by Rodgers &amp; Hammerstein</p></blockquote>
+
+<h3>PowerShell 3.0</h3>
+
+<p>So how do I use the <code>PowerShell</code> thing, Tim?  Easy.  First, we need to know what version of Windows you're using now, because we might want to upgrade you to the latest version.  If you're using <strong>Windows 8</strong> or <strong>Windows Server 2012</strong> then you're good, you already have PowerShell 3.0.  If you're using <strong>Windows 7</strong> or <strong>Windows Server 2008</strong> or <strong>Windows Server 2008 R2</strong>, then you need to download the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=34595">Windows Management Pack 3.0</a> which upgrades you to PowerShell 3.0.</p>
+
+<p>Not sure if someone else might have already installed it?  Just open PowerShell (hint: Win+R -> <code>PowerShell</code> <strong>enter</strong>) and enter <code>$host.version</code> at the prompt.</p>
+
+<p>```</p>
+
+<blockquote><p>$host.version</p></blockquote>
+
+<p>Major  Minor  Build  Revision</p>
+
+<hr />
+
+<p>3      0      -1     -1
+```</p>
+
+<p>The above it what we're looking for, anything else, and you need to install the <a href="http://www.microsoft.com/en-us/download/details.aspx?id=34595">Windows Management Pack 3.0</a>.</p>
+
+<h3>Variables</h3>
+
+<p>The first thing you need to know about PowerShell is how to create a variable.  This is very simple, you just assign it to a variable name.  In PowerShell, all variables are preceded by a <code>$</code>.  So if you want to create a variable X and assign the integer value 1 to it, you would type:</p>
+
+<p>```</p>
+
+<blockquote><p>$X = 1
+```</p></blockquote>
+
+<p>Important to know, especially for C# developers, is that PowerShell is <strong>case-insensitive</strong>.  As such, <code>$X</code> is the same as <code>$x</code>.</p>
+
+<h4>Value Types</h4>
+
+<p>Now, .NET developers, pay attention to this.  In PowerShell all variables are actual objects, not just string values.  What do I mean?  Type this:</p>
+
+<p>```</p>
+
+<blockquote><p>$X.GetType()</p></blockquote>
+
+<p>IsPublic IsSerial Name                                     BaseType</p>
+
+<hr />
+
+<p>True     True     Int32                                    System.ValueType
+```</p>
+
+<p><strong>Holy smoke!</strong> That variable is an <code>Int32</code>, I mean a real <code>System.Int32</code>.</p>
+
+<p>Because of this, we can use any type of methods that might exist on those objects.  For instance, we could type:</p>
+
+<p>```</p>
+
+<blockquote><p>$X.Equals(4)
+False
+```</p></blockquote>
+
+<p>So how do we create non-value types then?  That depends...</p>
+
+<h4>Reference Types via New-Object</h4>
+
+<p>Most of the time, we are used to creating .NET objects by typing something like <code>var dt = new System.DateTime()</code> but in PowerShell we have something similar, but different:</p>
+
+<p>```</p>
+
+<blockquote><p>$dt = New-Object System.DateTime
+```</p></blockquote>
+
+<p>You can always check the value of a variable, just by typing it's name at the prompt like this:</p>
+
+<p>```</p>
+
+<blockquote><p>$dt</p></blockquote>
+
+<p>Monday, January 1, 0001 12:00:00 AM
+```</p>
+
+<p>That makes total sense, that is the default value of a DateTime aka <code>default(DateTime)</code> in C#.  But in reality, I tend to use <code>System.DateTime.Now</code> to get the system time, more often than I do <code>new DateTime()</code>, so how to I do that in PowerShell?</p>
+
+<h4>Reference Types via Static Properties &amp; Methods</h4>
+
+<p>So if we want to access the .NET Framework's static types, we simply need to reference the type, and then the method, as follows:</p>
+
+<p>```</p>
+
+<blockquote><p>[System.DateTime]::Now</p></blockquote>
+
+<p>Monday, May 6, 2013 10:22:26 PM
+```</p>
+
+<p>Now, if we wanted to assign that to our variable, we would just do:</p>
+
+<p>```</p>
+
+<blockquote><p>$dt = [System.DateTime]::Now
+```</p></blockquote>
+
+<p>Please note, when we assign the value to a variable, we no longer get output to the console.  We'll see how to change that in just a bit.</p>
+
+<h3>Arrays</h3>
+
+<p>Arrays are common in all programming languages, they represent a series of values.  In PowerShell, those values are not required to be of the same type, you can think of all Arrays in .NET terms as <code>System.Object[]</code>, an array of Objects.</p>
+
+<p>Declaring and using arrays could not possibly be easier in PowerShell, we simply put together a series of values, separated by commas.</p>
+
+<p>```</p>
+
+<blockquote><p>1,2,3
+1
+2
+3
+```</p></blockquote>
+
+<p>As I noted above, they don't have to be of the same type:</p>
+
+<p>```</p>
+
+<blockquote><p>1,"abc",[System.DateTime]::Now
+1
+abc</p></blockquote>
+
+<p>Monday, May 6, 2013 10:28:15 PM
+```</p>
+
+<p>And that is all there is to arrays.  You can add members to arrays many ways, but the simplest is as follows:</p>
+
+<p>```</p>
+
+<blockquote><p>$arr = 1,2,3
+$arr
+1
+2
+3
+$arr = $arr + 4,5,6
+$arr
+1
+2
+3
+4
+5
+6
+```</p></blockquote>
+
+<h3>Hashtable</h3>
+
+<p>There is one other type of object which is critical to the world of PowerShell, and that is the Hashtable.  PowerShell is a dynamic language, in fact as of 3.0 it's even built on top of the Dynamic Language Runtime, but as such it needs a flexible structure for storing loosely types objects.  Enter the Hashtable.</p>
+
+<p>The syntax for Hashtable couldn't possibly be easier, to create one you just use <code>@{ key=value; key2=value2}</code> So for instance, if you want to create a Hashtable to store a bunch of people, you could do so like this:</p>
+
+<p>```</p>
+
+<blockquote><p>$tim = @{ FirstName="Tim";LastName="Rayburn"}
+$cori = @{ FirstName="Cori";LastName="Drew"}
+$barry = @{ FirstName="Barry";LastName="Forrest"}
+```</p></blockquote>
+
+<p>Now, as we learned in the last section, we can create an array just by separating items by commas, so lets do so, and then sort these people by FirstName:</p>
+
+<p>```</p>
+
+<blockquote><p>$tim,$cori,$barry | Sort-Object FirstName</p></blockquote>
+
+<p>Name                           Value</p>
+
+<hr />
+
+<p>LastName                       Forrest
+FirstName                      Barry
+LastName                       Drew
+FirstName                      Cori
+LastName                       Rayburn
+FirstName                      Tim
+```</p>
+
+<p>As you can see, Barry is now listed first, then Cori, then Tim.  Don't worry about understanding Sort-Object just yet, we'll get into how that line works more in the next post.</p>
+
+<p>Now, lets imagine I want to add a value for Employer to each of these.  How to I change a Hashtable once it has been created?  Easy, just refer to a property that doesn't exist yet, and set its value.</p>
+
+<p>```</p>
+
+<blockquote><p>$tim.Employer = "Improving Enterprises"
+$barry.Employer = "Improving Enterprises"
+$cori.Employer = "Improving Enterprises (Contractor until August)"
+```</p></blockquote>
+
+<h3>Constants</h3>
+
+<p>In addition to all of the above, there are a couple of constants which you might want to know about when developing.  <code>$null</code> is the constant value of a Null Reference.  In addition there are constants for <code>$true</code> and <code>$false</code> though if a boolean is expected you can also always use <code>1</code> or <code>0</code> respectively.</p>
+]]></content>
+  </entry>
+  
+</feed>

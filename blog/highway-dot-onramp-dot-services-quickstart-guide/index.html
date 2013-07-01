@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Highway.Onramp.Services Quickstart Guide - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="Highway.Onramp.Services is part of the Onramp series of NuGet packages which all focus on providing you robust starting solutions for common team &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/highway-dot-onramp-dot-services-quickstart-guide/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Highway.Onramp.Services Quickstart Guide</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-28T06:43:00-05:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Highway.Onramp.Services is part of the <a href="http://timrayburn.net/blog/introducing-highway-onramps/">Onramp series of NuGet packages</a> which all focus on providing you robust starting solutions for common team needs.  They let you skip over all that required plumbing friction, and jump straight into writing code which produces real business value.</p>
+
+<p>Now, we can&#8217;t do that without making some very important decisions for you.  That&#8217;s why as part of this we&#8217;ve also produced Highway Onramper, which lets you create your own version of these Onramps with your own technology decisions made.  For this post we&#8217;re just introducing our version, and in a future post we&#8217;ll teach you how to make an Onramp of your own.</p>
+
+<h2>1, 2, 3 Running Service</h2>
+
+<p>So let&#8217;s create a Windows Service, that we can actually debug, and install/uninstall, shall we?</p>
+
+<ul>
+<li>Start Visual Studio and create a Console Application in C#.  When you&#8217;re done, the Program.cs should look like the default:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>class Program
+</span><span class='line'>{
+</span><span class='line'>    static void Main(string[] args)
+</span><span class='line'>    {
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Open the Package Manager Console, and type:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PM&gt; Install-Package Highway.Onramp.Services</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Note: You will be prompted for permission to overwrite your Program.cs, go ahead and give permission, after all there is no useful code in that class yet.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>File Conflict
+</span><span class='line'>File 'Program.cs' already exists in project 'ConsoleApplication4'. Do you want to overwrite it?
+</span><span class='line'>[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [?] Help (default is "N"):Y
+</span><span class='line'>Overwrite existing file 'Program.cs'.
+</span><span class='line'>Successfully added 'Highway.Onramp.Services 2.0.4.0' to ConsoleApplication4.</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Press F5 and run your new, fully functional, Windows Service.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>INFO&gt; Configuration Result:
+</span><span class='line'>[Success] Name MyService
+</span><span class='line'>[Success] DisplayName My Services Long Description
+</span><span class='line'>[Success] Description My Services Long Description
+</span><span class='line'>[Success] ServiceName MyService
+</span><span class='line'>INFO&gt; Topshelf v3.1.107.0, .NET Framework v4.0.30319.18046
+</span><span class='line'>INFO&gt; The MyService service is now running, press Control+C to exit.
+</span><span class='line'>INFO&gt; Tick Tock goes the clock
+</span><span class='line'>INFO&gt; Tick Tock goes the clock
+</span><span class='line'>INFO&gt; Tick Tock goes the clock
+</span><span class='line'>INFO&gt; Tick Tock goes the clock</span></code></pre></td></tr></table></div></figure>
+
+
+<p>That&#8217;s it, your service is up and running, and can be debugged.  But what decisions did we just make for you?</p>
+
+<h2>Straight to Value</h2>
+
+<p>So before we explain how this all works, if you just want to get down to coding, then have at it.  The file you want to modify is <code>Services.cs</code> and you can change everything about that class you want to <strong>EXCEPT</strong> that it implements the <code>IHostedService</code> interface.  That is how our framework code tells your code when to Start and Stop.</p>
+
+<p>As you can see, the default we&#8217;ve provided uses a simple Timer to write to the console.  But you can wire in anything you want at this point.</p>
+
+<h2>The Architecture</h2>
+
+<h3>TopShelf</h3>
+
+<p>First and foremost, your new service uses the amazing <a href="http://topshelf-project.com/">TopShelf project</a> to turn a simple Console application into a Windows Service.  I encourage you to go and learn more about this project, but the fundamentals are the following:</p>
+
+<ul>
+<li>Install the service:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;YourConsoleExecutable&gt;.exe install</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Uninstall the service:</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;YourConsoleExecutable&gt;.exe uninstall</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Castle.Windsor</h3>
+
+<p>We are big believers in Dependency Injection, and so we&#8217;ve included <a href="http://www.castleproject.org/">Castle.Windsor as an Inversion of Control container</a>.  But more than that, we&#8217;ve already setup a the container for the basics for you.  If you go to the new <code>Installers</code> directory in your project, you will see three classes.  All of these inherit from <code>IWindsorInstaller</code> and are invoked when the service starts to configure your container.</p>
+
+<h3>NLog &amp; Castle Logging Facility</h3>
+
+<p>We&#8217;ve implemented the Castle Logging Facility, which is an abstraction over the top of any logger, and then wired that up to <a href="http://nlog-project.org/">NLog</a>.  There is an <code>NLog.config</code> file, and it is already setup to log to a file, and the console, and the debugger at various levels of messages.</p>
+
+<p>By default the console only receives <code>Info</code> level or higher, but the debugger will receive everything.</p>
+
+<h3>Dictionary Adapter</h3>
+
+<p>Also from Castle.Core, we&#8217;ve used Dictionary Adapter to provide a testable abstraction over App Settings.  This is setup in the <code>CastleInstaller.cs</code>, with the following lines of code:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>// Our configuration magic, register all interfaces ending in Config from
+</span><span class='line'>// this assembly, and create implementations using DictionaryAdapter
+</span><span class='line'>// from the AppSettings in our app.config.
+</span><span class='line'>var daf = new DictionaryAdapterFactory();
+</span><span class='line'>container.Register(
+</span><span class='line'>    Types
+</span><span class='line'>        .FromThisAssembly()
+</span><span class='line'>        .Where(type =&gt; type.IsInterface && type.Name.EndsWith("Config"))
+</span><span class='line'>        .Configure(
+</span><span class='line'>            reg =&gt; reg.UsingFactoryMethod(
+</span><span class='line'>                (k, m, c) =&gt; daf.GetAdapter(m.Implementation, ConfigurationManager.AppSettings)
+</span><span class='line'>                )
+</span><span class='line'>        ));</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This tells Castle to register all <strong>Types from the current assembly</strong> which are <strong>Interfaces</strong> and which have a <strong>name that ends with &#8220;Config&#8221;</strong>.  It then says that when such an interface is resolved, it will use the DictionaryAdapterFactory to create an instance of this interface for you, backed by the AppSettings of your project.  Now, you&#8217;re probably not familiar with DictionaryAdapter, but if you&#8217;d like to learn more I&#8217;d suggest my two <a href="http://timrayburn.net/blog/dictionaryadapter-is-love-part-1/">blog</a> <a href="http://timrayburn.net/blog/dictionaryadapter-is-love-part-2/">posts</a> of the subject.</p>
+
+<p>We&#8217;ve included an interface example in the <code>Config</code> folder to show you how this might work:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[KeyPrefix("Service.")]
+</span><span class='line'>public interface IServiceConfig
+</span><span class='line'>{
+</span><span class='line'>    string LongName { get; set; }
+</span><span class='line'>    string ShortName { get; set; }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you take this interface as a dependency, you can invoke the LongName, or ShortName, properties and you will receive the values from your <code>app.config</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;appSettings&gt;
+</span><span class='line'>  &lt;add key="Service.LongName" value="My Services Long Description" /&gt;
+</span><span class='line'>  &lt;add key="Service.ShortName" value="MyService" /&gt;
+</span><span class='line'>&lt;/appSettings&gt;</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-28T06:43:00-05:00" pubdate data-updated="true">May 28<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/highway/'>Highway</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/highway-dot-onramp-dot-services-quickstart-guide/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/highway-dot-onramp-dot-services-quickstart-guide/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/introducing-highway-onramps/" title="Previous Post: Introducing Highway Onramps">&laquo; Introducing Highway Onramps</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/slides-and-code-from-dallas-xaml-git-workshop/" title="Next Post: Slides and Code from Dallas XAML GIT Workshop">Slides and Code from Dallas XAML GIT Workshop &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

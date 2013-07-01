@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Break the Habit : Nested If Statements - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="It is time to break some bad habits, and today we take some code written by a man I like (but who will remain nameless and linkless) that is in &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/break-the-habit-nested-if-statements/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Break the Habit : Nested if Statements</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-23T00:00:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>It is time to break some bad habits, and today we take some code written by a man I like (but who will remain nameless and linkless) that is in desperate need of refactoring. But this problem is not a problem exclusive to this very bright developer, it is a bad habit that we as an industry have picked up somewhere along the line and I&#8217;m here to say &#8220;Stop The Insanity!&#8221;. </p> <p>Consider the following code:<p></p> <div> <div class="csharpcode"><pre><span class="lnum"> 1:</span> <span class="kwrd">if</span> (_privateDataObject.Methodology != <span class="kwrd">null</span>)</pre><pre><span class="lnum"> 2:</span> { </pre><pre><span class="lnum"> 3:</span> <span class="kwrd">if</span> (_privateDataObject.Methodology == <span class="str">"00"</span>) </pre><pre><span class="lnum"> 4:</span> { </pre><pre><span class="lnum"> 5:</span> <span class="kwrd">if</span> (_privateDataObject.Amount != <span class="kwrd">null</span>)</pre><pre><span class="lnum"> 6:</span> { </pre><pre><span class="lnum"> 7:</span> <span class="kwrd">if</span> (IsNumeric(_privateDataObject.Amount)) </pre><pre><span class="lnum"> 8:</span> { </pre><pre><span class="lnum"> 9:</span> <span class="kwrd">if</span> (Convert.ToDecimal(_privateDataObject.Amount )==0 ) </pre><pre><span class="lnum">10:</span> { </pre><pre><span class="lnum">11:</span> bReturnValue =<span class="kwrd">true</span>; </pre><pre><span class="lnum">12:</span> } </pre><pre><span class="lnum">13:</span> <span class="kwrd">else</span> </pre><pre><span class="lnum">14:</span> { </pre><pre><span class="lnum">15:</span> </pre><pre><span class="lnum">16:</span> bReturnValue =<span class="kwrd">false</span>; </pre><pre><span class="lnum">17:</span> } </pre><pre><span class="lnum">18:</span> } </pre><pre><span class="lnum">19:</span> <span class="kwrd">else</span> </pre><pre><span class="lnum">20:</span> { </pre><pre><span class="lnum">21:</span> </pre><pre><span class="lnum">22:</span> bReturnValue =<span class="kwrd">false</span>; </pre><pre><span class="lnum">23:</span> } </pre><pre><span class="lnum">24:</span> } </pre><pre><span class="lnum">25:</span> <span class="kwrd">else</span> </pre><pre><span class="lnum">26:</span> { </pre><pre><span class="lnum">27:</span> </pre><pre><span class="lnum">28:</span> bReturnValue =<span class="kwrd">false</span>; </pre><pre><span class="lnum">29:</span> } </pre><pre><span class="lnum">30:</span> } </pre><pre><span class="lnum">31:</span> <span class="kwrd">else</span> </pre><pre><span class="lnum">32:</span> { </pre><pre><span class="lnum">33:</span> </pre><pre><span class="lnum">34:</span> bReturnValue =<span class="kwrd">false</span>; </pre><pre><span class="lnum">35:</span> } </pre><pre><span class="lnum">36:</span> } </pre><pre><span class="lnum">37:</span> &nbsp;</pre><pre><span class="lnum">38:</span> <span class="kwrd">return</span> bReturnValue;</pre></div><style type="text/css">.csharpcode-wrapper, .csharpcode-wrapper pre {background-color: #f4f4f4;border: solid 1px gray;cursor: text;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;margin: 20px 0px 10px 0px;max-height: 200px;overflow: auto;padding: 4px 4px 4px 4px;width: 97.5%;}.csharpcode-wrapper pre {border-style: none;margin: 0px 0px 0px 0px;overflow: visible;padding: 0px 0px 0px 0px;}.csharpcode, .csharpcode pre, .csharpcode .alt {background-color: #f4f4f4;border-style: none;color: black;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;overflow: visible;padding: 0px 0px 0px 0px;width: 100%;}.csharpcode pre {margin: 0em;}.csharpcode .alt {background-color: white;}.csharpcode .asp {background-color: #ffff00;}.csharpcode .attr {color: #ff0000;}.csharpcode .html {color: #800000;}.csharpcode .kwrd {color: #0000ff;}.csharpcode .lnum {color: #606060;}.csharpcode .op {color: #0000c0;}.csharpcode .preproc {color: #cc6633;}.csharpcode .rem {color: #008000;}.csharpcode .str {color: #006080;}</style></div><p>&nbsp;</p><p>This decision weighs in at over 38 lines. Let&#8217;s look at what the warning signs in this method should have been that it needed to be coded differently. </p><p>The first and most important is that this follows a very basic pattern we see in code, we are seeking for single complex condition and want to return a &#8220;true&#8221; if we find it, and &#8220;false&#8221; in all other cases. This pattern is so basic it is taught in every Intro to Programming course ever. The pattern has a common name &#8220;Boolean AND&#8221; and is a part of every language (that I know of) on the planet. Refactored to accomidate for this pattern we end up with : <p>&nbsp; <div><div class="csharpcode"><pre><span class="lnum"> 1:</span> <span class="kwrd">if</span> (_privateDataObject.Methodology != <span class="kwrd">null</span> &amp;&amp;</pre><pre><span class="lnum"> 2:</span> _privateDataObject.Methodology == <span class="str">"00"</span> &amp;&amp; </pre><pre><span class="lnum"> 3:</span> _privateDataObject.Amount != <span class="kwrd">null</span> &amp;&amp;</pre><pre><span class="lnum"> 4:</span> IsNumeric(_privateDataObject.Amount) &amp;&amp; </pre><pre><span class="lnum"> 5:</span> Convert.ToDecimal(_privateDataObject.Amount ) == 0) </pre><pre><span class="lnum"> 6:</span> {</pre><pre><span class="lnum"> 7:</span> bReturnValue =<span class="kwrd">true</span>; </pre><pre><span class="lnum"> 8:</span> } </pre><pre><span class="lnum"> 9:</span> <span class="kwrd">else</span> </pre><pre><span class="lnum">10:</span> { </pre><pre><span class="lnum">11:</span> bReturnValue =<span class="kwrd">false</span>; </pre><pre><span class="lnum">12:</span> } </pre><pre><span class="lnum">13:</span> &nbsp;</pre><pre><span class="lnum">14:</span> <span class="kwrd">return</span> bReturnValue;</pre></div><style type="text/css">.csharpcode-wrapper, .csharpcode-wrapper pre {background-color: #f4f4f4;border: solid 1px gray;cursor: text;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;margin: 20px 0px 10px 0px;max-height: 200px;overflow: auto;padding: 4px 4px 4px 4px;width: 97.5%;}.csharpcode-wrapper pre {border-style: none;margin: 0px 0px 0px 0px;overflow: visible;padding: 0px 0px 0px 0px;}.csharpcode, .csharpcode pre, .csharpcode .alt {background-color: #f4f4f4;border-style: none;color: black;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;overflow: visible;padding: 0px 0px 0px 0px;width: 100%;}.csharpcode pre {margin: 0em;}.csharpcode .alt {background-color: white;}.csharpcode .asp {background-color: #ffff00;}.csharpcode .attr {color: #ff0000;}.csharpcode .html {color: #800000;}.csharpcode .kwrd {color: #0000ff;}.csharpcode .lnum {color: #606060;}.csharpcode .op {color: #0000c0;}.csharpcode .preproc {color: #cc6633;}.csharpcode .rem {color: #008000;}.csharpcode .str {color: #006080;}</style></div><p>From 38 lines down to 14, not bad. And this version is not even as short (in line count) as it could be in favor of readability (spreading the expression across multiple lines) and to include braces (which are optional with only 1 command). <p>Now that we&#8217;ve tamed the wild nested if, let&#8217;s look at another problem. Why set a value, only to immediately return that value once you&#8217;ve decided on the result? Just return the value immediately. This small win nets us the following code: <div><div class="csharpcode"><pre><span class="lnum"> 1:</span> <span class="kwrd">if</span> (_privateDataObject.Methodology != <span class="kwrd">null</span> &amp;&amp;</pre><pre><span class="lnum"> 2:</span> _privateDataObject.Methodology == <span class="str">"00"</span> &amp;&amp; </pre><pre><span class="lnum"> 3:</span> _privateDataObject.Amount != <span class="kwrd">null</span> &amp;&amp;</pre><pre><span class="lnum"> 4:</span> IsNumeric(_privateDataObject.Amount) &amp;&amp; </pre><pre><span class="lnum"> 5:</span> Convert.ToDecimal(_privateDataObject.Amount ) == 0) </pre><pre><span class="lnum"> 6:</span> {</pre><pre><span class="lnum"> 7:</span> <span class="kwrd">return</span> <span class="kwrd">true</span>; </pre><pre><span class="lnum"> 8:</span> } </pre><pre><span class="lnum"> 9:</span> <span class="kwrd">else</span> </pre><pre><span class="lnum">10:</span> { </pre><pre><span class="lnum">11:</span> <span class="kwrd">return</span> <span class="kwrd">false</span>; </pre><pre><span class="lnum">12:</span> } </pre></div><style type="text/css">.csharpcode-wrapper, .csharpcode-wrapper pre {background-color: #f4f4f4;border: solid 1px gray;cursor: text;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;margin: 20px 0px 10px 0px;max-height: 200px;overflow: auto;padding: 4px 4px 4px 4px;width: 97.5%;}.csharpcode-wrapper pre {border-style: none;margin: 0px 0px 0px 0px;overflow: visible;padding: 0px 0px 0px 0px;}.csharpcode, .csharpcode pre, .csharpcode .alt {background-color: #f4f4f4;border-style: none;color: black;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;overflow: visible;padding: 0px 0px 0px 0px;width: 100%;}.csharpcode pre {margin: 0em;}.csharpcode .alt {background-color: white;}.csharpcode .asp {background-color: #ffff00;}.csharpcode .attr {color: #ff0000;}.csharpcode .html {color: #800000;}.csharpcode .kwrd {color: #0000ff;}.csharpcode .lnum {color: #606060;}.csharpcode .op {color: #0000c0;}.csharpcode .preproc {color: #cc6633;}.csharpcode .rem {color: #008000;}.csharpcode .str {color: #006080;}</style></div><p>From 14 to 12, not bad, and even less un-needed code. The final refactoring is based on the fact that this code is searching for a boolean value using boolean expressions. That means that to reach true &#8220;ruthless&#8221; refactoring we should end up with the following:</p><div>&nbsp;</div><div><div class="csharpcode"><pre><span class="lnum"> 1:</span> <span class="kwrd">return</span> _privateDataObject.Methodology != <span class="kwrd">null</span> &amp;&amp;</pre><pre><span class="lnum"> 2:</span>_privateDataObject.Methodology == <span class="str">"00"</span> &amp;&amp; </pre><pre><span class="lnum"> 3:</span>_privateDataObject.Amount != <span class="kwrd">null</span> &amp;&amp;</pre><pre><span class="lnum"> 4:</span>IsNumeric(_privateDataObject.Amount) &amp;&amp; </pre><pre><span class="lnum"> 5:</span>Convert.ToDecimal(_privateDataObject.Amount ) == 0;</pre></div><style type="text/css">.csharpcode-wrapper, .csharpcode-wrapper pre {background-color: #f4f4f4;border: solid 1px gray;cursor: text;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;margin: 20px 0px 10px 0px;max-height: 200px;overflow: auto;padding: 4px 4px 4px 4px;width: 97.5%;}.csharpcode-wrapper pre {border-style: none;margin: 0px 0px 0px 0px;overflow: visible;padding: 0px 0px 0px 0px;}.csharpcode, .csharpcode pre, .csharpcode .alt {background-color: #f4f4f4;border-style: none;color: black;font-family: consolas, &#8216;Courier New&#8217;, courier, monospace;font-size: 8pt;line-height: 12pt;overflow: visible;padding: 0px 0px 0px 0px;width: 100%;}.csharpcode pre {margin: 0em;}.csharpcode .alt {background-color: white;}.csharpcode .asp {background-color: #ffff00;}.csharpcode .attr {color: #ff0000;}.csharpcode .html {color: #800000;}.csharpcode .kwrd {color: #0000ff;}.csharpcode .lnum {color: #606060;}.csharpcode .op {color: #0000c0;}.csharpcode .preproc {color: #cc6633;}.csharpcode .rem {color: #008000;}.csharpcode .str {color: #006080;}</style></div><p>Final result, 5 lines of code, same functionality. Important note to the Visual Basic developers out there, &amp;&amp; is the equivalent of &#8220;AndAlso&#8221; in VB, not simply &#8220;And&#8221;, hence why this code does not blow up with a <a href="code://mscorlib:2.0.0.0:b77a5c561934e089/System.NullReferenceException">NullReferenceException</a>. </p><p>I implore every developer reading this to get into the habit of considering how to refactor code as soon as you&#8217;ve got it working, and I mean on a method by method basis. Even if you&#8217;re not using a &#8220;TDD&#8221; methodology, this is a very good habit to get into because every time we change code we&#8217;ve introduced the chance to improve either the readability or performance of the code as well. It is natural to reach &#8220;working&#8221; code and want to move on, but spending 10 minutes to examine how you got it working will pay off in the long run, I assure you.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-02-23T00:00:00-06:00" pubdate data-updated="true">Feb 23<span>rd</span>, 2007</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/break-the-habit-nested-if-statements/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/break-the-habit-nested-if-statements/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/reflector-5-0-changes-net-blogging/" title="Previous Post: Reflector 5.0 changes .NET Blogging">&laquo; Reflector 5.0 changes .NET Blogging</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/gravatar-is-back/" title="Next Post: Gravatar is back!">Gravatar is back! &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

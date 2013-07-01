@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: azure | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/azure/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Join ScottGu for Meet Windows Azure]]></title>
+    <link href="http://TimRayburn.net/blog/join-scottgu-for-meet-windows-azure/"/>
+    <updated>2012-06-06T19:17:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/join-scottgu-for-meet-windows-azure</id>
+    <content type="html"><![CDATA[<p>Just a quick note here, tomorrow (June 7th) Scott Guthrie will be hosting a live stream event called <a href="http://www.meetwindowsazure.com/">Meet Windows Azure</a>.  The event will start at 1PM PDT (2PM MDT, 3PM CDT, 4PM EDT) and it will be covering some amazing new features in Windows Azure.  In particular I'd like to draw your attention to this snippet, from their <a href="http://blogs.msdn.com/b/windowsazure/archive/2012/06/06/announcing-new-windows-azure-services-to-deliver-hybrid-cloud.aspx">announcement blog post</a> which should get your attention.</p>
+
+<blockquote><p>Build web sites and applications with this highly elastic solution supporting .NET, Node.js, and PHP while using common deployment techniques like Git and FTP.  Windows Azure Web Sites will also allow easy deployment of open source applications like WordPress, Joomla!, DotNetNuke, Umbraco, and Drupal to the cloud with a few clicks.</p></blockquote>
+
+<p>What's that?  Quick and easy deployment from GIT to Azure?  You've got my attention.  But their not done yet, then they throw down:</p>
+
+<blockquote><p>Windows Azure SDK June 2012 includes new developer capabilities for writing code against the latest service improvements with updated support for Java, PHP, and .NET, and the addition of Python as a supported language on Windows Azure.  Additionally, the SDK now provides 100% command line support for both Windows and Mac.</p></blockquote>
+
+<p>Ok, where are the hidden cameras? 100% command line support for both Mac and Windows?!  Sign me up!</p>
+
+<p>Join me tomorrow for <a href="http://www.meetwindowsazure.com/">Meet Windows Azure</a> and lets see what ScottGu has done to improve Azure.</p>
+]]></content>
+  </entry>
+  
+</feed>

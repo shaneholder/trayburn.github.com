@@ -1,0 +1,857 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PowerShell for Developers - Functions - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="Pipeline We&#8217;ve been using it already quite a bit in the past chapters, but lets take a moment and introduce, properly, the pipeline. Pipeline&# &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/powershell-for-developers-functions/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">PowerShell for Developers - Functions</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-10T00:24:00-05:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2>Pipeline</h2>
+
+<p>We&#8217;ve been using it already quite a bit in the past chapters, but lets take a moment and introduce, properly, the pipeline.  Pipeline&#8217;ing is powered in PowerShell using the pipe operator <code>|</code>.  It passes data from one command, to another command.  That other command had better be able to use that data.  How?  Well there is not magic here, there is conventions instead.</p>
+
+<p>Let&#8217;s take a look at the help for our friend <code>Get-Item</code>, we do that as by typing <code>help Get-Item</code> or in our case <code>help Get-Item -Parameter Path</code> which is asking for the help for the Path parameter specifically:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; help get-item -Parameter Path
+</span><span class='line'>
+</span><span class='line'>-Path &lt;String[]&gt;
+</span><span class='line'>    Specifies the path to an item. Get-Item gets the item at the specified location. Wildcards are permitted. This
+</span><span class='line'>    parameter is required, but the parameter name ("Path") is optional.
+</span><span class='line'>
+</span><span class='line'>    Use a dot (.) to specify the current location. Use the wildcard character (*) to specify all the items in the
+</span><span class='line'>    current location.
+</span><span class='line'>
+</span><span class='line'>    Required?                    true
+</span><span class='line'>    Position?                    1
+</span><span class='line'>    Default value
+</span><span class='line'>    Accept pipeline input?       true (ByValue, ByPropertyName)
+</span><span class='line'>    Accept wildcard characters?  true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Did you not get this?  You likely need to install the help, run <code>Update-Help</code> and it will do so.  If you did get this, you&#8217;ll see the line that talks about <code>Accept Pipeline Input?</code> and that it states <code>true</code> but more importantly that we can pass either <strong>ByValue</strong> or <strong>ByPropertyName</strong>.  Let us explore both of those for a moment.</p>
+
+<h3>By Value Pipeline&#8217;ing</h3>
+
+<p>ByValue pipelines are the easiest to understand, in this case we can see from the help above we, the value for Path is expected to a <code>String[]</code> (a string array).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; dir | %{ $_.FullName }
+</span><span class='line'>C:\source\Highway\MVC\build
+</span><span class='line'>C:\source\Highway\MVC\src
+</span><span class='line'>C:\source\Highway\MVC\.gitignore
+</span><span class='line'>C:\source\Highway\MVC\license.txt
+</span><span class='line'>C:\source\Highway\MVC\make.ps1
+</span><span class='line'>C:\source\Highway\MVC\NDesk.Options.dll
+</span><span class='line'>C:\source\Highway\MVC\OnRamper.exe
+</span><span class='line'>C:\source\Highway\MVC\push.ps1
+</span><span class='line'>C:\source\Highway\MVC\README.markdown
+</span><span class='line'>C:\source\Highway\MVC\setv.ps1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So here we have taken a directory listing, which is objects as we have learned previously, and then done a <code>ForEach-Object</code> on that to select just the FullName property.  FullName is a string, and so we are sending an array of strings out to the console currently.  How, lets send that same data to Get-Item:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; dir | %{ $_.FullName } | Get-Item
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    Directory: C:\source\Highway\MVC
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Mode                LastWriteTime     Length Name
+</span><span class='line'>----                -------------     ------ ----
+</span><span class='line'>d----          5/4/2013  10:44 PM            build
+</span><span class='line'>d----          5/2/2013   8:37 PM            src
+</span><span class='line'>-a---          5/2/2013   2:19 PM        259 .gitignore
+</span><span class='line'>-a---          5/2/2013   2:19 PM      16896 license.txt
+</span><span class='line'>-a---          5/4/2013  11:11 AM        211 make.ps1
+</span><span class='line'>-a---          5/2/2013  11:46 PM      22016 NDesk.Options.dll
+</span><span class='line'>-a---          5/4/2013   6:36 PM      15872 OnRamper.exe
+</span><span class='line'>-a---          5/4/2013  12:16 PM         62 push.ps1
+</span><span class='line'>-a---          5/2/2013   2:19 PM      17183 README.markdown
+</span><span class='line'>-a---          5/4/2013  11:26 AM        332 setv.ps1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Wait &#8230; uhm &#8230; what?  Sure, we just took a bunch of FileSystemInfo objects and dumped them to the console, you know how that formats them?  As a directory listing of course.  But that means we&#8217;ve been successful in binding that data to Get-Item.  Prove it?  Ok&#8230;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; dir | %{ $_.FullName } | Get-Item | %{$_.GetType()}
+</span><span class='line'>
+</span><span class='line'>IsPublic IsSerial Name                                     BaseType
+</span><span class='line'>-------- -------- ----                                     --------
+</span><span class='line'>True     True     DirectoryInfo                            System.IO.FileSystemInfo
+</span><span class='line'>True     True     DirectoryInfo                            System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo
+</span><span class='line'>True     True     FileInfo                                 System.IO.FileSystemInfo</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So we have just bound <strong>ByValue</strong>, we&#8217;ve passed an array and it went to Path because of the value it was.</p>
+
+<h3>By Property Name Pipeline&#8217;ing</h3>
+
+<p>So how do we pass <strong>ByPropertyName</strong>?  Let us continue the above example:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; dir | %{ @{ Path=$_.FullName} }
+</span><span class='line'>
+</span><span class='line'>Name                           Value
+</span><span class='line'>----                           -----
+</span><span class='line'>Path                           C:\source\Highway\MVC\build
+</span><span class='line'>Path                           C:\source\Highway\MVC\src
+</span><span class='line'>Path                           C:\source\Highway\MVC\.gitignore
+</span><span class='line'>Path                           C:\source\Highway\MVC\license.txt
+</span><span class='line'>Path                           C:\source\Highway\MVC\make.ps1
+</span><span class='line'>Path                           C:\source\Highway\MVC\NDesk.Options.dll
+</span><span class='line'>Path                           C:\source\Highway\MVC\OnRamper.exe
+</span><span class='line'>Path                           C:\source\Highway\MVC\push.ps1
+</span><span class='line'>Path                           C:\source\Highway\MVC\README.markdown
+</span><span class='line'>Path                           C:\source\Highway\MVC\setv.ps1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So here we have created a bunch of Hashtables that contain a property named Path.  Now this is to simple, it doesn&#8217;t make that point that we could have other data included in these hashtables.  So I&#8217;m going to add some of that, but limit the number of files:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; dir *.ps1 | %{ @{ Path=$_.FullName; Size=$_.Length; Updated=$_.LastWriteTime} }
+</span><span class='line'>
+</span><span class='line'>Name                           Value
+</span><span class='line'>----                           -----
+</span><span class='line'>Path                           C:\source\Highway\MVC\make.ps1
+</span><span class='line'>Size                           211
+</span><span class='line'>Updated                        5/4/2013 11:11:03 AM
+</span><span class='line'>Path                           C:\source\Highway\MVC\push.ps1
+</span><span class='line'>Size                           62
+</span><span class='line'>Updated                        5/4/2013 12:16:29 PM
+</span><span class='line'>Path                           C:\source\Highway\MVC\setv.ps1
+</span><span class='line'>Size                           332
+</span><span class='line'>Updated                        5/4/2013 11:26:16 AM</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ok, three entries, each with three properties, and we&#8217;re good &#8230; Right?  <strong>sigh</strong> No.  So you&#8217;ll see from the output, these are not properties.  They are entries in a Hashtable, and are outputted vertically under <strong>Name</strong> and <strong>Value</strong> because of this.  We can easily turn this into a real object with properties though, using a cast to <code>PSCustomObject</code> which is the PowerShell <code>dynamic</code> object.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; dir *.ps1 | %{ [PSCustomObject]@{ Path=$_.FullName; Size=$_.Length; Updated=$_.LastWriteTime} }
+</span><span class='line'>
+</span><span class='line'>Path                                                                       Size Updated
+</span><span class='line'>----                                                                       ---- -------
+</span><span class='line'>C:\source\Highway\MVC\make.ps1                                              211 5/4/2013 11:11:03 AM
+</span><span class='line'>C:\source\Highway\MVC\push.ps1                                               62 5/4/2013 12:16:29 PM
+</span><span class='line'>C:\source\Highway\MVC\setv.ps1                                              332 5/4/2013 11:26:16 AM</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Alright, now we have the horizontal labels for our properties, and values below that.  Awesome.  Now lets pipe that to Get-Item:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; dir *.ps1 | %{ [PSCustomObject]@{ Path=$_.FullName; Size=$_.Length; Updated=$_.LastWriteTime} } | Get-Item
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    Directory: C:\source\Highway\MVC
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Mode                LastWriteTime     Length Name
+</span><span class='line'>----                -------------     ------ ----
+</span><span class='line'>-a---          5/4/2013  11:11 AM        211 make.ps1
+</span><span class='line'>-a---          5/4/2013  12:16 PM         62 push.ps1
+</span><span class='line'>-a---          5/4/2013  11:26 AM        332 setv.ps1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bingo, we bound Path to Get-Item.  That gives you an example now of both types of Pipeline&#8217;ing.</p>
+
+<h2>Functions</h2>
+
+<p>Now that we understand pipelines, how do we start to create reusable functionality?  Well, to do that we need to write functions.  And so, lets look at this in practice with everyone&#8217;s favorite demo &#8230; Hello World!</p>
+
+<h3>Basic Script Blocks</h3>
+
+<p>We can create a script block simply by using a set of curly braces <code>{ }</code>.  Like so:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; { "Hello World!" }
+</span><span class='line'> "Hello World!"   </span></code></pre></td></tr></table></div></figure>
+
+
+<p>That output is kind of odd, right?  It didn&#8217;t output the string, because that would not have the quotes.  What type of object did that return?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; { "Hello World!" }.GetType()
+</span><span class='line'>
+</span><span class='line'>IsPublic IsSerial Name                                     BaseType
+</span><span class='line'>-------- -------- ----                                     --------
+</span><span class='line'>True     True     ScriptBlock                              System.Object</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Oh, so it&#8217;s a script block!  Ok, is that the string representation of the block then?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; { "Hello World!" }.ToString()
+</span><span class='line'> "Hello World!"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ah!  Yep, that&#8217;s what happened.  So how do I run a script block?  Just stick a <code>.</code> or <code>&amp;</code> in front of it.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; .{ "Hello World!" }
+</span><span class='line'>Hello World!
+</span><span class='line'>&gt; &{ "Hello World!" }
+</span><span class='line'>Hello World!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yep, both of those do indeed execute, we lose the quotes, and all is well.  So we now have a code block.</p>
+
+<h3>Named Functions</h3>
+
+<p>But what if I want to name that script block?  Easy, we define a function:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function HW { "Hello World!" }
+</span><span class='line'>&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Done, we&#8217;ve defined that block now as HW.  How do I run it?  I type <code>HW</code> of course!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; HW
+</span><span class='line'>Hello World!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now I can assign a script block simply to a variable if I want, but if I do so, then I still need to use <code>&amp;</code> or <code>.</code> to execute it, where-as functions are called by name. See:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $hw = { "Hello World!" }
+</span><span class='line'>&gt; $hw
+</span><span class='line'> "Hello World!"
+</span><span class='line'>&gt; &$hw
+</span><span class='line'>Hello World!
+</span><span class='line'>&gt; .$hw
+</span><span class='line'>Hello World!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>But functions also have an important other aspect, which is that they can have parameters.  So let&#8217;s create a function which takes a parameter, but lets say we want to pass it a location:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function HW {
+</span><span class='line'>&gt;&gt; param($location)
+</span><span class='line'>&gt;&gt; "Hello $location!"
+</span><span class='line'>&gt;&gt; }
+</span><span class='line'>&gt;&gt;
+</span><span class='line'>&gt; HW Dallas
+</span><span class='line'>Hello Dallas!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, we can specify types for parameters, so that we can&#8217;t pass bad data:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function HW {
+</span><span class='line'>&gt;&gt;  param([int]$location)
+</span><span class='line'>&gt;&gt; "Hello $location!"
+</span><span class='line'>&gt;&gt; }
+</span><span class='line'>&gt;&gt;
+</span><span class='line'>&gt; HW Dallas
+</span><span class='line'>HW : Cannot process argument transformation on parameter 'location'. Cannot convert value "Dallas" to type
+</span><span class='line'>"System.Int32". Error: "Input string was not in a correct format."
+</span><span class='line'>At line:1 char:4
+</span><span class='line'>+ HW Dallas
+</span><span class='line'>+    ~~~~~~
+</span><span class='line'>    + CategoryInfo          : InvalidData: (:) [HW], ParameterBindingArgumentTransformationException
+</span><span class='line'>    + FullyQualifiedErrorId : ParameterArgumentTransformationError,HW
+</span><span class='line'>
+</span><span class='line'>&gt; hw 123
+</span><span class='line'>Hello 123!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>See that we got an error now when we passed the Dallas string, but when we passed 123, we succeeded.  Now we can change this pipe in an array, passing <strong>ByValue</strong>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; 1..5 | HW
+</span><span class='line'>Hello 0!</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Huh&#8230; that didn&#8217;t do what we expected.  I guess we&#8217;ll have to give a hint that we want that Parameter to be pipelined.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function HW { param( [Parameter(ValueFromPipeline=$true)][int]$location )
+</span><span class='line'>&gt;&gt; "Hello $location" }
+</span><span class='line'>&gt;&gt;
+</span><span class='line'>&gt; 1..5 | HW
+</span><span class='line'>Hello 5</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Ok, but still not &#8220;correct&#8221;.  Why?  Because as it happens, we&#8217;re using the simple form of a script blocks.  A script block is <strong>actually</strong> defined by three sections: Begin, Process, and End.  By default, if we don&#8217;t specify a section, we get <strong>End</strong>.  What are the differences?  Begin runs once, before pipleline values are bound.  Process is run once for each member of the pipeline.  End runs after all members have been process.  How do we know that we get <strong>End</strong> by default?  Look at the value we got, it was the last value of the pipeline.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function HW { param( [Parameter(ValueFromPipeline=$true)][int]$location )
+</span><span class='line'>&gt;&gt;  BEGIN { "Beginning : $location" }
+</span><span class='line'>&gt;&gt;  PROCESS {"Processing : $location"}
+</span><span class='line'>&gt;&gt;  END {"Ending: $location"}}
+</span><span class='line'>&gt;&gt;
+</span><span class='line'>&gt; 1..5 | HW
+</span><span class='line'>Beginning : 0
+</span><span class='line'>Processing : 1
+</span><span class='line'>Processing : 2
+</span><span class='line'>Processing : 3
+</span><span class='line'>Processing : 4
+</span><span class='line'>Processing : 5
+</span><span class='line'>Ending: 5</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So here we have redefined our function, and given it a <strong>Begin</strong>, <strong>Process</strong> and <strong>End</strong> block.  And we can see that $location, <strong>because it is marked from pipeline</strong>, is not set until we are in Process, and then we run process 5 times, and finally we run ending once.</p>
+
+<h3>Branching</h3>
+
+<p>So&#8230; it is not programming without if blocks, right?  Well we&#8217;ve got those:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function HW { param( [Parameter(ValueFromPipeline=$true)][int]$location )
+</span><span class='line'>&gt;&gt;  BEGIN { "Beginning : $location" }
+</span><span class='line'>&gt;&gt;  PROCESS { if(($location % 2) -eq 0) { "Processing : $location" } else { "Else" } }
+</span><span class='line'>&gt;&gt;  END {"Ending: $location"}}
+</span><span class='line'>&gt;&gt;
+</span><span class='line'>&gt; 1..5 | HW
+</span><span class='line'>Beginning : 0
+</span><span class='line'>Else
+</span><span class='line'>Processing : 2
+</span><span class='line'>Else
+</span><span class='line'>Processing : 4
+</span><span class='line'>Else
+</span><span class='line'>Ending: 5</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Looping</h3>
+
+<p>First &#8230; don&#8217;t loop, pipeline.  But when you must loop, do so these ways:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function DoWhile { $i = 1; do { Write-Host $i; $i++ } while ($i -le 5) }
+</span><span class='line'>&gt; DoWhile
+</span><span class='line'>1
+</span><span class='line'>2
+</span><span class='line'>3
+</span><span class='line'>4
+</span><span class='line'>5</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function WhileLoop { $i = 1; while ($i -le 5) { Write-Host $i;$i++} }
+</span><span class='line'>&gt; WhileLoop
+</span><span class='line'>1
+</span><span class='line'>2
+</span><span class='line'>3
+</span><span class='line'>4
+</span><span class='line'>5</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function ForLoop { for ($i=1;$i -le 5;$i++) {Write-Host $i} }
+</span><span class='line'>&gt; ForLoop
+</span><span class='line'>1
+</span><span class='line'>2
+</span><span class='line'>3
+</span><span class='line'>4
+</span><span class='line'>5</span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; function ForEachLoop { $ints=@(1..5); foreach ($i in $ints) {Write-Host $i} }
+</span><span class='line'>&gt; ForEachLoop
+</span><span class='line'>1
+</span><span class='line'>2
+</span><span class='line'>3
+</span><span class='line'>4
+</span><span class='line'>5</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Those cover all of the major types of looping, and do so in a clean way, very similar to the C# syntax in all cases.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-10T00:24:00-05:00" pubdate data-updated="true">May 10<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/powershell/'>PowerShell</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/powershell-for-developers-functions/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/powershell-for-developers-functions/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/powershell-for-developers-cmdlets/" title="Previous Post: PowerShell for Developers - Cmdlets">&laquo; PowerShell for Developers - Cmdlets</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/agile-dot-net-houston-2013/" title="Next Post: Agile.NET Houston 2013">Agile.NET Houston 2013 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

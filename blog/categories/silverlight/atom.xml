@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: silverlight | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/silverlight/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Write Less Code - Theme Detection on Windows Phone 7]]></title>
+    <link href="http://TimRayburn.net/blog/write-less-code-theme-detection-on-windows-phone-7/"/>
+    <updated>2012-06-16T21:33:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/write-less-code-theme-detection-on-windows-phone-7</id>
+    <content type="html"><![CDATA[<p>I spent alot of time tonight trying to find an elegant solution to the problem of detecting the light or dark theme from Windows Phone 7 and changing images based on those options.  I was people that were doing a ToString in the Foreground Brush, or writing custom methods for every image in their code-behind, and all of that felt  ... dirty.  Finally I <a href="http://stackoverflow.com/questions/7198046/how-to-swap-images-based-on-the-current-theme-wp7">came across this solution on StackOverflow</a> which is not the "accepted" answer, but is the highest voted answer.  It was good enough to get me to post the answer here as well, so I can remember it, and hopefully some of you who might be working to hard can find a more elegant solution.</p>
+
+<p>Liquid error: undefined method `Py_IsInitialized' for RubyPython::Python:Module</p>
+]]></content>
+  </entry>
+  
+</feed>

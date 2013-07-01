@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: writing | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/writing/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Finishing Up The Cookbook]]></title>
+    <link href="http://TimRayburn.net/blog/finishing-up-the-cookbook/"/>
+    <updated>2012-02-19T22:55:00-06:00</updated>
+    <id>http://TimRayburn.net/blog/finishing-up-the-cookbook</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/efcookbook.jpg" title="s Cookbook" alt="Our Book">While it has not been discussed here a great deal, my good friend <a href="http://devlinliles.com">Devlin Liles</a> and I have been writing a book together.  It's called <a href="http://www.amazon.com/Entity-Framework-4-1-Experts-Cookbook/dp/1849684464/ref=sr_1_1?ie=UTF8&amp;qid=1329713927&amp;sr=8-1">"Entity Framework 4.1 : Expert's Cookbook"</a>.  I will be clear upfront, Devlin did the lion's share of the work on this book, but the finished product is something which I am totally proud to be associated with.</p>
+
+<p>When we set out on the journey to write this book, we agreed that it was our primary goal to convey an approach to using Entity Framework which would be consistent with the type of code we would want to see in our production systems.  To that end, every recipe in the book is approached in a test driven fashion, and our first job is to setup the necessary abstractions around Entity Framework to ensure that it is testable, yet performant.  I believe we have accomplished that goal.</p>
+
+<p>The book is going through it's final edits now, and we are hopefully that it will be available sometime soon, I'll keep you updated here as things develop.</p>
+
+<p>I believe that Devlin and I would also both like to take a moment and thank our amazing wives, Christina and Kate, who have suffered through this experiment with us.  I'm not certain if Devlin and I will publish another large tome like this again, but I am certain we will collaborate on other projects ... focused on helping you <a href="http://ImprovingEnterprises.com">improve</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

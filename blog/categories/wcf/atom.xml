@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: wcf | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/wcf/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Presentation - WCF Topics]]></title>
+    <link href="http://TimRayburn.net/blog/presentation-wcf-topics/"/>
+    <updated>2012-04-17T12:05:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/presentation-wcf-topics</id>
+    <content type="html"><![CDATA[<p>This morning I had the pleasure of review the basics of WCF with a group from Exxon.  As promised to them I've made all code and presentations from that talk available at <a href="https://github.com/trayburn/Presentations.WcfTopics">GitHub</a>.  Thank you all for attending, and again if you have any questions please feel free to reach out to me at Tim@TimRayburn.net.</p>
+]]></content>
+  </entry>
+  
+</feed>

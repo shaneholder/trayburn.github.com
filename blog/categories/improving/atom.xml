@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Improving | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/improving/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Agile.NET Houston 2013]]></title>
+    <link href="http://TimRayburn.net/blog/agile-dot-net-houston-2013/"/>
+    <updated>2013-05-10T16:45:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/agile-dot-net-houston-2013</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/logo-houston-2013.png"></p>
+
+<p>So Agile.NET Houston is coming up soon, and I'll be there speaking as part of the Quartermaster track.  If you'd like to attend, we still have some spots available, and you can use the discount code <strong>IEFriends50</strong> to get 50% off the cost of registration, bringing it in at just $75.</p>
+
+<h1><a href="http://adnhouston.eventbrite.com/?discount=IEFriends50">Register Now</a></h1>
+]]></content>
+  </entry>
+  
+</feed>

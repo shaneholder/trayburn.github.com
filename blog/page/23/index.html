@@ -1,0 +1,594 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="I&#8217;m writing about this in the hopes that no one else ever has to suffer the way I just did trying to get a BizTalk install configured at a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/page/23/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/biztalk-2004-configuration-error-number-80004005/">BizTalk 2004 Configuration Error Number 80004005</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-08-04T00:00:00-05:00" pubdate data-updated="true">Aug 4<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><P>I&#8217;m writing about this in the hopes that no one else ever has to suffer the way I just did trying to get a BizTalk install configured at a client site.&nbsp; </P><P><STRONG>The symptom</STRONG> was that it would start to configure, reach the BTS WMI phase of the process and suddenly end with an &#8220;Unspecified Error&#8221;.&nbsp; If you review the log file you would find error 80004005 was returned from btswmi.cpp and absolutely no other useful information.</P><P><STRONG>The cause</STRONG> of this problem is that NetBIOS is being used to determine if your computer is already in a BizTalk Group.&nbsp; NetBIOS only supports machine names of LESS than 15 characters.</P><P><STRONG>The solution</STRONG> is to rename your machine to something with less than 15 characters.&nbsp; This will of course take a Domain Admin in a domain situation.</P><P><STRONG>The gotcha</STRONG> is if like me you run off an immediately rename, you can be left with orphaned jobs on your SQL Server if it is on the same box.&nbsp; The sys_jobs table contains the machine name.&nbsp; Before you rename, be sure to remove any BizTalk jobs which were created or if you forget like I did, open Query Analyzer and update sys_jobs to have the new correct computer name.&nbsp; If you do not update sys_jobs Enterprise Manager will not let you delete the jobs, and the BizTalk configure will now fail even earlier in the process.</P><P><STRONG>The other gotcha</STRONG> is that your BizTalk Administrators Group will not longer have access to SQL Server because it will be known by it&#8217;s fully qualified name &lt;machine&gt;/BizTalk Administrators and so you will need to give this group rights to the SQL Server again.</P>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/new-phone-cingular-8125-aka-htc-wizard/">New Phone - Cingular 8125 Aka HTC Wizard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-07-30T00:00:00-05:00" pubdate data-updated="true">Jul 30<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><IMG height=450 alt=Cingular8125.bmp src="http://www.timrayburn.net/content/binary/Cingular8125.bmp" width=315 align=right border=0> The time has come to retire my faithful Audiovox SMT-5600, it has served me dutifully for the last several years but since I am now a <A href="http://www.cingular.com/">Cingular</A> customer, the quality of service on Cingular&#8217;s network compared to AT&amp;T Wireless&#8217; network left much to be desired. I reviewed my options, including the concept of becoming a Verizon customer and getting a Treo 700w, and finally settled on staying with Cingular and taking the Cingular 8125 aka HTC Wizard. <BR><BR>So far I&#8217;m loving the increased usability that comes with the full QWERTY keyboard and Pocket PC Phone Edition OS. I will say that, like all Pocket PC Phone Edition devices, this is a Pocket PC first, Phone second. The dialing interface leaves alot to be desired but the flexibility of programs and data-entry makes up for that to me. <BR><BR>Of course the first thing I did was installed the Compact Framework 2.0 so I could port over several wonderful helper programs I&#8217;ve written like TKRoller (simple dice roller, now empowered by a touch screen). Also I&#8217;ve upgraded the Tablet to run <A href="http://www.microsoft.com/office/preview/beta/getthebeta.mspx">Office 2007 Beta 2</A> (more on that later) so it was also nice to be able to install OneNote Mobile 2007. I&#8217;ve also downloaded several wonderful programs for it including <A href="http://www.pocketinformant.com/">Informant 2005</A>, <A href="http://www.audible.com/">Audible Player</A>, <A href="http://www.google.com/search?sourceid=navclient&amp;ie=UTF-8&amp;rls=GGLJ,GGLJ:2006-25,GGLJ:en&amp;q=Audible+Air">Audible Air</A>, and <A href="http://www.astraware.com/ppc/puzzle/atomica/?skucode=0022-000-0043">Atomica</A> . <BR><BR>I&#8217;ve gotten Bluetooth Sync to work with the tablet (I never did get this working with the 5600) and it can be easily used as a USB Modem for the tablet for those times when a network connection with un-filtered access is hard to come by. <BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/the-church-of-using/">The Church of Using</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-07-29T00:00:00-05:00" pubdate data-updated="true">Jul 29<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">One my latest project working for <a href="http://www.citigroup.com">Citigroup</a>, I&#8217;ve been working with an Open Source component named <a href="http://www.pdfsharp.com">PdfSharp</a>.This wonderful little component lets you create and modify Pdf documents and has the advantage of behaving much more like a .NET component than the popular <a href="http://itextsharp.sourceforge.net/">ITextSharp</a>, which is a port of a Java PDF library.<P><P>One of the things I needed to do was put a GIF image into the bottom half of a PDF document.Simple enough using PdfSharp, just get a set of PdfDocument, XGraphic and XImage objects and do some math for the placement.All was happiness and light until we decided we needed to clean-up the created Pdf after we were done with it.Suddenly we would sometimes get Sharing Violations on deleting the file.But only <b>sometimes</b>.<P><P>Fortunately experience has taught me that &#8220;sometimes&#8221; errors can only be a few types of situations, and in this case one made the most sense &#8230; Garbage Collection.I went pouring over every piece of code looking for where I missed an object that, I hoped, implemented IDisposable and sure enough discovered that PdfDocument, XGraphic and XImage all implemented IDisposable but did not have a public Dispose method.This is perfectly fine, but does make it harder to know when you should use IDisposable.<P><P>In the end, the error was of course mine.As such I have done 50 &#8220;Hail Using&#8221;s (in VB since they now support it) and lit a candle in rememberance of lost productivity.<P>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/important-guidance-for-development/">Important Guidance for Development</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-06-13T00:00:00-05:00" pubdate data-updated="true">Jun 13<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><DIV><FONT face=Arial size=2>Of recent I&#8217;ve been reminded for how uncommon &#8220;Common Sense&#8221; truly is.&nbsp; To that end, I submit a list of rules which every company engaged in software development should adopt.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Titles Should Be Meaningless<BR></STRONG>Far to often titles are used in modern Corporate America to give an inflated view of importance or responsibility.&nbsp; What someone&#8217;s title in an organization is should be meaningless.&nbsp; What should be important is what value they bring to the organization.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Team Cohesiveness Should Rule<BR></STRONG>A team should be composed of people who respect one another&#8217;s opinions and contributions.&nbsp; Far to often I&#8217;ve seen a team dragged through the mud by one person&#8217;s whose attitude towards the work has become bitter.&nbsp; These people are poison to everyone around them.&nbsp; With understanding to personal life issues, they should be moved away from the team until they can return with a positive attitude towards the work.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Teams Should Be Dynamic<BR></STRONG>A team should consist of those needed to perform the work at the moment. If someone is not necessary for this phase of a project, then they shouldn&#8217;t be on the team until they are needed.&nbsp; Hording talented resources makes them bored.&nbsp; Bored talented people get employed by your competitors.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Cut Down Bureacracy<BR></STRONG>Managers should exist to cut through red-tape, not create it.&nbsp; If your job is to manage development resources you should spend most of your time each day allowing them to be creative and solve problems.&nbsp; Your team should feel comfortable calling you with the smallest concerns and knowing you will get things done in a timely manner.&nbsp; Your a member of the team to.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Be Honest And Keep Your Promises<BR></STRONG>Try to straight forward in all your communications.&nbsp; If there is change coming, tell people as soon as you can.&nbsp; Make certain that you avoid obfuscation whenever possible.&nbsp; The more open communications are, the more powerful the organization will be because little known talents can be taken advantage of.<SCRIPT><!--D(["mb","</font></div>\n<div> </div>\n<div><font face\u003d\"Arial\" size\u003d\"2\">Consistantly Reward Performance<br>Even the most \ntalent people need motivations to keep going and giving their best.  Look \nfor oppurtunities to reward excellence outside of a paycheck.  Budget for \nsuch things as needed, but make them spontaneous as you can.</font></div>\n<div> </div>\n<div><font face\u003d\"Arial\" size\u003d\"2\">Keep Talent And Cut Chaff<br>Talented people in \ndevelopment are creative, outside of the box thinkers.  These people thrive \nwhen you gather many of them in the same place.  You need only look at the \noutput of Xerox&#39;s famed Palo Alto Research Center (XEROX PARC) to know that a \ngroup of talented creative people can change the world, not just an organization \nprovided that management believes in them.  Likewise people who aren&#39;t \nproducing are a drain on such creativity.  You&#39;ll get more done with 10 \ntalented people than you will with 10 talented people and 10 \nunder-producers.</font></div>\n<div> </div>\n<div><font face\u003d\"Arial\" size\u003d\"2\">Focus On Small Problems<br>Attempting to solve &quot;Big \nProblems&quot; in a single large project has been the doom of almost every project \nthat has tried it.  Focus on small solutions that build towards a solving \nbig problems.  This path may seem to have many hills and valleys and be \nless grandeous, but the highway of large projects is littered with failed \ndeliverables and maintenance nightmares just out of sight over the \nhorizon.</font></div>\n<div> </div>\n<div><font face\u003d\"Arial\" size\u003d\"2\">Expect Excellence<br>It is important to have high \nexpectations of your people, but it is doom to expect the impossible.  It \nis key that you speak with your first layer of leadership, not necessarily \nmanagement, on a regular basis about the reality of your goals.  They \nshould feel free to tell you when what being asked is simply not possible.  \nCreative and talented people will consistantly rise to meet the challenge which \nis difficult, but they will just as consistantly shut down and stop performing \nwhen asked to perform the impossible.&#8221;,1]);//&#8211;></SCRIPT> </FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Consistantly Reward Performance<BR></STRONG>Even the most talent people need motivations to keep going and giving their best.&nbsp; Look for oppurtunities to reward excellence outside of a paycheck.&nbsp; Budget for such things as needed, but make them spontaneous as you can.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Keep Talent And Cut Chaff<BR></STRONG>Talented people in development are creative, outside of the box thinkers.&nbsp; These people thrive when you gather many of them in the same place.&nbsp; You need only look at the output of Xerox&#8217;s famed Palo Alto Research Center (XEROX PARC) to know that a group of talented creative people can change the world, not just an organization provided that management believes in them.&nbsp; Likewise people who aren&#8217;t producing are a drain on such creativity.&nbsp; You&#8217;ll get more done with 10 talented people than you will with 10 talented people and 10 under-producers.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Focus On Small Problems<BR></STRONG>Attempting to solve &#8220;Big Problems&#8221; in a single large project has been the doom of almost every project that has tried it.&nbsp; Focus on small solutions that build towards a solving big problems.&nbsp; This path may seem to have many hills and valleys and be less grandeous, but the highway of large projects is littered with failed deliverables and maintenance nightmares just out of sight over the horizon.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Expect Excellence<BR></STRONG>It is important to have high expectations of your people, but it is doom to expect the impossible.&nbsp; It is key that you speak with your first layer of leadership, not necessarily management, on a regular basis about the reality of your goals.&nbsp; They should feel free to tell you when what being asked is simply not possible.&nbsp; Creative and talented people will consistantly rise to meet the challenge which is difficult, but they will just as consistantly shut down and stop performing when asked to perform the impossible.<SCRIPT><!--D(["mb","</font></div>\n<div> </div>\n<div><font face\u003d\"Arial\" size\u003d\"2\">Strive To Humanize<br>This runs contrary to so much \nof what is out there today about management, but it is vitally important that \nmanagement over development efforts deliberately humanize themselves to their \nteam on a regular basis.  Have lunch out with your team on a regular basis, \ntalk about the things which people talk about at lunch.  Remember that \n&quot;Titles Should Be Meaningless&quot; and strive to reinforce that YOU know they are \nwith your team.</font></div>\n<div> </div>\n<div><font face\u003d\"Arial\" size\u003d\"2\">Trust Your People<br>Perhaps the most important \nrule of all of these, trust your people.  Developers are writing code which \nwill be deployed into the most fragile places in your enterprise.  These \nmen and women write programs for a living, they create solutions from \nnothing.  Give them the environment necessary to be creative and you will \nget excellence.  This goes from the physical environments (personalized \nwork spaces comfortable to that person) to the technical environments (rights \nsufficient to install and try new software).  Far to often developers are \nplaced in small, unpersonalized cubicles in the dark corner of the office \ncomplex and saddled with authoritarian policies regarding the installation of \nsoftware.  Creative environments create creative results.<br></font></div>\n<div> </div>\n<div align\u003d\"left\"><font face\u003d\"Arial\"><strong>Tim Rayburn</strong></font></div>\n<div align\u003d\"left\"><font face\u003d\"Arial\" size\u003d\"2\">Originations</font></div>\n<div align\u003d\"left\"><font face\u003d\"Arial\" size\u003d\"2\">CitiFinancial Auto</font></div>\n<div align\u003d\"left\"><font face\u003d\"Arial\" size\u003d\"2\">469-220-5817 - Office</font></div>\n<div align\u003d\"left\"><font face\u003d\"Arial\" size\u003d\"2\">817-300-9788 - Cellphone</font></div>\n<div> </div></div>\n\n</div>&#8220;,0]);//&#8211;></SCRIPT> </FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Strive To Humanize<BR></STRONG>This runs contrary to so much of what is out there today about management, but it is vitally important that management over development efforts deliberately humanize themselves to their team on a regular basis.&nbsp; Have lunch out with your team on a regular basis, talk about the things which people talk about at lunch.&nbsp; Remember that &#8220;Titles Should Be Meaningless&#8221; and strive to reinforce that YOU know they are with your team.</FONT></DIV><DIV>&nbsp;</DIV><DIV><FONT face=Arial size=2><STRONG>Trust Your People<BR></STRONG>Perhaps the most important rule of all of these, trust your people.&nbsp; Developers are writing code which will be deployed into the most fragile places in your enterprise.&nbsp; These men and women write programs for a living, they create solutions from nothing.&nbsp; Give them the environment necessary to be creative and you will get excellence.&nbsp; This goes from the physical environments (personalized work spaces comfortable to that person) to the technical environments (rights sufficient to install and try new software).&nbsp; Far to often developers are placed in small, unpersonalized cubicles in the dark corner of the office complex and saddled with authoritarian policies regarding the installation of software.&nbsp; Creative environments create creative results.<BR></FONT></DIV>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/coderush-love/">CodeRush Love&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-05-15T00:00:00-05:00" pubdate data-updated="true">May 15<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">I&#8217;ve recently acquired a <A href="http://www.devexpress.com/Products/NET/CodeRush/">CodeRush</A> license for my personal use, and all I can say is &#8230; <B>I LOVE CODERUSH!</B> <P>You may be asking, &#8220;Why do you love CodeRush, Tim?&#8221; Here&#8217;s why. By using the following sequence : <P><PRE>C Space P E R S O NClick to the end of constructor blockEnter P S Space F I R S T N A M EClick to the end of the property blockEnter P S Space L A S T N A M EClick on class nameCtrl-CClick outside of the classcoll Space</PRE><P>Produces all of the following code: <P><P><DIV style="FONT-SIZE: 10pt; FONT-FAMILY: Monospace; BACKGROUND-COLOR: white">&nbsp;&nbsp;&nbsp;&nbsp;<SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">class</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: teal">Person<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> Person(</SPAN><SPAN style="COLOR: blue">string</SPAN><SPAN style="COLOR: black"> myFileName)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR><BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">private</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">string</SPAN><SPAN style="COLOR: black"> _FirstName;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">string</SPAN><SPAN style="COLOR: black"> FirstName<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">get<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> _FirstName;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">set<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_FirstName = </SPAN><SPAN style="COLOR: blue">value</SPAN><SPAN style="COLOR: black">;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">private</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">string</SPAN><SPAN style="COLOR: black"> _LastName;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">string</SPAN><SPAN style="COLOR: black"> LastName<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">get<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> _LastName;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">set<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_LastName = </SPAN><SPAN style="COLOR: blue">value</SPAN><SPAN style="COLOR: black">;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;}</SPAN> </DIV><DIV style="FONT-SIZE: 10pt; FONT-FAMILY: Monospace; BACKGROUND-COLOR: white">&nbsp;&nbsp;&nbsp;&nbsp;<SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">class</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: teal">PersonCollection</SPAN><SPAN style="COLOR: black"> : </SPAN><SPAN style="COLOR: teal">CollectionBase<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: green">// public methods&#8230;<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#region</SPAN><SPAN style="COLOR: black"> Add<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">int</SPAN><SPAN style="COLOR: black"> Add(</SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> person)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> List.Add(person);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#endregion<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#region</SPAN><SPAN style="COLOR: black"> IndexOf<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">int</SPAN><SPAN style="COLOR: black"> IndexOf(</SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> person)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">for</SPAN><SPAN style="COLOR: black"> (</SPAN><SPAN style="COLOR: blue">int</SPAN><SPAN style="COLOR: black"> i = 0; i &lt; List.Count; i++)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">if</SPAN><SPAN style="COLOR: black"> (</SPAN><SPAN style="COLOR: blue">this</SPAN><SPAN style="COLOR: black">[i] == person)&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: green">// Found it<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> i;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> -1;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#endregion<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#region</SPAN><SPAN style="COLOR: black"> Insert<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">void</SPAN><SPAN style="COLOR: black"> Insert(</SPAN><SPAN style="COLOR: blue">int</SPAN><SPAN style="COLOR: black"> index, </SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> person)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List.Insert(index, person);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#endregion<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#region</SPAN><SPAN style="COLOR: black"> Remove<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">void</SPAN><SPAN style="COLOR: black"> Remove(</SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> person)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List.Remove(person);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#endregion<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#region</SPAN><SPAN style="COLOR: black"> Find<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: green">// TODO: If desired, change parameters to Find method to search based on a property of Person.<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> Find(</SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> person)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">foreach</SPAN><SPAN style="COLOR: black"> (</SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> lPersonItem </SPAN><SPAN style="COLOR: blue">in</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">this</SPAN><SPAN style="COLOR: black">)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">if</SPAN><SPAN style="COLOR: black"> (lPersonItem == person)&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: green">// Found it<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> lPersonItem;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">null</SPAN><SPAN style="COLOR: black">;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: green">// Not found<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#endregion<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#region</SPAN><SPAN style="COLOR: black"> Contains<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: green">// TODO: If you changed the parameters to Find (above), change them here as well.<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">bool</SPAN><SPAN style="COLOR: black"> Contains(</SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> person)<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> (Find(person) != </SPAN><SPAN style="COLOR: blue">null</SPAN><SPAN style="COLOR: black">);<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#endregion<BR><BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: green">// public properties&#8230;<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#region</SPAN><SPAN style="COLOR: black"> this[int aIndex]<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">public</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black"> </SPAN><SPAN style="COLOR: blue">this</SPAN><SPAN style="COLOR: black">[</SPAN><SPAN style="COLOR: blue">int</SPAN><SPAN style="COLOR: black"> index]<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">get<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">return</SPAN><SPAN style="COLOR: black"> (</SPAN><SPAN style="COLOR: teal">Person</SPAN><SPAN style="COLOR: black">)List[index];<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</SPAN><SPAN style="COLOR: blue">set<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List[index] = </SPAN><SPAN style="COLOR: blue">value</SPAN><SPAN style="COLOR: black">;<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN><SPAN style="COLOR: blue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#endregion<BR></SPAN><SPAN style="COLOR: black">&nbsp;&nbsp;&nbsp;&nbsp;}<BR></SPAN></DIV>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/scott-hanselman-does-north-dallas-net-user-group/">Scott Hanselman Does North Dallas .NET User Group</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-05-10T00:00:00-05:00" pubdate data-updated="true">May 10<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Just had a great time at <A href="http://www.computerzen.com">Scott Hanselman&#8217;s</A> talk on Advanced System.Xml at the <A href="http://www.nddnug.net">North Dallas .NET User Group</A>. It was a fantastic tour through the features available, especially spending time on XmlReader.<P>In particular I loved how his conversation started with &#8220;What makes Xml special?&#8221; Responses from the crowd were great (obviously there was a point here which I&#8217;ll get to in a moment)<P><B>&#8220;It&#8217;s Well-Formed&#8230;.&#8221;</B><P>To which Scott suggested that the following was also well-formed:<P><PRE>FIRST,LASTTim,Rayburn</PRE>And that hence this was not:<P><PRE>FIRST,LASTTim,Ray,burn</PRE><B>&#8220;It&#8217;s a standard&#8230;&#8221;</B><P>To which Scott suggested that he start a company espousing CSV as a standard which could be accepted.<P>There were many more things which were thrown out, but the point was to drive home that Xml is about the Infoset or PSVI (Post Schema Validated Infoset). In other words it is not about the angle brackets but rather about a described structure which can be validated. And that if you&#8217;re writing code which requires you to know that angle brackets exist, then you&#8217;re writing code wrong.<P>In all, great talk. It was a personal thrill to meet Scott, I&#8217;ve read him for several years on his blog and I&#8217;ve got no doubt I make more money now because I&#8217;ve read his blog.</P>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/nunit-developer/">NUnit Developer</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-05-10T00:00:00-05:00" pubdate data-updated="true">May 10<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Alright, so it&#8217;s a bit of boasting on myself but I&#8217;m happy to say that officially as of yesterday I&#8217;ve been added as a <a href="http://sourceforge.net/project/memberlist.php?group_id=10749">Developer</a> on <a href="http://www.nunit.org">NUnit</a>.If you know me, you know I believe firmly in Test Driven Development and I&#8217;ve been contributing for some time now to the NUnit project.Well <a href="http://www.nunit.com/blogs/">Charlie Pool</a> extended the offer and I&#8217;ve accepted the position to become a Developer on the project officially.What does it change?Very little, I&#8217;ll still be writing code for this great tool just like I was before this but it does make me feel like my contributions to the project have been of a high quality and that people appreciate the time I&#8217;ve dedicated to it.
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/multiple-outbound-connections/">Multiple Outbound Connections</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-03-01T00:00:00-06:00" pubdate data-updated="true">Mar 1<span>st</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Recently I&#8217;ve been working with a system that involves an externally facing server acting as a <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnpatterns/html/DesServiceGateway.asp">Gateway</A> for another internal box, in this case a BizTalk Server. This system as such runs into the glorious problem with .NET 1.1 limiting the maximum number of outbound HTTP connections to 2 by default. This could impact performance but this far hasn&#8217;t been a problem. This system has been working reasonably well for some time, but now there is a desire to change the model of communication from one of submitted requests which receive asynch responses to getting synch responses. This means connection lifetime will increase, and as such the number of simultaneous connections had better rise with it or scalability will go to hell. The place this needs to be changed is in the machine.config file for .NET 1.1 and specifically you are looking for the maxconnection element, which defaults to 2.
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/external-file-dependency-in-nunit/">External File Dependency in NUnit</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-02-19T00:00:00-06:00" pubdate data-updated="true">Feb 19<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">Of late I have been doing alot of work on NUnit, a popular open source Unit Testing framework.The area in which I have spent the most time is extending the available Assert models to accomplish new things.Today I finished and have sent in to be merged a FileAsserter which will compare, byte by byte, any file with any other file.The work is based on some work started by Darrel Norton which I extended and merged with the NUnit way of coding Asserters.In the process of writing the unit tests to support this functionality I found myself in the need to have external files which could move gracefully along with the test library.Easier said than done.<p>Fortunately for me I remember <a href="http://www.hanselman.com/blog/UsingNUnitAndABetterWayToUnitTestWithExternalFileDependancies.aspx">reading about a way to handle this some time ago on Scott Hanselman&#8217;s blog</a>.He was in fact just quoting <a href="http://www.cauldwell.net/patrick/blog/PermaLink,guid,e9a1451b-108c-4da7-8be9-2b6c2316f7b1.aspx">Patrick Cauldwell</a>.Both of the variations of handling this were good, but not perfectly portable.I realized that this could be encapsulated into a re-usable component which implemented the IDisposable interface.This would allow me to use the using() statement and ensure that files were always cleaned up rather than accidently forgotten when you called only half of the routines presented by Scott or Patrick.So without further ado, here is my TestFile class.<p><font size=2>&nbsp;&nbsp;</font><font color="#0000FF" size=2>public <font color="#0000FF" size=2>class </font></font><font color="#008080" size=2>TestFile</font><font size=2> : </font><font color="#008080" size=2>IDisposable</font><br><font size=2>&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>private <font color="#0000FF" size=2>bool</font></font><font size=2> _disposedValue = </font><font color="#0000FF" size=2>false</font><font size=2>;<br>&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>private <font color="#0000FF" size=2>string</font></font><font size=2> _resourceName;<br>&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>private <font color="#0000FF" size=2>string</font></font><font size=2> _fileName;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>public</font><font size=2> TestFile(</font><font color="#0000FF" size=2>string</font><font size=2> fileName, </font><font color="#0000FF" size=2>string</font><font size=2> resourceName)<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_resourceName = resourceName;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_fileName = fileName;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Assembly a = Assembly.GetExecutingAssembly();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>using</font><font size=2> (</font><font color="#008080" size=2>Stream</font><font size=2> s = a.GetManifestResourceStream(_resourceName))<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>if</font><font size=2> (s == </font><font color="#0000FF" size=2>null</font><font size=2>) </font><font color="#0000FF" size=2>throw <font color="#0000FF" size=2>new </font></font><font color="#008080" size=2>Exception</font><font size=2>(</font><font color="#800000" size=2>&#8220;Manifest Resource Stream &#8221;</font><font size=2> + _resourceName + </font><font color="#800000" size=2>&#8221; was not found.&#8221;</font><font size=2>);<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>using</font><font size=2> (</font><font color="#008080" size=2>StreamReader</font><font size=2> sr = </font><font color="#0000FF" size=2>new </font><font color="#008080" size=2>StreamReader</font><font size=2>(s))<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>using</font><font size=2> (</font><font color="#008080" size=2>StreamWriter</font><font size=2> sw = </font><font color="#008080" size=2>File</font><font size=2>.CreateText(_fileName))<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sw.Write(sr.ReadToEnd());<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sw.Flush();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>protected <font color="#0000FF" size=2>virtual <font color="#0000FF" size=2>void</font></font></font><font size=2> Dispose(</font><font color="#0000FF" size=2>bool</font><font size=2> disposing)<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>if</font><font size=2> (!</font><font color="#0000FF" size=2>this</font><font size=2>._disposedValue)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>if</font><font size=2> (disposing)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>if</font><font size=2> (</font><font color="#008080" size=2>File</font><font size=2>.Exists(_fileName))<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#008080" size=2>File</font><font size=2>.Delete(_fileName);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>this</font><font size=2>._disposedValue = </font><font color="#0000FF" size=2>true</font><font size=2>;<br>&nbsp;&nbsp;&nbsp;&nbsp;}</font><br><br><font color="#0000FF" size=2>&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000FF" size=2>#region</font></font><font size=2> IDisposable Members<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000FF" size=2>public <font color="#0000FF" size=2>void</font></font><font size=2> Dispose()<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#008000" size=2>// Do not change this code.Put cleanup code in Dispose(bool disposing) above.</font><br><font size=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dispose(</font><font color="#0000FF" size=2>true</font><font size=2>);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#008080" size=2>GC</font><font size=2>.SuppressFinalize(</font><font color="#0000FF" size=2>this</font><font size=2>);<br>&nbsp;&nbsp;&nbsp;&nbsp;}</font><br><br><font color="#0000FF" size=2>&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000FF" size=2>#endregion</font></font><br><font size=2>&nbsp;&nbsp;}</font>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/vistadb-2-1-database-for-net-has-been-released/">VistaDB 2.1 Database for .NET Has Been Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2005-12-21T00:00:00-06:00" pubdate data-updated="true">Dec 21<span>st</span>, 2005</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This 2.1 update includes over 60 improvements, including new support for .NET 2.0 and Visual Studio 2005. 					 VistaDB is a small-footprint, embedded SQL database alternative to						Jet/Access, MSDE and SQL Server Express 2005 that enables developers to build						.NET 1.1 and .NET 2.0 applications. Features SQL-92 support, small 500KB						embedded footprint, free 2-User VistaDB Server for remote TCP/IP data access,						royalty free distribution for both embedded and server, Copy &#8216;n Go! deployment,						managed ADO.NET Provider, data management and data migration tools. Free trial						is available for download.<br><a href="http://www.vistadb.net/overview.asp?ref=blogger">- Learn more about VistaDB</a><br><a href="http://www.vistadb.net/blogoffer.asp?ref=blogger">- Repost this to your blog and receive a FREE copy of VistaDB 2.1!</a><br></p><p><br>I&#8217;ve used VistaDB in the past and it just rocks.&nbsp; XCopy deployment is the jam!<br>						</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/24/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/22/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

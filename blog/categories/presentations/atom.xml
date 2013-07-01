@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: presentations | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/presentations/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Slides and Code from Dallas XAML GIT Workshop]]></title>
+    <link href="http://TimRayburn.net/blog/slides-and-code-from-dallas-xaml-git-workshop/"/>
+    <updated>2013-06-05T06:37:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/slides-and-code-from-dallas-xaml-git-workshop</id>
+    <content type="html"><![CDATA[<p>For those who attended my GIT Workship last night at Dallas XAML, you can find the code and slides here: <a href="https://github.com/trayburn/Presentation-GitWorkshop">https://github.com/trayburn/Presentation-GitWorkshop</a></p>
+
+<p>I've fixed the problems with my demo scripts that create repositories, so you can clone that repository locally and execute :</p>
+
+<p><code>
+.\LocalDevelopment.ps1
+</code></p>
+
+<p>For a basic repository example which you can use to practice roll-backs, etc.</p>
+
+<p><code>
+.\BranchingDemo.ps1
+</code>
+This will create three branches from master, which you can practice merging, and rebase'ing with.</p>
+
+<p>Thanks to those that attended, I hope you got something useful out of it.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Presentation - WCF Topics]]></title>
+    <link href="http://TimRayburn.net/blog/presentation-wcf-topics/"/>
+    <updated>2012-04-17T12:05:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/presentation-wcf-topics</id>
+    <content type="html"><![CDATA[<p>This morning I had the pleasure of review the basics of WCF with a group from Exxon.  As promised to them I've made all code and presentations from that talk available at <a href="https://github.com/trayburn/Presentations.WcfTopics">GitHub</a>.  Thank you all for attending, and again if you have any questions please feel free to reach out to me at Tim@TimRayburn.net.</p>
+]]></content>
+  </entry>
+  
+</feed>

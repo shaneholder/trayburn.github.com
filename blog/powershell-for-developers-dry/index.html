@@ -1,0 +1,904 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PowerShell for Developers - DRY - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="DRY is an acronym that was created by Andrew Hunt and Dave Thomas in their book The Pragmatic Programmer. It stands for Don&#8217;t Repeat Yourself. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/powershell-for-developers-dry/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">PowerShell for Developers - DRY</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-12T21:06:00-05:00" pubdate data-updated="true">May 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>DRY is an acronym that was created by <a href="http://www.amazon.com/gp/product/020161622X/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=020161622X&amp;linkCode=as2&amp;tag=timraybnet-20">Andrew Hunt and Dave Thomas in their book The Pragmatic Programmer</a>.  It stands for Don&#8217;t Repeat Yourself.  We&#8217;ve espoused terse commands in all the previous chapters, but how to I avoid having to re-invent the wheel every time I open a PowerShell prompt.</p>
+
+<h2>Profiles</h2>
+
+<p>There is a script which runs every time you open a PowerShell prompt, it&#8217;s called your Profile.  The file name varies depending on your operating system and version, but you can find it quickly by opening a prompt and typing <code>$profile</code> like so:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; $profile
+</span><span class='line'>C:\Users\Tim\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now if you&#8217;ve got a brand new environment, this file may not even exist.  You can test if it does, and then create it if it does not with the following commands:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Test-Path $PROFILE
+</span><span class='line'>False
+</span><span class='line'>&gt; New-Item -path $profile -type file -force
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    Directory: C:\Users\Tim\Documents\WindowsPowerShell
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Mode                LastWriteTime     Length Name
+</span><span class='line'>----                -------------     ------ ----
+</span><span class='line'>-a---         5/12/2013   6:09 PM          0 Microsoft.PowerShell_profile.ps1
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>&gt; notepad $PROFILE</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The first command ensures that the you don&#8217;t already have a profile.  If it returns true, the skip the second command.</p>
+
+<p>The second command created the profile, as a file, and uses -force to create any directories required to create the item along the way.  This command will work even if you don&#8217;t have a <code>WindowsPowershell</code> directory in your <code>Documents</code> folder.</p>
+
+<h3>What do I put in a $PROFILE?</h3>
+
+<p>Things you don&#8217;t want to type over and over again, of course.  Don&#8217;t Repeat Yourself (DRY).  Now, in reality you don&#8217;t want your profile to become just a giant function library, we have a concept called Modules for that, which we will discuss in just a minute, but there are some things which belong in your $PROFILE.</p>
+
+<h4>The Prompt</h4>
+
+<p>There is a special function called <code>Prompt</code> which you can define, that controls how what your command prompt looks like.  You may have noticed that during this article I&#8217;ve had a very basic prompt that was just <code>&gt;</code>, but most of you likely have a prompt that looks more like this <code>PS C:\Source&gt;</code>.  There is no trickery, I just wanted to make my prompt minimalist for these articles, so I typed the following:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; function prompt { "&gt; " }
+</span><span class='line'>&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, instantly my prompt was set to the minimalist version you&#8217;ve seen in all these articles.  How is the default prompt defined?  Let&#8217;s see, shall we?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; (get-item Function:\prompt).Definition
+</span><span class='line'>"PS $($executionContext.SessionState.Path.CurrentLocation)$('&gt;' * ($nestedPromptLevel + 1)) "
+</span><span class='line'># .Link
+</span><span class='line'># http://go.microsoft.com/fwlink/?LinkID=225750
+</span><span class='line'># .ExternalHelp System.Management.Automation.dll-help.xml</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So this prompt is defined as <code>PS</code> followed by the expression <code>$executionContext.SessionState.Path.CurrentLocation</code> which gets the current location of the execution context (aka the directory you&#8217;re in).  Then, it displays one <code>&gt;</code> for every level of <code>$nestedPromptLevel</code>, adding one.  Well if your like most people, you&#8217;ve likely got no idea what the heck <code>$nestedPromptLevel</code> is.  We will discuss it further, but for the most basic idea, there is a command called <code>$Host.EnterNestedPrompt()</code> which creates a new prompt.  Like so:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; $host.EnterNestedPrompt()
+</span><span class='line'>PS C:\Source&gt;&gt; $host.EnterNestedPrompt()
+</span><span class='line'>PS C:\Source&gt;&gt;&gt; $host.EnterNestedPrompt()
+</span><span class='line'>PS C:\Source&gt;&gt;&gt;&gt; exit
+</span><span class='line'>PS C:\Source&gt;&gt;&gt; exit
+</span><span class='line'>PS C:\Source&gt;&gt; exit
+</span><span class='line'>PS C:\Source&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, each nested level of prompt adds a <code>&gt;</code>, which makes perfect sense given the above <code>prompt</code> function definition.</p>
+
+<h2>Location</h2>
+
+<p>Your current working directory is on display in the prompt at all times, and you know if you want to change that directory, you use <code>cd</code>.  It must be named <code>cd</code>, both DOS and LINUX agree on this, how could it possibly be named something else, right?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; cd Highway
+</span><span class='line'>PS C:\Source\Highway&gt; alias cd
+</span><span class='line'>
+</span><span class='line'>CommandType     Name                                               ModuleName
+</span><span class='line'>-----------     ----                                               ----------
+</span><span class='line'>Alias           cd -&gt; Set-Location</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Well, as you can see, in PowerShell, which <code>cd</code> is an alias that exists by default for it, the actual command you&#8217;re execution is <code>Set-Location</code>.  Well, most programs would rightly assume that whatever you can <code>Set-</code> you can also <code>Get-</code>, right?</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source\Highway&gt; Get-Location
+</span><span class='line'>
+</span><span class='line'>Path
+</span><span class='line'>----
+</span><span class='line'>C:\Source\Highway
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>PS C:\Source\Highway&gt; alias -Definition Get-Location
+</span><span class='line'>
+</span><span class='line'>CommandType     Name                                               ModuleName
+</span><span class='line'>-----------     ----                                               ----------
+</span><span class='line'>Alias           gl -&gt; Get-Location
+</span><span class='line'>Alias           pwd -&gt; Get-Location</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Yup, Get-Location returns the current <code>Path</code> we are at.  You can see that we have two aliases defined by default for us, one is just shorthand for Get-Item, and the other is a helper alias for our Linux friends, who use <code>pwd</code> (short for Print Working Directory) to accomplish this same task.</p>
+
+<h3>Time to get pushy</h3>
+
+<p>Now, as it happens, in PowerShell (and Linux, and DOS) there are a couple of commands for working with Location that most people didn&#8217;t learn when they were first struggling through how to work at a command prompt.  These two commands are called <code>pushd</code> and <code>popd</code> in Linux and DOS, but in PowerShell those are, of course, just aliases:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; alias pushd
+</span><span class='line'>
+</span><span class='line'>CommandType     Name                                               ModuleName
+</span><span class='line'>-----------     ----                                               ----------
+</span><span class='line'>Alias           pushd -&gt; Push-Location
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>PS C:\Source&gt; alias popd
+</span><span class='line'>
+</span><span class='line'>CommandType     Name                                               ModuleName
+</span><span class='line'>-----------     ----                                               ----------
+</span><span class='line'>Alias           popd -&gt; Pop-Location</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So <code>Push-Location</code> and <code>Pop-Location</code> are commands that let you quickly leave your current location, but then return there very quickly.  Let me demonstrate:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; pushd 'C:\Windows\Microsoft.NET\Framework\v4.0.30319'
+</span><span class='line'>PS C:\Windows\Microsoft.NET\Framework\v4.0.30319&gt; pushd 'C:\Program Files'
+</span><span class='line'>PS C:\Program Files&gt; pushd 'C:\Program Files (x86)'
+</span><span class='line'>PS C:\Program Files (x86)&gt; pushd 'C:\Users\Tim\Documents\WindowsPowerShell'
+</span><span class='line'>PS C:\Users\Tim\Documents\WindowsPowerShell&gt; popd
+</span><span class='line'>PS C:\Program Files (x86)&gt; popd
+</span><span class='line'>PS C:\Program Files&gt; popd
+</span><span class='line'>PS C:\Windows\Microsoft.NET\Framework\v4.0.30319&gt; popd
+</span><span class='line'>PS C:\Source&gt; popd
+</span><span class='line'>PS C:\Source&gt; popd
+</span><span class='line'>PS C:\Source&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So initially, <code>pushd</code> would appear to just be a longer version of <code>cd</code>, it moves our current working directory to whichever directory we name.  But, when we then invoke <code>popd</code> the magical nature becomes clear.  When we invoke <code>pushd</code> it changes our directory, but puts the directory we&#8217;re leaving on a stack of remembered directories.  <a href="http://en.wikipedia.org/wiki/Stack_%28abstract_data_type%29">A stack, hence push and pop.</a></p>
+
+<p>As we pop the locations back off the stack, we are transported back to that location as our current working directory.  Pretty darn useful if you need to move from one path to another and back very quickly.</p>
+
+<h3>PSDrive</h3>
+
+<p>Now, Location is all well and good, but that described where you are a given drive.  My default drive, and likely yours, is <code>C:</code> aka the C-Drive.  From time immemorial this has been the default hard drive letter in Windows. <code>A:</code> and <code>B:</code> were reserved for Floppy drives.  Hard drives started at the letter C and incremented from there.  But, that has been simply default for a long time now.</p>
+
+<p>In PowerShell, I can still use <code>C:</code> and <code>D:</code> to move between drives.  This next set of commands will only work if you have two drives (or an SSD and a <a href="http://www.amazon.com/gp/product/B00AK31M3G/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B00AK31M3G&amp;linkCode=as2&amp;tag=timraybnet-20">Flash card</a> as I&#8217;m using on my <a href="http://www.amazon.com/gp/product/B00BE5T2TA/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B00BE5T2TA&amp;linkCode=as2&amp;tag=timraybnet-20">Microsoft Surface Pro</a>):</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; d:
+</span><span class='line'>PS D:\&gt; dir
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    Directory: D:\
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Mode                LastWriteTime     Length Name
+</span><span class='line'>----                -------------     ------ ----
+</span><span class='line'>d----         5/11/2013   2:17 PM            iTunes
+</span><span class='line'>d----         5/11/2013   2:27 PM            iTunes Library
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>PS D:\&gt; c:
+</span><span class='line'>PS C:\Source&gt; dir
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    Directory: C:\Source
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Mode                LastWriteTime     Length Name
+</span><span class='line'>----                -------------     ------ ----
+</span><span class='line'>d----          5/7/2013   1:57 PM            Blog
+</span><span class='line'>d----          5/9/2013   7:06 PM            Highway
+</span><span class='line'>d----         5/11/2013   4:17 PM            Node
+</span><span class='line'>d----          5/5/2013   5:13 PM            PowerShell
+</span><span class='line'>d----         4/11/2013  11:58 PM            Presentation-EasyESB
+</span><span class='line'>d----         5/10/2013   7:55 PM            RrynVsPS
+</span><span class='line'>d----         4/20/2013   1:53 PM            SynTask</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, the commands move me between those two drives.  But in reality, the concept of a <em>drive</em> has been much expanded in PowerShell.</p>
+
+<blockquote><p>If it has hierarchy (aka Locations) you want to Navigate, or items you want to inspect, then in PowerShell someone will likely have made it a drive.</p></blockquote>
+
+<p>There is a command in PowerShell that lists all current drives:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; Get-PSDrive
+</span><span class='line'>
+</span><span class='line'>Name           Used (GB)     Free (GB) Provider      Root                                               CurrentLocation
+</span><span class='line'>----           ---------     --------- --------      ----                                               ---------------
+</span><span class='line'>Alias                                  Alias
+</span><span class='line'>C                  78.10         32.42 FileSystem    C:\                                                         Source
+</span><span class='line'>Cert                                   Certificate   \
+</span><span class='line'>D                   3.29         56.16 FileSystem    D:\
+</span><span class='line'>E                                      FileSystem    E:\
+</span><span class='line'>Env                                    Environment
+</span><span class='line'>Function                               Function
+</span><span class='line'>HKCU                                   Registry      HKEY_CURRENT_USER
+</span><span class='line'>HKLM                                   Registry      HKEY_LOCAL_MACHINE
+</span><span class='line'>Variable                               Variable
+</span><span class='line'>WSMan                                  WSMan</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>blink</strong> <strong>blink</strong> &#8230; Ok, so that is more drives than I was expecting when I first invoked this command.  So what all drives are those, and how do I use them?</p>
+
+<p>Enter <code>Set-Location</code>, aka <code>cd</code>:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS C:\Source&gt; cd alias:
+</span><span class='line'>PS Alias:\&gt; ls | select -first 5
+</span><span class='line'>
+</span><span class='line'>CommandType     Name                                               ModuleName
+</span><span class='line'>-----------     ----                                               ----------
+</span><span class='line'>Alias           % -&gt; ForEach-Object
+</span><span class='line'>Alias           ? -&gt; Where-Object
+</span><span class='line'>Alias           ac -&gt; Add-Content
+</span><span class='line'>Alias           asnp -&gt; Add-PSSnapin
+</span><span class='line'>Alias           cat -&gt; Get-Content</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Here I&#8217;ve <code>Set-Location</code> to the Alias drive, and listed the first 5 items.  Each PSDrive has different contents depending on what it is representing.  Here&#8217;s a sum-up of the contents of the <strong>default</strong> set of drives:</p>
+
+<ul>
+<li>C, D and E drive are File System drives, representing your various mounted drives.  In my case they are my SSD, Flash card, and virtual CD drive.</li>
+<li>Cert represents your digital certificate store, both CurrentUser and LocalMachine, which are the two root locations.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS Alias:\&gt; cd Cert:
+</span><span class='line'>PS Cert:\&gt; ls | select -first 5
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Location   : CurrentUser
+</span><span class='line'>StoreNames : {SmartCardRoot, Root, Trust, AuthRoot...}
+</span><span class='line'>
+</span><span class='line'>Location   : LocalMachine
+</span><span class='line'>StoreNames : {TrustedPublisher, ClientAuthIssuer, Remote Desktop, Root...}</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Env represents your Environment Variables, which contains all defined environment variables for your machine.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS Cert:\&gt; cd env:
+</span><span class='line'>PS Env:\&gt; ls | select -first 5
+</span><span class='line'>
+</span><span class='line'>Name                           Value
+</span><span class='line'>----                           -----
+</span><span class='line'>ALLUSERSPROFILE                C:\ProgramData
+</span><span class='line'>APPDATA                        C:\Users\Tim\AppData\Roaming
+</span><span class='line'>asl.log                        Destination=file
+</span><span class='line'>ChocolateyInstall              C:\Chocolatey
+</span><span class='line'>CommonProgramFiles             C:\Program Files\Common Files</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Function represents all functions defined in PowerShell, and in fact is how I showed you the definition of <code>prompt</code> earlier in this chapter (go ahead, look back, I don&#8217;t mind)</li>
+<li>HKCU and HKLM represent your register, and specifically the <strong>HKEY_CURRENT_USER</strong> and <strong>HKEY_LOCAL_MACHINE</strong> sections of it.  For instance, want to know all versions of the .NET Framework 4.0 installed on your box?</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS Env:\&gt; ls HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs | %{$_.Name}
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0,Profile=Client
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.1
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.1,Profile=Client
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.2
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.2,Profile=Client
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.3
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.0.3,Profile=Client
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\.NETFramework,Version=v4.5
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\Client
+</span><span class='line'>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs\Default</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Variable represents all current variables defined in your scope.</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>PS Env:\&gt; ls Variable:\ | select -first 3
+</span><span class='line'>
+</span><span class='line'>Name                           Value
+</span><span class='line'>----                           -----
+</span><span class='line'>$                              Get-PSDrive
+</span><span class='line'>?                              True
+</span><span class='line'>^                              Get-PSDrive</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>WSMan represents the &#8220;Windows Remote Management&#8221; aka WinRM settings.</li>
+</ul>
+
+
+<p>Moreover, these are just the beginning.  Lots of modules, which we are about to discuss, create even more drives.  With the right modules you can browse around Active Directory, SQL Servers, IIS Websites, and so much more.</p>
+
+<h2>Modules Basics</h2>
+
+<p>Modules are a way to expand your available functions, drives, etc in PowerShell, but in an optional manner.  Any given PowerShell environment can load many different Modules, in and adhoc manner.  You can get a list of the current Modules you&#8217;re running as so:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Get-Module
+</span><span class='line'>
+</span><span class='line'>ModuleType Name                                ExportedCommands
+</span><span class='line'>---------- ----                                ----------------
+</span><span class='line'>Manifest   Microsoft.PowerShell.Management     {Add-Computer, Add-Content, Checkpoint-Computer, Clear-Content...}
+</span><span class='line'>Manifest   Microsoft.PowerShell.Security       {ConvertFrom-SecureString, ConvertTo-SecureString, Get-Acl, Get-Authe...
+</span><span class='line'>Manifest   Microsoft.PowerShell.Utility        {Add-Member, Add-Type, Clear-Variable, Compare-Object...}
+</span><span class='line'>Manifest   Microsoft.WSMan.Management          {Connect-WSMan, Disable-WSManCredSSP, Disconnect-WSMan, Enable-WSManC...
+</span><span class='line'>Manifest   pki                                 {Add-CertificateEnrollmentPolicyServer, Export-Certificate, Export-Pf...</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, I have four modules loaded at the current time.  But those are just what I have loaded.  What I have available to me is quite another thing.  If you type <code>Get-Module -ListAvailable</code> it will show you all of your possible options, but that output is large.  I&#8217;m going to limit it somewhat here:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Get-Module -ListAvailable | select -first 10
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>    Directory: C:\Users\Tim\Documents\WindowsPowerShell\Modules
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>ModuleType Name                                ExportedCommands
+</span><span class='line'>---------- ----                                ----------------
+</span><span class='line'>Script     EZOut                               {Add-FormatData, Clear-FormatData, Out-FormatData, Remove-FormatData...}
+</span><span class='line'>Script     IsePackV2                           {Add-PowerGUIMenu, Add-IseMenu, Add-Icicle, Clear-Icicle...}
+</span><span class='line'>Script     Pester                              {Assert-MockCalled, Assert-VerifiableMocks, Context, Describe...}
+</span><span class='line'>Script     Pipeworks                           {Get-FunctionFromScript, Write-PowerShellHashtable, Import-PSData, Ex...
+</span><span class='line'>Script     psake                               {Assert, Exec, FormatTaskName, Framework...}
+</span><span class='line'>Script     PsGet                               {Get-PsGetModuleHash, Get-PsGetModuleInfo, Install-Module, Update-Mod...
+</span><span class='line'>Script     ScriptCop                           {Get-ScriptCopRule, Register-ScriptCopRule, Unregister-ScriptCopRule,...
+</span><span class='line'>Script     Send-Growl                          {Get-GrowlPath, Register-GrowlCallback, Register-GrowlType, Send-Grow...
+</span><span class='line'>Script     ShowUI                              {Add-CodeGenerationRule, Add-UIModule, Select-UIType, Get-AssemblyNam...
+</span><span class='line'>Script     TRayburn-Utils                      {New-BasicAuth, Set-AppSetting, Set-NuSpecVersion, Test-Item}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>As you can see, I have a number of Modules installed, and they are installed by in the <code>WindowsPowerShell\Modules</code> folder of my Documents folder.  But as I said, there are alot of them:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Get-Module -ListAvailable | measure
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Count    : 62
+</span><span class='line'>Average  :
+</span><span class='line'>Sum      :
+</span><span class='line'>Maximum  :
+</span><span class='line'>Minimum  :
+</span><span class='line'>Property :</span></code></pre></td></tr></table></div></figure>
+
+
+<p>62 in fact, on my box alone, and it isn&#8217;t part of a domain, or a server, or one of many other things which might add to that list.</p>
+
+<h3>Creating your own modules</h3>
+
+<p>You can create your own modules very simply.  A module is just a PowerShell script, named <code>.psm1</code> instead of simply <code>.ps1</code> and which loads up a series of functions, cmdlets, aliases, etc.  The big additional requirement is that the script must also declare what it intends to make available to those who <code>Import</code> that module.  Simply defining a function in a script isn&#8217;t enough, you must also <code>Export</code> that function to those who use the module.  This is done with the Cmdlet <code>Export-ModuleMember</code>.</p>
+
+<p>I&#8217;m not going to go into details here about how to create a PowerShell module, there is alot of information out there on that already.  If you&#8217;d like to see the source of one, check out either <a href="https://github.com/trayburn/powershell">my PowerShell repository</a>, or <a href="https://github.com/pester/pester">the repository for Pester</a>.</p>
+
+<p>To use a module you have installed, simply type:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Import-Module &lt;name&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Must-Have Modules</h3>
+
+<p>The community of developers and administrators in the world being the wonderful geeks that they are, there are many awesome Modules that have been made available for others to consume.  While it saddens me to report that there is not one consolidated repository, like NuGet for references, there are several good places.  Both <a href="http://nuget.org">NuGet</a> and <a href="http://chocolatey.org">Chocolatey</a> have PowerShell modules hiding in their directories, but in my opinion the best overall implementation for PowerShell is <a href="http://psget.net">PsGet.net</a>.</p>
+
+<h3>PsGet</h3>
+
+<p>PsGet is the module that drives access to the PsGet.net directory of modules.  To get started with it, simply type:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(new-object Net.WebClient).DownloadString("http://psget.net/GetPsGet.ps1") | iex</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will download and install the PsGet module.  Once it&#8217;s installed, go ahead and import that module:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Import-Module PsGet</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You now have two powerful commands are your disposal:
+- Install-Module
+- Update-Module</p>
+
+<p>With these, you can install any module from the PsGet.net directory with just one command.</p>
+
+<h3>Pester</h3>
+
+<p>I&#8217;m a big fan of TDD/BDD and so I was sold the moment Pester was described to me as a BDD framework for PowerShell.  It allows me to test my modules with the familiar Describe, Context, It syntax.  This module was created by the awesome <a href="http://about.me/scottmuc/">Scott Muc</a> and I&#8217;ve used it in my own PowerShell work.  Details on how to use it can be found at the <a href="https://github.com/pester/pester/wiki">GitHub wiki</a> for the project, and <a href="http://scottmuc.com/powershell-pester-2-and-1-dot-2-released/">on Scott&#8217;s blog</a>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Install-Module Pester
+</span><span class='line'>&gt; Import-Module Pester</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>PowerShell Community Extensions</h3>
+
+<p>So what happens when lots of people love PowerShell and start putting together their greatest hits functions and CmdLets?  PowerShell Community Extensions (PSCX) or course!  Think of this as a -contrib project for PowerShell.  It has functions that do all sorts of things, from awesome, to cute.  How many commands?  148 as of this writing.  Everything from <code>Out-Speech</code> which voice outputs any piped content, to quick helpers like <code>Set-ReadOnly</code> and <code>Set-Writeable</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&gt; Install-Module PSCX
+</span><span class='line'>&gt; Import-Module PSCX</span></code></pre></td></tr></table></div></figure>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-05-12T21:06:00-05:00" pubdate data-updated="true">May 12<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/powershell/'>PowerShell</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/powershell-for-developers-dry/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/powershell-for-developers-dry/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/agile-dot-net-houston-2013/" title="Previous Post: Agile.NET Houston 2013">&laquo; Agile.NET Houston 2013</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/books-every-software-developer-should-read/" title="Next Post: Books Every Software Developer Should Read">Books Every Software Developer Should Read &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

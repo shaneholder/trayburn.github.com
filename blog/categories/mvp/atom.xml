@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: mvp | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/mvp/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Six Time Microsoft MVP]]></title>
+    <link href="http://TimRayburn.net/blog/six-time-microsoft-mvp/"/>
+    <updated>2012-07-01T14:11:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/six-time-microsoft-mvp</id>
+    <content type="html"><![CDATA[<p>I'm thrilled to announce that Microsoft has deemed fit to award my efforts over the last year with a Microsoft MVP for Connected Systems Development, once again.  This marks my sixth year as an MVP, a community of such passionate leaders, contributors and influencers that it could boggle the mind.  Every MVP is different, but each brings a passion about their technology that is infectious.</p>
+
+<p>I look forward to once again getting the chance to visit the Microsoft campus during the MVP Summit, and to continue to help start conversations everywhere I go.  I'm also thrilled to announce that <a href="http://devlinliles.com">Devlin Liles</a>, my co-author for <a href="http://www.packtpub.com/entity-framework-4-1-experts-test-driven-development-architecture-cookbook/book">Entity Framework 4.1 : An Expert's Cookbook</a>, was also re-awarded today as an MVP for Data Platform Development.  With that, I'll let you get back to your day, and I'll get back to celebrating my wife's birthday which is also July 1st and which she has shared the celebration of my award for the last six years.</p>
+]]></content>
+  </entry>
+  
+</feed>

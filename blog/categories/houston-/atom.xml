@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: houston, | TimRayburn.net]]></title>
+  <link href="http://TimRayburn.net/blog/categories/houston-/atom.xml" rel="self"/>
+  <link href="http://TimRayburn.net/"/>
+  <updated>2013-07-01T14:02:29-05:00</updated>
+  <id>http://TimRayburn.net/</id>
+  <author>
+    <name><![CDATA[Tim Rayburn]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Azure Bootcamp in Houston]]></title>
+    <link href="http://TimRayburn.net/blog/azure-bootcamp-in-houston/"/>
+    <updated>2012-10-05T09:47:00-05:00</updated>
+    <id>http://TimRayburn.net/blog/azure-bootcamp-in-houston</id>
+    <content type="html"><![CDATA[<p><img src="/images/ie-logo-small.jpg" title="Improving Enterprises Logo" alt="Improving Enterprises Logo"></p>
+
+<p>How would you like a <a href="http://www.improvingenterprises.com/events/event/windows-azure-developer-camp/">free full day of training</a> from the best and brightest of <a href="http://improvingenterprises.com">Improving Enterprises</a>?  Well have I got a deal for you!</p>
+
+<p>On October the 22nd, at the Microsoft Offices in Houston, we will be hosting a Windows Azure Developer Camp.  We will be covering all of the basics of Windows Azure, from IaaS to Websites, from SQL Azure to Mobile Services.  And what's more?  We've got some rockstar trainers for you.  <a href="http://www.improvingenterprises.com/about/people/todd-girvin/bio/">Todd Girvin</a>, <a href="http://www.improvingenterprises.com/about/people/allen-hurst/bio/">Allen Hurst</a>, <a href="http://www.improvingenterprises.com/about/people/devlin-liles/bio/">Devlin Liles</a>, <a href="http://www.improvingenterprises.com/about/people/chris-weldon/bio/">Chris Weldon</a>, <a href="http://www.improvingenterprises.com/about/people/ben-floyd/bio/">Ben Floyd</a> and <a href="http://www.improvingenterprises.com/about/people/tim-rayburn/bio/">myself</a> will guide you through all the hands on labs, and you'll leave ready to bring the incredible scale and ease of Windows Azure to your next project.</p>
+
+<p>While you're there, be sure to ask about our <a href="http://www.improvingenterprises.com/2012/09/10/improving-and-alphaware-join-forces/">incredible new Houston offices</a>.  Need consultants in Houston?  We're open for business and ready to help.  Looking for a new job?  Drop me a line, and we'll talk about the opportunities for you to start improving.</p>
+
+<p>Even if none of that is true, be sure to ask us that day about our upcoming Monday Night Football event.</p>
+
+<h1><a href="http://www.improvingenterprises.com/events/event/windows-azure-developer-camp/">Signup Now</a></h1>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,603 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="Today I was taught an immensely important lesson by WCF.&nbsp; It actually has nothing to do with WCF except that because of the size of the schema I &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/page/13/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/xmlserializerformat-plus-huge-schema-equals-trouble/">XmlSerializerFormat Plus Huge Schema Equals Trouble</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-10-02T00:00:00-05:00" pubdate data-updated="true">Oct 2<span>nd</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Today I was taught an immensely important lesson by WCF.&nbsp; It actually has nothing to do with WCF except that because of the size of the schema I&#8217;m working with that is where I encountered it.</p> <p>I do a lot of work in the healthcare industry, and that industry, by government mandate, works with a message format called the 837 (properly the X12 4010A1 837 either I, P or D).&nbsp; The 837 has three flavors, and is absolutely huge.&nbsp; I was crafting a service which had to accept an XML representation of this data. <em>How did I create the XML?&nbsp; BizTalk Server 2006 R2&#8217;s new HIPAA support of course.</em>&nbsp; When I made the call to service from my unit tests I first received a Fault indicating that exception details could not be returned because of configuration.&nbsp; No problem, obviously I&#8217;ve seen this before and so I added the following to my app.Config for the Host executable:</p> <p>&nbsp;</p> <div style="border-right: gray 1px solid; padding-right: 4px; border-top: gray 1px solid; padding-left: 4px; font-size: 8pt; padding-bottom: 4px; margin: 20px 0px 10px; overflow: auto; border-left: gray 1px solid; width: 97.5%; cursor: text; max-height: 200px; line-height: 12pt; padding-top: 4px; border-bottom: gray 1px solid; font-family: consolas, 'Courier New', courier, monospace; background-color: #f4f4f4"> <div style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">behaviors</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">serviceBehaviors</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">behavior</span> <span style="color: #ff0000">name</span><span style="color: #0000ff">="EnableDebugging"</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">serviceDebug</span> <span style="color: #ff0000">includeExceptionDetailInFaults</span><span style="color: #0000ff">="true"</span><span style="color: #0000ff">/&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">behavior</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">serviceBehaviors</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">behaviors</span><span style="color: #0000ff">&gt;</span></pre></div></div><p>Now that I&#8217;ve enabled debugging, surely now I&#8217;ll see some sort of clear reason by this occurred. Nope!&nbsp; I was presented with the following:</p><blockquote><p>TheCompany.Services.Tests.ClaimsService.GetListOfClaimsByStatus : System.ServiceModel.FaultException`1[System.ServiceModel.ExceptionDetail] : Error in deserializing body of request message for operation &#8216;GetClaimListByStatus&#8217;. </p></blockquote><p>Well isn&#8217;t that terribly useful.&nbsp; Fortunately, this did give me the single most important piece of information &#8220;deserializing&#8221;.&nbsp; So off I go to Google my brain, because <a href="http://www.timrayburn.net/2007/06/21/Debugging+Into+The+NET+XmlSerializer.aspx">I&#8217;d written a post before on how to debug the XmlSerializer</a> (and I was using the XmlSerializer in this case because the DataContractSerializer could not work with my schema).&nbsp; As that post will tell you, there is a switch that can be set in the app.Config which will enable you to debug the code generated by the XmlSerializer.&nbsp; So now we add the following to my app.Config:</p><div style="border-right: gray 1px solid; padding-right: 4px; border-top: gray 1px solid; padding-left: 4px; font-size: 8pt; padding-bottom: 4px; margin: 20px 0px 10px; overflow: auto; border-left: gray 1px solid; width: 97.5%; cursor: text; max-height: 200px; line-height: 12pt; padding-top: 4px; border-bottom: gray 1px solid; font-family: consolas, 'Courier New', courier, monospace; background-color: #f4f4f4"><div style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">system.diagnostics</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">switches</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">add</span> <span style="color: #ff0000">name</span><span style="color: #0000ff">="XmlSerialization.Compilation"</span> <span style="color: #ff0000">value</span><span style="color: #0000ff">="1"</span> <span style="color: #0000ff">/&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">switches</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">system.diagnostics</span><span style="color: #0000ff">&gt;</span></pre></div></div><p>And we follow that by running the unit tests again, that results in something that is actively useful:</p><p><a href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/XmlSerializerFormatplusHugeSchemaequalsT_DC2C/image.png" atomicselection="true"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="324" alt="image" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/XmlSerializerFormatplusHugeSchemaequalsT_DC2C/image_thumb.png" width="450" border="0"></a> </p><p>For those reading along at home and wanting the full text that says:</p><blockquote><p>The maximum nametable character count quota (10000) has been exceeded while reading XML data. The nametable is a data structure used to store strings encountered during XML processing - long XML documents with non-repeating element names, attribute names and attribute values may trigger this quota. This quota may be increased by changing the MaxNameTableCharCount property on the XmlDictionaryReaderQuotas object used when creating the XML reader. </p></blockquote><p>Now that is useful, it tells me exactly how to correct the problem and the size of the quota currently.&nbsp; The only problem is that I didn&#8217;t create this XmlReader object, I didn&#8217;t even create the XmlSerializer which created this XmlReader.&nbsp; The only thing which I create was a ServiceHost, how can I change that setting?&nbsp; Enter Google again.<p>As it happens, Windows Communication Foundation does include an ability to override that value, it is stored in the Binding Configuration in your &#8230; you guessed it &#8230; app.Config!&nbsp; Add the following snippet (assuming you&#8217;re using Basic Http Binding (it exists for all bindings though) and you&#8217;ll be good to go:</p><div style="border-right: gray 1px solid; padding-right: 4px; border-top: gray 1px solid; padding-left: 4px; font-size: 8pt; padding-bottom: 4px; margin: 20px 0px 10px; overflow: auto; border-left: gray 1px solid; width: 97.5%; cursor: text; max-height: 200px; line-height: 12pt; padding-top: 4px; border-bottom: gray 1px solid; font-family: consolas, 'Courier New', courier, monospace; background-color: #f4f4f4"><div style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">bindings</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">basicHttpBinding</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">binding</span> <span style="color: #ff0000">name</span><span style="color: #0000ff">="BasicHttpBinding"</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;</span><span style="color: #800000">readerQuotas</span> <span style="color: #ff0000">maxNameTableCharCount</span><span style="color: #0000ff">="100000"</span><span style="color: #0000ff">/&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">binding</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: #f4f4f4; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">basicHttpBinding</span><span style="color: #0000ff">&gt;</span></pre><pre style="padding-right: 0px; padding-left: 0px; font-size: 8pt; padding-bottom: 0px; margin: 0em; overflow: visible; width: 100%; color: black; border-top-style: none; line-height: 12pt; padding-top: 0px; font-family: consolas, 'Courier New', courier, monospace; border-right-style: none; border-left-style: none; background-color: white; border-bottom-style: none"><span style="color: #0000ff">&lt;/</span><span style="color: #800000">bindings</span><span style="color: #0000ff">&gt;</span></pre></div></div><p>Now, surely I&#8217;m done, and things will work.&nbsp; Actually, no it took me&nbsp;a few times to find a value that would work for that quota.&nbsp; Once I did though I finally hit my breakpoint inside the service and was able to send back a response, where upon I got this message:</p><blockquote><p>TheCompany.Services.Tests.ClaimsService.GetListOfClaimsByStatus : System.ServiceModel.CommunicationException : Error in deserializing body of reply message for operation &#8216;GetClaimListByStatus&#8217;.<br>&nbsp; &#8212;-&gt; System.InvalidOperationException : There is an error in XML document (1, 252).<br>&nbsp; &#8212;-&gt; System.Xml.XmlException : The maximum nametable character count quota (10000) has been exceeded while reading XML data. The nametable is a data structure used to store strings encountered during XML processing - long XML documents with non-repeating element names, attribute names and attribute values may trigger this quota. This quota may be increased by changing the MaxNameTableCharCount property on the XmlDictionaryReaderQuotas object used when creating the XML reader. Line 1, position 252.</p></blockquote><p>At least when the error occurs on the client side you get the full details to start with!&nbsp; Make the same modification above to your configuration on the client side and you&#8217;re good to go.
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/webcast-introduction-to-c-3-0/">Webcast - Introduction to C# 3.0</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-27T00:00:00-05:00" pubdate data-updated="true">Sep 27<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a atomicselection="true" href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/WebcastIntroductiontoC3.0_E56B/image.png"><img border="0" align="right" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/WebcastIntroductiontoC3.0_E56B/image_thumb.png" alt="image" style="border: 0px none ;" /></a> I&#8217;ve spent a lot of time this summer traveling to various events and presenting my talk &quot;Introduction to C# 3.0&quot; to people throughout the South Central area of the United States.&nbsp; Well, it pains me to say I&#8217;m but one man, and there are way way way <strong>way</strong> to many of you to reach through this manual process.&nbsp; Fortunately for me, there are technological solutions to this problem : The Internet!</p>
+<p>I&#8217;ve spent some time today recording my first of what I hope to be several webcasts.&nbsp; These webcasts are made possible through the generation gift of a <a href="http://www.techsmith.com/camtasia.asp">Camtasia</a> license from <a href="http://www.techsmith.com/">TechSmith</a>.&nbsp; I&#8217;ve been a fan of <a href="http://www.techsmith.com/camtasia.asp">Camtasia</a> for many years, and the latest versions are a joy to work with.</p>
+<p><a href="/flash/IntroToCSharp3/index.html">All of that said, following this link to the Land of Oz and an Introduction to C# 3.0.</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/creative-zen-v-plus/">Creative ZEN v Plus</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-27T00:00:00-05:00" pubdate data-updated="true">Sep 27<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/CreativeZENVPlus_BB74/image.png" atomicselection="true"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" alt="image" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/CreativeZENVPlus_BB74/image_thumb.png" align="right" border="0"></a> Recently the time had come to upgrade my MP3 player.&nbsp; For Christmas I had gotten a Video iPod from my wonderful wife, but it was stolen a short time later from my truck and I&#8217;ve been without a portable MP3 player since then.&nbsp; Well a new client was suddenly a 45 minute commute, one way, and that sealed the deal that it was time to get something which I could use to travel with <a href="http://www.Audible.com">Audible</a> books.&nbsp; Enter the Creative Zen V Plus.</p> <p>Having learned from my mistake, I was not going to spent another several hundred dollars on a device, the goal was less than 100 dollars with the requirements that it play Audible, store at least 1 gigabyte, and be reliable.&nbsp; The Zen V Plus more than fit the bill, for just over $75 dollars you can get:</p> <ul> <li>2 gigabytes of storage</li> <li>FM Tuner</li> <li>Audio Recorder (with Built In Microphone)</li> <li>Line-In Audio Recorder</li> <li>VIDEO player on 1.5&#8221; screen (Low Res, but any video is a plus)</li> <li>Simple and easy to follow interface</li></ul> <p>Now overall I&#8217;ve loved the device, but there are a few things I wish it did better.&nbsp; The biggest is that a couple of times it has lost the place in my Audiobook when it did an idle shutdown.&nbsp; You know, you pause because you need to focus on work for a bit, and then hours later come back but in the meantime after 30 minutes of no action it shutdown.&nbsp; This is to me somewhat unforgiveable, but I&#8217;ve been able to work around it for the most part, hopeful a future firmware upgrade will address this.&nbsp; Overall, 4 out of 5 stars.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/about-tim-rayburn/">About Tim Rayburn</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-27T00:00:00-05:00" pubdate data-updated="true">Sep 27<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img alt="" hspace="10" align="left" vspace="10" src="http://timrayburn.net/TimRayburn-Web.png" />Giving in to the fact that every blog should be able to tell you something about it&#8217;s author, this post will serve as a bit of introduction to me and give you a little bit of my history.</p>
+<p>My name is Tim Rayburn, and I am currently employed as a Principal Consultant with <a href="http://www.improvingenterprises.com">Improving Enterprises</a> and I am&nbsp;a Microsoft Most Valuable Professional (MVP) for Connected Systems Development.&nbsp; I&#8217;m fairly heavily involved with the Microsoft community, I am the President of the Dallas Connected Systems User Group, I commonly speak at user groups throughout Texas, Oklahoma, and Arkansas as well as at conferences such as the Tulsa TechFest, Houston TechFest, VSLive! Austin, Microsoft TechEd and the Microsoft SOA &amp; Business Process Conference.&nbsp; In 2009 I was selected to be a member of the INETA Speaker&#8217;s Bureau,&nbsp;which affords me the ability to travel around the nation talking with people about .NET technologies.</p>
+<p>I grew up in New York City, moved with my family to Connecticut when I was entering the 6th grade, graduated from Glastonbury High School and then after some community college moved with my family again to the Dallas/Fort Worth area of Texas where I reside still today even though much of my family no longer lives in this area.&nbsp; I do not have a bachelor&#8217;s degree, but I have in the past attended Manchester Community College (in Manchester, CT), and later the University of Texas at Arlington.&nbsp; I still live in Arlington with my lovely wife Kate and our&nbsp;Australian Shepard&nbsp;named Gandalf.</p>
+<p>I am a certifiable geek, and unabashedly so.&nbsp; I own multiple gaming consoles, play table top RPG&#8217;s, love board games of all sorts, and still have a weekly gathering to play D&amp;D (or whatever we&#8217;re playing at the moment) with my friends.&nbsp; In 2008 I launched a podcast about Dungeons &amp; Dragons Fourth Edition called <a href="http://hommlet.com">Radio Free Hommlet</a>.&nbsp; In the past I&#8217;ve also been deeply involved with a wonderful organization called the <a href="http://www.sca.org">Society for Creative Anachronism</a>, but have not been active with them for many years.</p>
+<p>I&#8217;m always happy to talk to folks in the community about their latest project or about coming out to their conference, code camp, code mash, etc.&nbsp; Please feel free to reach out at <a href="mailto:Tim@TimRayburn.net">Tim@TimRayburn.net</a> if you have questions or would like me to come out and speak.</p>
+<p><strong>Biography</strong></p>
+<p>Tim&nbsp;Rayburn&nbsp;is a Principal Consultant with Improving Enterprises, and a Microsoft MVP for Connected Systems Development.&nbsp; He has worked with Microsoft technologies for over 13 years, and is the President and Founder of the <a href="http://dfwcsug.com">Dallas/Fort Worth&nbsp;Connected Systems User Group</a>, the organizer of the Dallas TechFest, and blogger at <span><a href="http://timrayburn.net/">TimRayburn.net</a></span>.&nbsp; When he&rsquo;s not pursuing the ever moving technology curve, he is an avid gamer, from consoles to table-top RPGs and is the host of a podcast called Radio Free Hommlet.&nbsp; He welcomes questions about any of the above to <a style="color: rgb(42,93,176)" href="mailto:totim@timrayburn.net" target="_blank">tim@timrayburn.net</a>.</p>
+<p>&nbsp;</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/biztalk-2006-r2-developer-edition-on-msdn/">BizTalk 2006 R2 Developer Edition on MSDN</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-26T00:00:00-05:00" pubdate data-updated="true">Sep 26<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Thanks to <a href="http://www.winterdom.com/weblog/2007/09/27/BizTalk2006R2DevOnMSDN.aspx">Tomas Restrepo for pointing out</a> that the Developer Edition of BizTalk 2006 R2 is now up on MSDN.&nbsp; If you&#8217;re working with EDI and BizTalk server you seriously need to check this out and realize what is coming your way.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/it-s-like-communitycast-tv-but/">It&#8217;s Like CommunityCast.TV But&#8230;</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-25T00:00:00-05:00" pubdate data-updated="true">Sep 25<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><P>Last night at the HALO3 launch party at the Microsoft Campus in Las Colinas, I decided to have some fun at the expense of my good friend <A href="http://www.calebjenkins.com">Caleb Jenkins</A>, host of <A href="http://CommunityCast.tv">CommunityCast.tv.</A> Below are the fruits of an evening of shooting video.&nbsp; My thanks to all those who contributed, and especially Caleb.&nbsp; All I have to say is &#8220;That&#8217;s Awesome!&#8221;.</P><P><OBJECT height=350 width=425><PARAM NAME="movie" VALUE="http://www.youtube.com/v/eKt_lEsdZjs"> <embed src="http://www.youtube.com/v/eKt_lEsdZjs" type="application/x-shockwave-flash" width="425" height="350"> </embed> </OBJECT></P>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/microsoft-dallas-halo3-launch-party-live-blogging/">Microsoft Dallas HALO3 Launch Party - Live Blogging</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-24T00:00:00-05:00" pubdate data-updated="true">Sep 24<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p></p> <p><a href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/MicrosoftDallasHALO3LaunchPartyLiveBlogg_DFC0/Halo3BannerBW.png" atomicselection="true"><img style="border-top-width: 0px; border-left-width: 0px; border-bottom-width: 0px; border-right-width: 0px" height="89" alt="Halo3BannerBW" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/MicrosoftDallasHALO3LaunchPartyLiveBlogg_DFC0/Halo3BannerBW_thumb.png" width="672" border="0"></a>&nbsp;</p> <p>Watch this space for live pictures and commentary from the HALO3 Launch Party in Dallas, TX.&nbsp; Updates will begin shortly after 6pm Central Time Today, and will continue through Midnight.</p> <p><embed src="http://www.youtube.com/v/dKhN73yY37c" width="425" height="350" type="application/x-shockwave-flash"> </embed></p> <p><embed src="http://www.youtube.com/v/JNKPFfIz3xo" width="425" height="350" type="application/x-shockwave-flash"> </p> <p>Phil Wheat talks about CodeToLive.com the new Channel 9 show for those who program for more than a paycheck.</embed></p> <p><embed src="http://www.youtube.com/v/_h7bbP-lk_k" width="425" height="350" type="application/x-shockwave-flash"> </embed></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/how-to-promote-properties-from-an-orchestration/">How to Promote Properties From an Orchestration</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-21T00:00:00-05:00" pubdate data-updated="true">Sep 21<span>st</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&#8220;<em>The best reason to blog something is so that you can Google your own brain.</em>&#8221; &#8211; Poorly paraphrased Scott Hanselman, yet so very true.</p> <p>In that spirit, today I&#8217;m posting a reminder of a very useful trick for promoting properties out of Orchestrations.&nbsp; Kudos go to <a href="http://www.digitaldeposit.net/blog/2007/01/property-promotion-inside-orchestration.html">Saravana Kumar</a> and <a href="http://blogs.msdn.com/dhtoran/archive/2005/07/07/436395.aspx">David Hurtado</a>&nbsp;for posting about this long before I did, but I record this information here to make sure I can find it when next I need it.</p> <p>Normally when you assign a value to a message context property from within an Orchestration, that property is not promoted, even if it was promoted prior to you assigning a value to it.&nbsp; In order to promote a property within an orchestration we use an &#8220;elegant hack&#8221; as detailed below:</p> <ol> <li>Create a new Correlation Set, and as such likely a new Correlation Type, which contains the property or properties which you wish to promote.</li> <li>When you use a &#8220;Send&#8221; shape in your orchestration, there is a property called &#8220;Initializing Correlation Sets&#8221;, check off your new Correlation Set from the drop down on this property.</li> <li>Rejoice, you have now promoted those properties.</li></ol> <p>Now before anyone asks, no this does not create orphaned subscriptions in the Message Box, we are never creating a <strong>Receive</strong> using this Correlation Set so we&#8217;re never creating a subscription.&nbsp; This can be very useful, in particular I&#8217;ve used it just this week on a 2006 R2 project I&#8217;m working on to enable batching from an Orchestration. That is a long story, but the short version is we&#8217;re creating a new message in the Orchestration which we then intend to immediately queue for batching, so we need to promote these properties without ever having passed through a pipeline with this message.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/win-an-invite-to-the-microsoft-halo-3-pre-launch-party-on-september-24th/">Win an Invite to the Microsoft HALO 3 Pre-Launch Party on September 24th!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-11T00:00:00-05:00" pubdate data-updated="true">Sep 11<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><a href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/WinanInvitetotheMicrosoftHALO3PreLaunchP_14705/halo-3-1_4.jpg"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="184" alt="halo-3-1" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/WinanInvitetotheMicrosoftHALO3PreLaunchP_14705/halo-3-1_thumb_1.jpg" width="244" align="right" border="0"></a> Can you name every vehicle in HALO 2?</strong></p> <p><strong>Do you know how many Flood must be killed to beat HALO 2 on Legendary?</strong></p> <p><strong>And do you &#8220;know what ladies like&#8221;?</strong></p> <p><strong>THEN THIS CONTEST IS FOR YOU!</strong></p> <p>Thanks to the <a href="http://blogs.msdn.com/chkoenig/">incredible</a> <a href="http://blogs.msdn.com/zainnab/">evangelism</a> <a href="http://blog.austinwheats.net/default.aspx">team</a> here in the South Central district, I&#8217;m pleased to bring you, dear reader, the chance to go to the Microsoft Pre-Launch party for HALO 3.&nbsp; That&#8217;s right, you will be welcomed into the <strong>Microsoft campus in Irving, TX</strong> on <strong>September 24th, 2007 between 6pm and Midnight </strong>and have a chance to play <strong>HALO 3 while everyone else is still standing in line!&nbsp; </strong>You read that right, 6 hours of HALO 3 while the rest of the peasants are sitting outside GameStop just so they can rush home an play it.&nbsp; The event will feature food and drink and everything you&#8217;d expect from such a prestigious frag-fest.</p> <p>You can win this ticket to Master Chief Nirvana by doing <strong>two things!</strong>&nbsp; Important, you must do both things to win.</p> <ol> <li>Leave a comment on this blog containing:</li> <ol> <li><strong>Your Real Name</strong></li> <li><strong>Your Gamertag (No tag? Sorry, serious fans only)</strong></li> <li><strong>The reason you should win the ticket.</strong></li></ol> <li>Be on XBOX LIVE this Saturday (9/15/07) night, between 8 PM and 9 PM Central.</li></ol> <p>I will review the entries, consult the mystic oracle, and pick from among the comments the very best response.&nbsp; On Saturday night between 8pm and 9pm Central I will logon to XBOX LIVE (Gamertag Gisben for those who are new here) and will see if that person is online.&nbsp; If not?&nbsp; On to the next best response of course!</p> <p><strong><a href="http://www.timrayburn.net/content/binary/WindowsLiveWriter/WinanInvitetotheMicrosoftHALO3PreLaunchP_14705/111607-Cortana_2.png"><img style="border-right: 0px; border-top: 0px; border-left: 0px; border-bottom: 0px" height="154" alt="111607-Cortana" src="http://www.timrayburn.net/content/binary/WindowsLiveWriter/WinanInvitetotheMicrosoftHALO3PreLaunchP_14705/111607-Cortana_thumb.png" width="135" align="left" border="0"></a></strong>The lucky winner will be given all of the relevant details for the event.</p> <p><strong> This event is being held in Irving, TX &#8230; If you can&#8217;t be in Irving, TX on September 24th of your own power, then do not enter.&nbsp; The contest is only for the ticket to enter the event, not for travel or anything else. </strong></p> <p><strong>And I remind you &#8230; may your reasons good, this isn&#8217;t a random drawing my friends, your reason has to be better than everyone else&#8217;s reason if you hope to walk away with the prize.</strong></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/speaking-at-the-microsoft-soa-amp-business-process-conference/">Speaking at the Microsoft SOA &amp; Business Process Conference</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-09-11T00:00:00-05:00" pubdate data-updated="true">Sep 11<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&#8217;ve just received word that one of the sessions I submitted has been accepted for the <a href="http://mssoaandbpconference.com/">Microsoft SOA &amp; Business Process Conference</a>.&nbsp; This is year is bound to be interesting coming just after the release of BizTalk 2006 R2 (scheduled for late September) and just before Visual Studio 2008 (scheduled for late November).&nbsp; I will be speaking on BizTalk 2006 R2 and HIPAA Transactions, a topic near and dear to my heart as I&#8217;ve done a great deal of work with both the HIPAA Accelerator and the Covast EDI Adapter for previous versions of BizTalk, and am currently working on a Proof-Of-Concept application for a claims clearinghouse using BizTalk 2006 R2.&nbsp; If you have a chance to get out to Redmond in late October, here are the details (<a href="http://zachbonham.blogspot.com/2007/07/microsoft-soa-and-business-process.html">hat tip to Mary Kay BizTalk Guru Zach Bonham</a>)</p> <p><a href="http://mssoaandbpconference.com/">http://mssoaandbpconference.com/</a> <p><strong>Who is invited to attend?</strong><br>Space will be limited, but anyone who is interested in SOA and Business Process should attend.<br><strong>Who should attend the conference?</strong><br>The conference is intended to educate and inform project managers, business managers, process owners/executives, IT/technical implementers, developers and business/technical consultants. Individuals from IT departments, development organizations, Project Management Offices (PMOs), and those business focused individuals who need to grasp a deeper understanding of how Project, Portfolio and EPM can empower their organization to do more will get great value from this conference. <br><strong>What is the charge to attend the conference?</strong><br>Registration&nbsp;is $299.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/14/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/12/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

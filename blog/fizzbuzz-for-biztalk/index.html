@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>FizzBuzz for BizTalk - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="So unless you don&#8217;t read any of the &#8220;big&#8221; .NET bloggers (like Scott Hanselman&#8217;s Blog or Podcast, Phil Haack, Jeff Attwood, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/fizzbuzz-for-biztalk/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">FizzBuzz for BizTalk</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-06T00:00:00-06:00" pubdate data-updated="true">Mar 6<span>th</span>, 2007</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>So unless you don&#8217;t read any of the &#8220;big&#8221; .NET bloggers (like <a href="http://www.hanselman.com/blog/YouCantTeachHeightMeasuringProgrammerCompetenceViaFizzBuzz.aspx">Scott Hanselman&#8217;s Blog</a> or <a href="http://www.hanselminutes.com/default.aspx?showID=69">Podcast</a>, <a href="http://www.haacked.com/archive/2007/02/27/Why_Cant_Programmers._Read.aspx">Phil Haack</a>, <a href="http://www.codinghorror.com/blog/archives/000781.html">Jeff Attwood</a>, etc) then you&#8217;re likely familiar with the &#8220;FizzBuzz&#8221; problem described in those various posts.&nbsp; In case you missed it, the idea of FizzBuzz is a <strong>super simple</strong> coding exercise which can be completed during the course of an interview to prove that the candidate can at least write a program.&nbsp; FizzBuzz in particular is an example of that as follows:</p> <blockquote> <p>Write a program that prints the numbers 1 to 100.&nbsp; But for multiples of three print &#8220;Fizz&#8221; instead of the number and for multiples of five print &#8220;Buzz&#8221;.&nbsp; For numbers which are multiples of both three and five print &#8220;FizzBuzz&#8221;.</p></blockquote> <p>It&#8217;s simple, elegant, and proves that the candidate can at least write simple code.&nbsp; As many people have pointed out, it will not highlight great developers, but it will knock out bad ones.</p> <p>My question to the assembled audience here is, what is a good FizzBuzz problem for BizTalk?&nbsp; Obviously asking you to write a custom Adapter or Pipeline component is just right out.&nbsp; They are to complex to be accomplished during the time of an interview.&nbsp; But what is a fair example of this type of problem for BizTalk?</p> <p>How about sometime like this:</p> <blockquote> <p>Write, deploy and start a BizTalk solution which will accept an XML file containing a root node named &#8220;Root&#8221; and a potentially unlimited number of child nodes of the root called &#8220;Data&#8221; from the path &#8220;C:\Test\In&#8221; and will output the same structure with to &#8220;C:\Test\Out&#8221; with the value of every &#8220;Data&#8221; node multiplied times 100.</p> <p>Sample Input:</p> <p>&lt;Root&gt;</p> <p>&nbsp;&nbsp;&nbsp; &lt;Data&gt;1&lt;/Data&gt;&lt;Data&gt;2&lt;/Data&gt;</p> <p>&nbsp;&nbsp;&nbsp; &lt;Data&gt;1&lt;/Data&gt;&lt;Data&gt;2&lt;/Data&gt;</p> <p>&lt;/Root&gt;</p> <p>Sample Output:</p> <p>&lt;Root&gt;</p> <p>&nbsp;&nbsp;&nbsp; &lt;Data&gt;100&lt;/Data&gt;&lt;Data&gt;200&lt;/Data&gt;</p> <p>&nbsp;&nbsp;&nbsp; &lt;Data&gt;100&lt;/Data&gt;&lt;Data&gt;200&lt;/Data&gt;</p> <p>&lt;/Root&gt;</p></blockquote> <p>The problem here is there isn&#8217;t such a thing as the &#8220;5 minute&#8221; BizTalk Solution.&nbsp; I think I could do this solution in 5 minutes, but I wrote the thing.&nbsp; What do you think?&nbsp; Is this unreasonable to expect during an interview? Again, the point is not to prove you know BizTalk Server inside out and backwards, it&#8217;s to prove that you don&#8217;t know it at all through failure.&nbsp; Thoughts?</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-03-06T00:00:00-06:00" pubdate data-updated="true">Mar 6<span>th</span>, 2007</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/fizzbuzz-for-biztalk/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/fizzbuzz-for-biztalk/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/great-new-resources/" title="Previous Post: Great New Resources">&laquo; Great New Resources</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/team-foundation-server-administrator-s-guide/" title="Next Post: Team Foundation Server Administrator's Guide">Team Foundation Server Administrator's Guide &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

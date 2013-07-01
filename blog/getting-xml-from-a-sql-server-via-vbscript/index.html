@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Getting XML from a SQL Server via VBScript - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="I had reason to help a client the other day automate the transmission of data from a table they controlled in their system to my company on a daily &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/getting-xml-from-a-sql-server-via-vbscript/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Getting XML From a SQL Server via VBScript</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2004-11-19T00:00:00-06:00" pubdate data-updated="true">Nov 19<span>th</span>, 2004</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I had reason to help a client the other day automate the transmission of data from a table they controlled in their system to my company on a daily basis in order to allow us to use that data in performing certain operations for them.  Initially they were going to send a tab delimited file, and then I suggested they send XML.  They indicated that they weren&#8217;t comfortable formatting XML and I said &#8230; “Have SQL Server handle that for you.”  What resulted was an education for them on how to retrieve XML from SQL Server and the following code snippet:</p><span style="FONT-SIZE: 14pt; COLOR: green; FONT-FAMILY: 'Courier New'"><p class="MsoNormal" style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><span style="COLOR: green; FONT-FAMILY: 'Courier New'"><font size="1">&#8217;*******************************************************<?xml:namespace prefix = o ns = "urn:schemas-microsoft-com:office:office" /><o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8216;Example code for XML Export of table data<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8217;*******************************************************<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8217; By Tim Rayburn, Lead Architect, www.ghnonline.com<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8217; Date : 09/23/2004<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8217;*******************************************************<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8216;This is a modified version of an example file located on msdn.microsoft.com to suit<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8216;the specific purpose of this example.<SPAN style="mso-spacerun: yes">  </SPAN>The original also used XML for the query, which<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8216;is not done in this file.<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8217;*******************************************************<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8216;Absolutely no warrantly expressed or implied.<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8216;This code is herby placed in the public domain.<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><FONT size=1>&#8217;*******************************************************<o:p></o:p></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><o:p><FONT size=1> </FONT></o:p></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Declare all variables<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> adoCmd <SPAN style="mso-tab-count: 1">   </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;<SPAN style="mso-spacerun: yes">   </SPAN>As ADODB.Command<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> adoConn<SPAN style="mso-tab-count: 1">   </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;<SPAN style="mso-spacerun: yes">   </SPAN>As ADODB.Connection<SPAN style="mso-tab-count: 1"> </SPAN><o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> outStrm<SPAN style="mso-tab-count: 1">   </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;<SPAN style="mso-spacerun: yes">   </SPAN>As ADODB.Stream<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> txtResults<SPAN style="mso-tab-count: 1"> </SPAN></FONT><SPAN style="COLOR: green">&#8216;<SPAN style="mso-spacerun: yes">   </SPAN>String for results<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> sConn<SPAN style="mso-tab-count: 1"> </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;<SPAN style="mso-spacerun: yes">   </SPAN>String for connection<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> sQuery<SPAN style="mso-tab-count: 1">    </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;<SPAN style="mso-spacerun: yes">   </SPAN>Query String<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> fso<SPAN style="mso-tab-count: 1">   </SPAN><SPAN style="mso-tab-count: 2">          </SPAN></FONT><SPAN style="COLOR: green">&#8216;File System Object<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> ts<SPAN style="mso-tab-count: 1">    </SPAN><SPAN style="mso-tab-count: 2">          </SPAN></FONT><SPAN style="COLOR: green">&#8216;Text Stream<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> dbName<SPAN style="mso-tab-count: 1">    </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;The DNS name or IP address of your DB Server<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> UID<SPAN style="mso-tab-count: 1">   </SPAN><SPAN style="mso-tab-count: 2">          </SPAN></FONT><SPAN style="COLOR: green">&#8216;The User Name to login to your database<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> PWD<SPAN style="mso-tab-count: 1">   </SPAN><SPAN style="mso-tab-count: 2">          </SPAN></FONT><SPAN style="COLOR: green">&#8216;The Password to login to your database<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> Catalog<SPAN style="mso-tab-count: 1">   </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;The specific database to connect to<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Dim</SPAN><FONT color=#000000> TableName<SPAN style="mso-tab-count: 1"> </SPAN><SPAN style="mso-tab-count: 1">     </SPAN></FONT><SPAN style="COLOR: green">&#8216;The table we will retrieve data from<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Setup Variable Values (CHANGE THIS TO HAVE THE INFORMATION FOR YOUR DATABASE)<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>dbName = &#8220;DBSERVER&#8221;<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>UID = &#8220;UID&#8221;<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>PWD = &#8220;PWD&#8221;<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>Catalog = &#8220;Northwind&#8221;<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>TableName = &#8220;Employees&#8221;<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Connect to the database<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>sConn = &#8220;Provider=SQLOLEDB;Data Source=&#8221; & dbName <o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>sConn = sConn & &#8220;;Initial Catalog=&#8221; & Catalog & &#8220;;uid=&#8221; & UID & &#8220;;pwd=&#8221; & PWD<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Set</SPAN><FONT color=#000000> adoConn = CreateObject(&#8220;ADODB.Connection&#8221;)<SPAN style="mso-tab-count: 1">  </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>adoConn.ConnectionString = sConn<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>adoConn.CursorLocation =<SPAN style="mso-spacerun: yes">  </SPAN>3<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>adoConn.Open<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Create the Command Object & Query<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Set</SPAN><FONT color=#000000> adoCmd = CreateObject(&#8220;ADODB.Command&#8221;)<SPAN style="mso-spacerun: yes">  </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> adoCmd.ActiveConnection = adoConn<SPAN style="mso-tab-count: 1"> </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>sQuery = &#8220;SELECT * FROM &#8221; & UCase(TableName) & &#8221; FOR XML AUTO, ELEMENTS&#8221;<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><SPAN style="mso-tab-count: 1">     </SPAN><SPAN style="mso-tab-count: 1">     </SPAN><SPAN style="mso-spacerun: yes"> </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>adoCmd.CommandText = sQuery<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><o:p><FONT color=#000000 size=1> </FONT></o:p></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Open the output stream and query the database<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">Set</SPAN><FONT color=#000000> outStrm = CreateObject(&#8220;ADODB.Stream&#8221;)<SPAN style="COLOR: green"><o:p></o:p></SPAN></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>outStrm.Open<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>adoCmd.Properties(&#8220;Output Stream&#8221;) = outStrm<SPAN style="COLOR: green"><o:p></o:p></SPAN></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>adoCmd.Execute , , 1024 <SPAN style="COLOR: green"><o:p></o:p></SPAN></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="COLOR: green; FONT-FAMILY: 'Courier New'"><o:p><FONT size=1> </FONT></o:p></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Set to the start of the stream, and then read all data.<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>outStrm.Position = 0<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>txtResults = outStrm.ReadText(-1)<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Cleanup Database objects<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>adoConn.Close<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> adoConn = </FONT><SPAN style="COLOR: blue">Nothing<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> adoCmd = </FONT><SPAN style="COLOR: blue">Nothing<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> outStrm = </FONT><SPAN style="COLOR: blue">Nothing</SPAN><FONT color=#000000><SPAN style="mso-tab-count: 1">   </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Output to a file<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> fso = CreateObject(&#8220;Scripting.FileSystemObject&#8221;)<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> ts = fso.CreateTextFile(&#8220;OutputFile.xml&#8221;)<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>ts.Write &#8221;<" & Ucase(TableName) & "Table>&#8221;<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; TEXT-INDENT: 0.5in; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1>ts.Write txtResults <o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; TEXT-INDENT: 0.5in; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1>ts.Write &#8221;</" UCase(TableName) & ?Table></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN>ts.Close<o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT color=#000000><FONT size=1><SPAN style="mso-tab-count: 1">     </SPAN><o:p></o:p></FONT></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8216;Cleanup File write objects<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: green">&#8217;*******************************************************<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> fso = </FONT><SPAN style="COLOR: blue">Nothing<o:p></o:p></SPAN></FONT></SPAN></P><P class=MsoNormal style="MARGIN: 0in 0in 0pt; mso-layout-grid-align: none"><SPAN style="FONT-FAMILY: 'Courier New'"><FONT size=1><SPAN style="mso-tab-count: 1"><FONT color=#000000>     </FONT></SPAN><SPAN style="COLOR: blue">set</SPAN><FONT color=#000000> ts = </FONT><SPAN style="COLOR: blue">Nothing</SPAN></FONT></SPAN></SPAN></P></SPAN></BLOGHELPER><FONT size=1>?></font></span></p><p></p></span>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2004-11-19T00:00:00-06:00" pubdate data-updated="true">Nov 19<span>th</span>, 2004</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/getting-xml-from-a-sql-server-via-vbscript/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/getting-xml-from-a-sql-server-via-vbscript/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/my-gamertag-is-gisben-and-i-stink-at-halo2/" title="Previous Post: My GamerTag is Gisben, and I stink at Halo2">&laquo; My GamerTag is Gisben, and I stink at Halo2</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/new-project-hero-tracker/" title="Next Post: New Project : Hero Tracker">New Project : Hero Tracker &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

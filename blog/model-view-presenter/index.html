@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Model View Presenter - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="I recently had the pleasure of attending a talk (twice) by Scott Cate about the Model View Presenter design pattern as implemented in .NET. I had &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/model-view-presenter/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Model View Presenter</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-11T00:00:00-05:00" pubdate data-updated="true">Oct 11<span>th</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><P></P><P>I recently had the pleasure of attending a talk (twice) by <A href="http://weblogs.asp.net/ScottCate/">Scott Cate</A> about the Model View Presenter design pattern as implemented in .NET. I had never worked with this design pattern before and must say it was a joy to listen to Scott give this talk. He style is very natural, code oriented, and he stays very connected to the audience. <P>The concept of this pattern is one of seperation of UI from Implementation. Most N-Tier implementations believe they do this well, but in fact still fill their code-behind (for ASP.NET) or form class (for WinForms) with logic which retrieves data, validates, etc. The Model View Presenter (MVP) suggests a different way, in which you do not place this in your application, but rather in a presenter object. But before we go further, let&#8217;s define some of the terms. <P><STRONG>Model</STRONG> - The model is your business objects, or data access layer, which provides the data which needs to be presented. <P><STRONG>View</STRONG> - The view is an Interface which defines how information is both retrieved and set. <P><STRONG>Presenter</STRONG> - The presenter is a class which requires a &#8220;view&#8221; object to be constructed and can then present methods which will act upon the view. <P>As a simple example, let&#8217;s take the concept of a simple blogging software which stores all of the posts in an XML file. The XML file will look like this : <P></P><DIV class=wlWriterSmartContent id=57F11A72-B0E5-49c7-9094-E3A15BD5B5E7:a9acb5be-46a1-4a04-9664-f9a75b5f1980 contentEditable=false style="PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; FLOAT: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px"><PRE style="BACKGROUND-COLOR: white"><DIV><!--Code highlighting produced by Actipro CodeHighlighter (freeware)http://www.CodeHighlighter.com/--><SPAN style="COLOR: #0000ff">&lt;</SPAN><SPAN style="COLOR: #800000">Posts</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;</SPAN><SPAN style="COLOR: #800000">Post </SPAN><SPAN style="COLOR: #ff0000">id</SPAN><SPAN style="COLOR: #0000ff">=1&gt;</SPAN><SPAN style="COLOR: #ff0000">&lt;Title</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000">Model View Presenter Rocks!</SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Title</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;</SPAN><SPAN style="COLOR: #800000">Body</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000">Lots of cool text goes here</SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Body</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Post</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;</SPAN><SPAN style="COLOR: #800000">Post </SPAN><SPAN style="COLOR: #ff0000">id</SPAN><SPAN style="COLOR: #0000ff">=2&gt;</SPAN><SPAN style="COLOR: #ff0000">&lt;Title</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000">BizTalk Rocks!</SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Title</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;</SPAN><SPAN style="COLOR: #800000">Body</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000">Lots of cool text goes here</SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Body</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Post</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;</SPAN><SPAN style="COLOR: #800000">Post </SPAN><SPAN style="COLOR: #ff0000">id</SPAN><SPAN style="COLOR: #0000ff">=3&gt;</SPAN><SPAN style="COLOR: #ff0000">&lt;Title</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000">Dot Net Rocks!</SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Title</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;</SPAN><SPAN style="COLOR: #800000">Body</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000">Will this get me in trouble with Cory?</SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Body</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Post</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">&lt;/</SPAN><SPAN style="COLOR: #800000">Posts</SPAN><SPAN style="COLOR: #0000ff">&gt;</SPAN></DIV></PRE></DIV><P></P><P>Given this, which we keep in a &#8220;posts.xml&#8221; file, we will implement a super simple Model object.</P><P>&nbsp;</P><P></P><DIV class=wlWriterSmartContent id=57F11A72-B0E5-49c7-9094-E3A15BD5B5E7:3a7bcc20-0463-4e73-bb85-0da7e69ac00f contentEditable=false style="PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; FLOAT: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px"><PRE style="BACKGROUND-COLOR: white"><DIV><!--Code highlighting produced by Actipro CodeHighlighter (freeware)http://www.CodeHighlighter.com/--><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">class</SPAN><SPAN style="COLOR: #000000"> Post{</SPAN><SPAN style="COLOR: #0000ff">private</SPAN><SPAN style="COLOR: #000000"> Post() { }</SPAN><SPAN style="COLOR: #008000">//</SPAN><SPAN style="COLOR: #008000"> Private Constructor</SPAN><SPAN style="COLOR: #008000"></SPAN><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">internal</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">string</SPAN><SPAN style="COLOR: #000000"> _Title;</SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">string</SPAN><SPAN style="COLOR: #000000"> Title{</SPAN><SPAN style="COLOR: #0000ff">get</SPAN><SPAN style="COLOR: #000000">{</SPAN><SPAN style="COLOR: #0000ff">return</SPAN><SPAN style="COLOR: #000000"> _Title;}}</SPAN><SPAN style="COLOR: #0000ff">internal</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">string</SPAN><SPAN style="COLOR: #000000"> _Body;</SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">string</SPAN><SPAN style="COLOR: #000000"> Body{</SPAN><SPAN style="COLOR: #0000ff">get</SPAN><SPAN style="COLOR: #000000">{</SPAN><SPAN style="COLOR: #0000ff">return</SPAN><SPAN style="COLOR: #000000"> _Body;}}</SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">static</SPAN><SPAN style="COLOR: #000000"> Post GetPostById(</SPAN><SPAN style="COLOR: #0000ff">int</SPAN><SPAN style="COLOR: #000000"> id){XmlDocument posts </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">new</SPAN><SPAN style="COLOR: #000000"> XmlDocument();posts.Load(</SPAN><SPAN style="COLOR: #000000">&#8221;</SPAN><SPAN style="COLOR: #000000">posts.xml</SPAN><SPAN style="COLOR: #000000">&#8221;</SPAN><SPAN style="COLOR: #000000">);</SPAN><SPAN style="COLOR: #0000ff">string</SPAN><SPAN style="COLOR: #000000"> strXpath </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #000000">&#8220;</SPAN><SPAN style="COLOR: #000000">/Posts/Post[@id={0}]/{1}</SPAN><SPAN style="COLOR: #000000">&#8221;</SPAN><SPAN style="COLOR: #000000">;XmlNode titleNode </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> posts.SelectSingleNode<BR>(String.Format(strXpath,id,</SPAN><SPAN style="COLOR: #000000">&#8221;</SPAN><SPAN style="COLOR: #000000">Title</SPAN><SPAN style="COLOR: #000000">&#8221;</SPAN><SPAN style="COLOR: #000000">));XmlNode bodyNode </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> posts.SelectSingleNode<BR>(String.Format(strXpath, id, </SPAN><SPAN style="COLOR: #000000">&#8220;</SPAN><SPAN style="COLOR: #000000">Body</SPAN><SPAN style="COLOR: #000000">&#8221;</SPAN><SPAN style="COLOR: #000000">));Post retPost </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">new</SPAN><SPAN style="COLOR: #000000"> Post();retPost._Title </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> titleNode.InnerText;retPost._Body </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> bodyNode.InnerText;</SPAN><SPAN style="COLOR: #0000ff">return</SPAN><SPAN style="COLOR: #000000"> retPost;}}</SPAN></DIV></PRE></DIV><P></P><P>&nbsp;</P><P>Now that we can get data from the file, we need to create our view. Our view is an Interface which supports &#8220;get&#8221;ing the post id, and &#8220;set&#8221;ing the title and body. <P><P></P><DIV class=wlWriterSmartContent id=57F11A72-B0E5-49c7-9094-E3A15BD5B5E7:a93d8e8a-4bde-4b92-b9dd-ec0b57a05b8c contentEditable=false style="PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; FLOAT: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px"><PRE style="BACKGROUND-COLOR: white"><DIV><!--Code highlighting produced by Actipro CodeHighlighter (freeware)http://www.CodeHighlighter.com/--><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">interface</SPAN><SPAN style="COLOR: #000000"> IPostView{</SPAN><SPAN style="COLOR: #0000ff">int</SPAN><SPAN style="COLOR: #000000"> PostId { </SPAN><SPAN style="COLOR: #0000ff">get</SPAN><SPAN style="COLOR: #000000">; }</SPAN><SPAN style="COLOR: #0000ff">string</SPAN><SPAN style="COLOR: #000000"> Title { </SPAN><SPAN style="COLOR: #0000ff">set</SPAN><SPAN style="COLOR: #000000">; }</SPAN><SPAN style="COLOR: #0000ff">string</SPAN><SPAN style="COLOR: #000000"> Body { </SPAN><SPAN style="COLOR: #0000ff">set</SPAN><SPAN style="COLOR: #000000">; }}</SPAN></DIV></PRE></DIV><P></P><P>Finally, we have our presenter. Our presenter requires an implementation of our interface to be constructed and offers a method which allows retrieval.</P><P>&nbsp;</P><P></P><DIV class=wlWriterSmartContent id=57F11A72-B0E5-49c7-9094-E3A15BD5B5E7:c0398ff1-8463-4c3e-ac51-9358268a687f contentEditable=false style="PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; FLOAT: none; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px"><PRE style="BACKGROUND-COLOR: white"><DIV><!--Code highlighting produced by Actipro CodeHighlighter (freeware)http://www.CodeHighlighter.com/--><SPAN style="COLOR: #000000"></SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">class</SPAN><SPAN style="COLOR: #000000"> PostPresenter{</SPAN><SPAN style="COLOR: #0000ff">private</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">readonly</SPAN><SPAN style="COLOR: #000000"> IPostView view;</SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> PostPresenter(IPostView view){</SPAN><SPAN style="COLOR: #0000ff">this</SPAN><SPAN style="COLOR: #000000">.view </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> view;}</SPAN><SPAN style="COLOR: #0000ff">public</SPAN><SPAN style="COLOR: #000000"> </SPAN><SPAN style="COLOR: #0000ff">void</SPAN><SPAN style="COLOR: #000000"> RetrievePost(){Post myPost </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> Post.GetPostById(view.PostId);view.Title </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> myPost.Title;view.Body </SPAN><SPAN style="COLOR: #000000">=</SPAN><SPAN style="COLOR: #000000"> myPost.Body;}}</SPAN></DIV></PRE></DIV><P></P><P>If you want to see all of this implemented as a Windows Form application, <A href="http://www.TimRayburn.net/content/binary/MVPExample.zip">then grab the download here.</A></P><P>&nbsp;</P><DIV class=wlWriterSmartContent id=0767317B-992E-4b12-91E0-4F059A8CECA8:e93c0a00-f2d2-44ae-bc4b-2363fb8838d1 contentEditable=false style="PADDING-RIGHT: 0px; DISPLAY: inline; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px">Technorati tags: <A href="http://technorati.com/tags/design%20patterns" rel=tag>design patterns</A>, <A href="http://technorati.com/tags/model%20view%20presenter" rel=tag>model view presenter</A>, <A href="http://technorati.com/tags/C#" rel=tag>C#</A>, <A href="http://technorati.com/tags/scott%20cate" rel=tag>scott cate</A></DIV>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-11T00:00:00-05:00" pubdate data-updated="true">Oct 11<span>th</span>, 2006</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/model-view-presenter/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/model-view-presenter/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/speaking-at-the-little-rock-net-user-group/" title="Previous Post: Speaking at the Little Rock .NET User Group">&laquo; Speaking at the Little Rock .NET User Group</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/timrayburn-customfunctoids-logical-string-functoids/" title="Next Post: TimRayburn.CustomFunctoids - Logical String Functoids">TimRayburn.CustomFunctoids - Logical String Functoids &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

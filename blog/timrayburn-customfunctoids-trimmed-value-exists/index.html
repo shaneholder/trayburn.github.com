@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>TimRayburn.CustomFunctoids - Trimmed Value Exists - TimRayburn.net</title>
+  <meta name="author" content="Tim Rayburn">
+
+  
+  <meta name="description" content="&nbsp;Today&#8217;s functoid is one which I&#8217;ve created in the past for several clients working with BizTalk 2004 and flat files, especially &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://TimRayburn.net/blog/timrayburn-customfunctoids-trimmed-value-exists/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link rel="openid.server" href="http://www.myopenid.com/server"/>
+  <link rel="openid.delegate" href="http://trayburn.myopenid.com/"/>
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/TimRayburnsBlog" rel="alternate" title="TimRayburn.net" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-2693862-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TimRayburn.net</a></h1>
+  
+    <h2>Technology is a means, not an end.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/TimRayburnsBlog" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:TimRayburn.net" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about/">About Tim</a></li>
+  <li><a href="/fitness/">Fitness</a></li>
+  <li><a href="/gaming/">Gaming</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">TimRayburn.CustomFunctoids - Trimmed Value Exists</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-01T00:00:00-05:00" pubdate data-updated="true">Oct 1<span>st</span>, 2006</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>&nbsp;Today&#8217;s functoid is one which I&#8217;ve created in the past for several clients working with BizTalk 2004 and flat files, especially position files.&nbsp; Often you will encounter a situation where the disassembler will give you a value of <strong>&#8220;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#8221;</strong>.&nbsp; In BTS 2006 you have the option of setting a fill character that is ignored by the disassembler, but on &#8216;04 you&#8217;ve got to deal with this in the map.</p> <p>The premise then in simple, to avoid the common pattern of a Trim -&gt; Size -&gt; Greater Than -&gt; Value Mapping we roll up the first three of these into this single functoid.&nbsp; The code is presented below, and you can follow the link to the source code download.</p> <p><strong><a href="http://www.timrayburn.net/content/binary/TimRayburn.CustomFunctoids.v1.0.zip">Download TimRayburn.CustomFunctoids v1.0</a></strong></p><!--{\rtf1\ansi\ansicpg\lang1024\noproof1252\uc1 \deff0{\fonttbl{\f0\fnil\fcharset0\fprq1 Consolas;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0??;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;??\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;??\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;??\red192\green192\blue192;}??\fs28 \cf2 class\cf0\cf10 TrimmedValueExistsFunctoid\cf0: \cf10 BaseFunctoid\par ??\cf0 \{\par ??\cf2 public\cf0TrimmedValueExistsFunctoid(): \cf2 base\cf0 ()\par ??\{\par ??\cf11 // Assign a "unique" id to this functiod\par ??\cf0 \cf2 this\cf0 .ID = 24603;\par ??\par ??\cf11 // Setup the resource assembly to use.\par ??\cf0 SetupResourceAssembly(\par ??\cf13 "TimRayburn.CustomFunctoids.CustomFunctoidsResources"\cf0 ,\par ??\cf10 Assembly\cf0 .GetExecutingAssembly());\par ??\par ??SetName(\cf13 "IDS_TRIMMEDVALUEEXISTSFUNCTOID_NAME"\cf0 );\par ??SetTooltip(\cf13 "IDS_TRIMMEDVALUEEXISTSFUNCTOID_TOOLTIP"\cf0 );\par ??SetDescription(\cf13 "IDS_TRIMMEDVALUEEXISTSFUNCTOID_DESCRIPTION"\cf0 );\par ??SetBitmap(\cf13 "IDB_TRIMMEDVALUEEXISTSFUNCTOID_BITMAP"\cf0 );\par ??\par ??\cf2 this\cf0 .SetMinParams(1);\par ??\cf2 this\cf0 .SetMaxParams(1);\par ??\par ??SetExternalFunctionName(\cf2 this\cf0 .GetType().Assembly.FullName,\par ??\cf13 "TimRayburn.CustomFunctoids.TrimmedValueExistsFunctoid"\cf0 ,\par ??\cf13 "TrimmedValueExists"\cf0 );\par ??\par ??\cf2 this\cf0 .Category = \cf10 FunctoidCategory\cf0 .Logical;\par ??\cf2 this\cf0 .OutputConnectionType = \cf10 ConnectionType\cf0 .AllExceptRecord;\par ??\par ??AddInputConnectionType(\cf10 ConnectionType\cf0 .AllExceptRecord);\par ??\}\par ??\cf2 public\cf0\cf2 string\cf0TrimmedValueExists(\cf2 string\cf0inputVal)\par ??\{\par ??\cf2 if\cf0(inputVal.Length.Equals(0))\par ??\cf2 return\cf0\cf13 "true"\cf0 ;\par ??\cf2 else\par ??\cf0 \{\par ??\cf2 string\cf0trimmedVal = inputVal.Trim();\par ??\cf2 if\cf0(trimmedVal.Length.Equals(0))\par ??\cf2 return\cf0\cf13 "true"\cf0 ;\par ??\cf2 else\par ??\cf0 \cf2 return\cf0\cf13 "false"\cf0 ;\par ??\}\par ??\}\par ??\}\par ??}--> <div style="font-size: 10pt; background: white; color: black; font-family: consolas, courier"><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;&nbsp;9</span>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue">class</span> <span style="color: teal">TrimmedValueExistsFunctoid</span> : <span style="color: teal">BaseFunctoid</span></pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;10</span>&nbsp;&nbsp;&nbsp;&nbsp; {</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;11</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span style="color: blue">public</span> TrimmedValueExistsFunctoid(): <span style="color: blue">base</span>()</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;12</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; {</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;13</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: green">// Assign a "unique" id to this functiod</span></pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;14</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: blue">this</span>.ID = 24603;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;15</span>&nbsp;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;16</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: green">// Setup the resource assembly to use.</span></pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;17</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; SetupResourceAssembly(</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;18</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: maroon">"TimRayburn.CustomFunctoids.CustomFunctoidsResources"</span>,</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;19</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: teal">Assembly</span>.GetExecutingAssembly());</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;20</span>&nbsp;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;21</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; SetName(<span style="color: maroon">"IDS_TRIMMEDVALUEEXISTSFUNCTOID_NAME"</span>);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;22</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; SetTooltip(<span style="color: maroon">"IDS_TRIMMEDVALUEEXISTSFUNCTOID_TOOLTIP"</span>);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;23</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; SetDescription(<span style="color: maroon">"IDS_TRIMMEDVALUEEXISTSFUNCTOID_DESCRIPTION"</span>);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;24</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; SetBitmap(<span style="color: maroon">"IDB_TRIMMEDVALUEEXISTSFUNCTOID_BITMAP"</span>);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;25</span>&nbsp;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;26</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: blue">this</span>.SetMinParams(1);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;27</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: blue">this</span>.SetMaxParams(1);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;28</span>&nbsp;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;29</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; SetExternalFunctionName(<span style="color: blue">this</span>.GetType().Assembly.FullName,</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;30</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: maroon">"TimRayburn.CustomFunctoids.TrimmedValueExistsFunctoid"</span>,</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;31</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: maroon">"TrimmedValueExists"</span>);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;32</span>&nbsp;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;33</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: blue">this</span>.Category = <span style="color: teal">FunctoidCategory</span>.Logical;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;34</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: blue">this</span>.OutputConnectionType = <span style="color: teal">ConnectionType</span>.AllExceptRecord;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;35</span>&nbsp;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;36</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; AddInputConnectionType(<span style="color: teal">ConnectionType</span>.AllExceptRecord);</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;37</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;38</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span style="color: blue">public</span> <span style="color: blue">string</span> TrimmedValueExists(<span style="color: blue">string</span> inputVal)</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;39</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; {</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;40</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: blue">if</span> (inputVal.Length.Equals(0))</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;41</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">return</span> <span style="color: maroon">"true"</span>;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;42</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <span style="color: blue">else</span></pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;43</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; {</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;44</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">string</span> trimmedVal = inputVal.Trim();</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;45</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">if</span> (trimmedVal.Length.Equals(0))</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;46</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue">return</span> <span style="color: maroon">"true"</span>;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;47</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: blue">else</span></pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;48</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <span style="color: blue">return</span> <span style="color: maroon">"false"</span>;</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;49</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; }</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;50</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }</pre><pre style="margin: 0px"><span style="color: #2b91af">&nbsp;&nbsp;&nbsp;51</span>&nbsp;&nbsp;&nbsp;&nbsp; }</pre></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Tim Rayburn</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-01T00:00:00-05:00" pubdate data-updated="true">Oct 1<span>st</span>, 2006</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://TimRayburn.net/blog/timrayburn-customfunctoids-trimmed-value-exists/" data-via="trayburn" data-counturl="http://TimRayburn.net/blog/timrayburn-customfunctoids-trimmed-value-exists/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/timrayburn-customfunctoids-if-else/" title="Previous Post: TimRayburn.CustomFunctoids - If ... Else">&laquo; TimRayburn.CustomFunctoids - If ... Else</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/timrayburn-customfunctoids-formatdate/" title="Next Post: TimRayburn.CustomFunctoids - FormatDate">TimRayburn.CustomFunctoids - FormatDate &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/signup-for-july-number-fffgn/">Signup for July #FFFGN</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/fourth-friday-family-game-night/">Fourth Friday Family Game Night</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/slides-and-code-from-dallas-xaml-git-workshop/">Slides and Code from Dallas XAML GIT Workshop</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/highway-dot-onramp-dot-services-quickstart-guide/">Highway.Onramp.Services Quickstart Guide</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/introducing-highway-onramps/">Introducing Highway Onramps</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/trayburn">@trayburn</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'trayburn',
+            count: 5,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("trayburn", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/trayburn" class="twitter-follow-button" data-show-count="false">Follow @trayburn</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/trayburn?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Rayburn -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
